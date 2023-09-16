@@ -1,16 +1,13 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import routes from "./pages/routes/routes";
 
 const App = () => {
   return (
     <>
-      <h1>Hello World</h1>
-      <Routes>
-        {/* <Route /> */}
-      </Routes>
+      <Routes>{routes.map((value) => value)}</Routes>
     </>
-  )
-}
+  );
+};
 
-export default App
-
+export default App;
