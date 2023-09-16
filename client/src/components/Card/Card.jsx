@@ -1,9 +1,10 @@
 import React from "react";
 //sibling components
 import Button from "../Button/Button";
+import "./cardcss.css"
 const Card = () => {
   return (
-    <div className="card  lg:w-40 xl:w-64  bg-base-100 shadow-xl bg-white rounded-2xl px-[10px]">
+    <div className="card     sm:w-32 lg:w-32 xl:w-40  2xl:w-64    shadow-xl bg-white rounded-2xl px-[10px]">
       <figure>
         <img
           src="https://cdn1-production-images-kly.akamaized.net/EjwV7j3Y4JrlqUFuavke4NtRWtM=/1200x675/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/3108566/original/079979700_1587487794-Sajiku_1.jpg"

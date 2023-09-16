@@ -9,6 +9,7 @@ import { PiCoffeeFill } from "react-icons/pi";
 import { BiDrink } from "react-icons/bi";
 import { LuCakeSlice } from "react-icons/lu";
 import { BiSolidReport } from "react-icons/bi";
+
 // Components
 import Search from "../../components/Search/Search";
 import CategoryCard from "../../components/CategoryCard/CategoryCard";
@@ -35,7 +36,7 @@ const Home = () => {
           <h1 className="text-gray-500">Reports</h1>
         </div>
       </div>
-      <div className="middle w-8/12 h-full px-[100px] overflow-scroll  bg-customBackground">
+      <div className="middle w-8/12 h-full md:px-[50px] xl:px-[100px] lg:px-[75px] overflow-scroll  bg-customBackground">
         <Search className="mt-[50px]" />
         <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
         <div className="flex gap-10">
@@ -60,7 +61,7 @@ const Home = () => {
             </select>
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-5">
+        <div className="grid sm:grid-cols-3 lg:grid-cols-4 gap-5 mt-[20px]">
           <Card />
           <Card />
           <Card />
