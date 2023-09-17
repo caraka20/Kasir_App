@@ -3,10 +3,10 @@ const app = express()
 const cors = require("cors")
 app.use(cors())
 app.use(express.json())
-// const {admin}
 PORT = 3001
 
-app.use("kasir", )
+const {kasirRouter} = require("./routers")
+app.use("/kasir", kasirRouter)
 
 app.use((err, req, res, next) => {
     const statusCode = err.status || 500
