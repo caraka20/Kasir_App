@@ -1,10 +1,12 @@
 const express = require("express")
 const app = express()
 const cors = require("cors")
-const { productRouter } = require("./Router")
+const { productRouter } = require("./routers")
 app.use(cors())
 app.use(express.json())
+// const {admin}
 PORT = 3001
+
 
 app.use('/product', productRouter)
 
@@ -17,6 +19,7 @@ app.use((err, req, res, next) => {
         data: null
     })
 })
+
 
 
 app.listen(PORT, () => {
