@@ -15,6 +15,9 @@ module.exports = {
       deskripsi: {
         type: Sequelize.STRING
       },
+      harga: {
+        type: Sequelize.INTEGER
+      },
       stock: {
         type: Sequelize.INTEGER
       },
