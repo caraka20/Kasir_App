@@ -8,28 +8,21 @@ import { GiFrenchFries } from "react-icons/gi";
 import { PiCoffeeFill } from "react-icons/pi";
 import { BiDrink } from "react-icons/bi";
 import { LuCakeSlice } from "react-icons/lu";
+import { BiSolidReport } from "react-icons/bi";
 
 // Components
 import Search from "../../components/Search/Search";
 import CategoryCard from "../../components/CategoryCard/CategoryCard";
-
+import Card from "../../components/Card/Card";
+import Button from "../../components/Button/Button";
+import Input from "../../components/Input/Input";
+import CartOrders from "../../components/CartOrders/CartOrders";
+import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
 const Home = () => {
   return (
-    <div className="screen h-screen w-full flex ">
-      <div className="left-side w-1/12 h-full bg-white">
-        <div className="Logo mt-[50px] cursor-pointer w-full flex justify-center text-customPrimary font-bold text-5xl">
-          <PiCoffeeFill />
-        </div>
-        <div className="Menu w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[50px] border-l-8  border-l-customPrimary rounded">
-          <PiForkKnifeBold className="text-4xl text-customPrimary " />
-          <h1 className="text-customPrimary">Menu</h1>
-        </div>
-        <div className="Bills w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
-          <RiBillFill className="text-4xl text-gray-500 " />
-          <h1 className="text-gray-500">Reports</h1>
-        </div>
-      </div>
-      <div className="middle w-8/12 h-full px-[100px]  bg-customBackground">
+    <div className="screen  w-full h-screen flex ">
+      <LeftSideBar/>
+      <div className="middle w-8/12 h-full md:px-[50px] xl:px-[20px] lg:px-[75px] overflow-scroll  bg-customBackground">
         <Search className="mt-[50px]" />
         <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
         <div className="flex gap-10">
@@ -40,15 +33,71 @@ const Home = () => {
             categoryCSS=""
           />
         </div>
-        <div>
-          <h1>Foods</h1>
-          <div>
+        <div className="flex justify-between items-center mt-[20px]">
+          <h1 className=" text-2xl">Foods</h1>
+          <div className="flex items-center ">
             <h1>Sort by:</h1>
-
+            <select className="filter select select-ghost text-customPrimary  border-none text-xl bg-customBackground">
+              <option className="" disabled selected>
+                Select
+              </option>
+              <option>Foods</option>
+              <option>A/Z</option>
+              <option>Z/A</option>
+              <option>Highest</option>
+              <option>Lowest</option>
+            </select>
           </div>
         </div>
+        <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-5 mt-[20px]">
+          <Card />
+        </div>
+
+        <div className="Pagination mt-[100px] flex justify-between mb-[20px]">
+          <Button
+            btnCSS="w-[200px] bg-white text-orange-500 border-2 border-orange-500 "
+            btnName="Previously"
+          />
+          <Button btnCSS="w-[200px]" btnName="Next" />
+        </div>
       </div>
-      <div className="right-side h-full w-3/12 bg-white"></div>
+      <div className="right-side h-full w-3/12 px-[20px] bg-white relative">
+        <h1 className="mt-[50px] text-3xl mb-[20px]">Cart</h1>
+        <div className="CartOrders h-[400px]  overflow-scroll">
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+        </div>
+        <div className="mt-[20px] border-t-2 border-b-2 py-[20px]">
+          <div className="SubTotal flex justify-between items-center">
+            <h1 className="text-lg">Sub Total</h1>
+            <h1 className="text-xl  font-normal">$111</h1>
+          </div>
+          <div className="VAT flex justify-between items-center">
+            <h1 className="text-lg">VAT (10%)</h1>
+            <h1 className="text-xl font-normal">$11.1</h1>
+          </div>
+        </div>
+        <div className="flex justify-between items-center mt-[20px]">
+          <h1 className="font-semibold text-2xl">TOTAL : </h1>
+          <h1 className="font-semibold text-2xl">$122.1 </h1>
+        </div>
+        <div className="flex flex-col mt-[20px] ">
+          {/* <div className="flex justify-between items-center ">
+            <h1 className="font-semibold text-xl">Change : </h1>
+            <h1 className="place-items-end font-semibold text-xl">$122.1 </h1>
+          </div> */}
+
+          <Button btnCSS="mt-[20px] " btnName="Confirm" />
+        </div>
+      </div>
     </div>
   );
 };
