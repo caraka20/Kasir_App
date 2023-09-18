@@ -1,5 +1,6 @@
 import React from "react";
-
+import Modal from 'react-modal'
+import { useState } from "react";
 // Icons from React-icons
 import { PiForkKnifeBold } from "react-icons/pi";
 import { RiBillFill } from "react-icons/ri";
@@ -18,14 +19,37 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import CartOrders from "../../components/CartOrders/CartOrders";
 import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
+import Modals from "../../components/Modal/Modals";
+
 const Home = () => {
+    const [modalIsOpen, setModelIsOpen] = useState(false)
+
+
   return (
     <div className="screen  w-full h-screen flex ">
-      <LeftSideBar/>
-      <div className="middle w-8/12 h-full md:px-[50px] xl:px-[20px] lg:px-[75px] overflow-scroll  bg-customBackground">
+      <LeftSideBar />
+      <div className="middle w-8/12 h-full md:px-[50px]  2xl:px-[100px] lg:px-[20px]  overflow-scroll  bg-customBackground">
         <Search className="mt-[50px]" />
         <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
-        <div className="flex gap-10">
+        <div className="flex gap-10 w-full overflow-scroll">
+          <CategoryCard
+            icons={<PiBowlFood />}
+            categoryName="Foods"
+            iconsCSS=""
+            categoryCSS=""
+          />
+          <CategoryCard
+            icons={<PiBowlFood />}
+            categoryName="Foods"
+            iconsCSS=""
+            categoryCSS=""
+          />
+          <CategoryCard
+            icons={<PiBowlFood />}
+            categoryName="Foods"
+            iconsCSS=""
+            categoryCSS=""
+          />
           <CategoryCard
             icons={<PiBowlFood />}
             categoryName="Foods"
@@ -50,6 +74,14 @@ const Home = () => {
           </div>
         </div>
         <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-5 mt-[20px]">
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
+          <Card />
           <Card />
         </div>
 
@@ -85,17 +117,13 @@ const Home = () => {
             <h1 className="text-xl font-normal">$11.1</h1>
           </div>
         </div>
-        <div className="flex justify-between items-center mt-[20px]">
-          <h1 className="font-semibold text-2xl">TOTAL : </h1>
-          <h1 className="font-semibold text-2xl">$122.1 </h1>
+        <div className="flex justify-between items-center mt-[10px]">
+          <h1 className="font-semibold text-xl">TOTAL : </h1>
+          <h1 className="font-semibold text-xl">$122.1 </h1>
         </div>
-        <div className="flex flex-col mt-[20px] ">
-          {/* <div className="flex justify-between items-center ">
-            <h1 className="font-semibold text-xl">Change : </h1>
-            <h1 className="place-items-end font-semibold text-xl">$122.1 </h1>
-          </div> */}
-
-          <Button btnCSS="mt-[20px] " btnName="Confirm" />
+        <div className="flex flex-col  ">
+          <Button onClick={() => setModelIsOpen(true)} btnCSS="btn-modal" btnName="Confirm" />
+          <Modals isOpen={modalIsOpen}/>
         </div>
       </div>
     </div>
