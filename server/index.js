@@ -6,7 +6,9 @@ app.use(express.json())
 PORT = 3001
 
 const {kasirRouter} = require("./routers")
+const {reportRouter} = require("./routers")
 app.use("/kasir", kasirRouter)
+app.use("/report", reportRouter)
 
 app.use((err, req, res, next) => {
     const statusCode = err.status || 500
