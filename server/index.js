@@ -3,13 +3,17 @@ const app = express()
 const cors = require("cors")
 const { userRouter } = require("./routers")
 const {kasirRouter} = require("./routers")
-const {transactionRouter} = require('./routers')
 
+const {authorizationRouter} = require("./routers")
+const {transactionRouter} = require('./routers')
 app.use(cors())
 app.use(express.json())
 
 app.use("/user",userRouter)
 app.use("/kasir", kasirRouter)
+
+app.use("/auth", authorizationRouter)
+
 app.use("/transaction", transactionRouter)
 
 PORT = 3001

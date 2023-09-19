@@ -8,6 +8,7 @@ module.exports = {
         id:1,
         nama_lengkap: "admin",
         username:"admin",
+        email:"admin@gmail.com",
         password:"admin123",
         role:"admin",
         status_user:"active",
