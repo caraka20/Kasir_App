@@ -15,7 +15,7 @@ const LeftSideBarAdmin = () => {
     <div className="Logo cursor-pointer w-full flex justify-center text-customPrimary font-bold text-5xl">
       <PiCoffeeFill  className=' mt-[50px]'/>
     </div>
-    <div className='h-screen'>
+    <div className='h-[500px]'>
       <div className='grid gap-5'>
     <div className="Menu w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[50px]">
       <p className="text-4xl text-gray-500" />

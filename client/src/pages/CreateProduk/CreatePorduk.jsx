@@ -78,7 +78,7 @@ import Button from '../../components/Button/Button'
                                         </div>     
                                         
                                         <div className=''>
-                                            <Button btnName="Submit" btnCSS="w-[30%] ml-[150px]"/> 
+                                            <Button btnName="Submit" btnCSS="w-[35%] ml-[120px]"/> 
                                         </div>                            
                                     </div>
                                          

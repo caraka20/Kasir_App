@@ -3,11 +3,11 @@ const db = require('../models')
 module.exports = {
     create: async (req, res, next) => {
         try {
-            const {nama_produk, deskripsi, stock, status_product, harga, kategori_produk_id} = req.body
+            const {nama_produk, deskripsi, stock, harga, kategori_produk_id} = req.body
             // console.log(nama_produk);
 
             // Validasi data tidak boleh kosong
-            if(!nama_produk && !deskripsi && !stock && !status_product && !harga && !kategori_produk_id) {
+            if(!nama_produk && !deskripsi && !stock && !harga && !kategori_produk_id) {
                 throw {message : "Tolong... Lengkapi data"}
             }
 
@@ -41,7 +41,7 @@ module.exports = {
             }
 
             const createProduk = await db.produk.create({
-                nama_produk, deskripsi, stock, status_product, harga
+                nama_produk, deskripsi, stock, harga, status_product:"Active"
             })
             
             res.status(200).send({
