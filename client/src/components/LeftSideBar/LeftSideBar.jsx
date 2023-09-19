@@ -2,10 +2,9 @@ import React from "react";
 
 import { PiForkKnifeBold } from "react-icons/pi";
 import { RiBillFill } from "react-icons/ri";
-
 import { PiCoffeeFill } from "react-icons/pi";
-
 import { BiSolidReport } from "react-icons/bi";
+import { BsFillPersonFill } from "react-icons/bs";
 
 import { Link } from "react-router-dom";
 
@@ -19,16 +18,12 @@ const LeftSideBar = () => {
         <PiForkKnifeBold className="text-4xl text-customPrimary " />
         <h1 className="text-customPrimary">Menu</h1>
       </div>
-      <Link>
+      <Link to="/cashier/profile">
         <div className="Bills w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
-          <BiSolidReport className="text-4xl text-gray-500 " />
+          <BsFillPersonFill className="text-4xl text-gray-500 " />
           <h1 className="text-gray-500">Profile</h1>
         </div>
       </Link>
-      <div className="Bills w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
-        <RiBillFill className="text-4xl text-gray-500 " />
-        <h1 className="text-gray-500">Reports</h1>
-      </div>
     </div>
   );
 };

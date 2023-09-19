@@ -62,7 +62,7 @@ const Home = () => {
           <h1 className=" text-2xl">Foods</h1>
           <div className="flex items-center ">
             <h1>Sort by:</h1>
-            <select className="filter select select-ghost text-customPrimary  border-none text-xl bg-customBackground">
+            <select className="filter select select-ghost text-customPrimary  focus:ring-customPrimary  border-none text-xl bg-customBackground">
               <option className="" disabled selected>
                 Select
               </option>
@@ -91,13 +91,12 @@ const Home = () => {
             btnCSS="test1  text-black w-[200px] bg-white  border-2 border-orange-500 "
             btnName="Previously"
           />
-
           <Button btnCSS="test2 w-[200px] text-white" btnName="Next" />
         </div>
       </div>
       <div className="right-side h-full w-3/12 px-[20px] bg-white relative">
         <h1 className="mt-[50px] text-3xl mb-[20px]">Cart</h1>
-        <div className="CartOrders h-[400px]  overflow-scroll">
+        <div className="CartOrders h-[400px] overflow-scroll">
           <CartOrders />
           <CartOrders />
           <CartOrders />
