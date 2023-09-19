@@ -11,6 +11,7 @@ module.exports = {
                 throw {message : "Tolong... Lengkapi data"}
             }
 
+            // Validasi Harga tidak boleh kurang dari 5000
             if(harga < 5000) {
                 throw {
                     status: 409,
@@ -101,16 +102,16 @@ module.exports = {
     deleteStatus: async (req, res, next) => {
         try {
             const { id } = req.params
-            const { status_product } = req.body
+            // const { status_product } = req.body
             console.log(id);
-            console.log(status_product);
+            // console.log(status_product);
 
             const idProductStatus = await db.produk.findByPk(id)
             console.log(idProductStatus.dataValues);
 
             const edtiStatus = await db.produk.update(
                 {
-                    status_product
+                    status_product: "Non-Active"
                 },
                 {
                     where: {id : id}
