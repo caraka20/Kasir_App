@@ -1,5 +1,5 @@
 import React from "react";
-import Modal from 'react-modal'
+import Modal from "react-modal";
 import { useState } from "react";
 // Icons from React-icons
 import { PiForkKnifeBold } from "react-icons/pi";
@@ -20,10 +20,11 @@ import Input from "../../components/Input/Input";
 import CartOrders from "../../components/CartOrders/CartOrders";
 import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
 import Modals from "../../components/Modal/Modals";
+// import css
+import "./home.css"
 
 const Home = () => {
-    const [modalIsOpen, setModelIsOpen] = useState(false)
-
+  const [modalIsOpen, setModelIsOpen] = useState(false);
 
   return (
     <div className="screen  w-full h-screen flex ">
@@ -85,12 +86,13 @@ const Home = () => {
           <Card />
         </div>
 
-        <div className="Pagination mt-[100px] flex justify-between mb-[20px]">
+        <div className="Pagination  mt-[100px] flex justify-between mb-[20px]">
           <Button
-            btnCSS="w-[200px] bg-white text-orange-500 border-2 border-orange-500 "
+            btnCSS="test1  text-black w-[200px] bg-white  border-2 border-orange-500 "
             btnName="Previously"
           />
-          <Button btnCSS="w-[200px]" btnName="Next" />
+
+          <Button btnCSS="test2 w-[200px] text-white" btnName="Next" />
         </div>
       </div>
       <div className="right-side h-full w-3/12 px-[20px] bg-white relative">
@@ -121,10 +123,14 @@ const Home = () => {
           <h1 className="font-semibold text-xl">TOTAL : </h1>
           <h1 className="font-semibold text-xl">$122.1 </h1>
         </div>
-        <div className="flex flex-col  ">
-          <Button onClick={() => setModelIsOpen(true)} btnCSS="btn-modal" btnName="Confirm" />
-          <Modals isOpen={modalIsOpen}/>
+        <div className="flex flex-col lg:mt-[75px]  mt-[10px] ">
+          <Button
+            onClick={() => setModelIsOpen(true)}
+            btnCSS="btn-modal"
+            btnName="Confirm"
+          />
         </div>
+        <Modals isOpen={modalIsOpen} />
       </div>
     </div>
   );
