@@ -9,8 +9,14 @@ const {transactionRouter} = require('./routers')
 app.use(cors())
 app.use(express.json())
 
+
+const {kasirRouter} = require("./routers")
+const {reportRouter} = require("./routers")
+
 app.use("/user",userRouter)
+
 app.use("/kasir", kasirRouter)
+app.use("/report", reportRouter)
 
 app.use("/auth", authorizationRouter)
 
