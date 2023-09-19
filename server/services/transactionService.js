@@ -20,4 +20,13 @@ module.exports = {
       return error;
     }
   },
+  cart: async () => {
+    try {
+        const cartProducts = await db.cart.findAll()
+
+        return cartProducts
+    } catch (error) {
+        return error
+    }
+  }
 };
