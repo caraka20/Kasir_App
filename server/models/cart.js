@@ -17,10 +17,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   cart.init({
     quantity: DataTypes.INTEGER,
-    total_price: DataTypes.INTEGER,
     customer_name: DataTypes.STRING,
     note: DataTypes.STRING,
     PPN: DataTypes.INTEGER,
+    price: DataTypes.INTEGER,
     createdAt : {
       type: DataTypes.DATE,
       defaultValue: new Date()
