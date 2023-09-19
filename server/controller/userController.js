@@ -1,10 +1,13 @@
 const conn = require ("../models")
+const upload = require('../middleware/upload')
+const {createJWT} = require('../lib/jwt')
 
 module.exports = { //udah bisa namun belum ada validasi samsek
     loginUser: async (req, res, next) => {
         try {
             const {username, password} = req.query 
             const masuk = await conn.user.findOne({where: {username: username, password: password}});
+
             if(!masuk) {
                 throw {
                     isError: true,
@@ -18,42 +21,25 @@ module.exports = { //udah bisa namun belum ada validasi samsek
                     message: "You are currently deactivated, please contact admin"
                 }
             }
+            console.log(masuk.dataValues.id)
+            const token = await createJWT({id: masuk.dataValues.id}) // harus dikirim dalam object, karena masuk kedalam payload untuk diencode
             res.status(200).send({
                 isError: false,
                 message:"Welcome back, have a pleasant day!",
-                data: masuk
+                data: token
             })
-            // const masuk = await conn.user.findOne()
+            //data token diatas yang akan kita masukan kemudian kedalam localStorage di bagian frontend
         } catch (error) {
             next(error)
         }
     },
-    // update: async(req, res, next) => {
-    //     try{
-    //         //1. Ambil id image
-    //         const {idImage} = req.params
-    //         //2. Ambil path images
-    //         const findImage = await db.hotel_image.findOne({
-    //             where: {
-    //                 id:idImage
-    //             }
-    //         })
-    //         //3. Update new path on tabel
-    //         await db.hotel_image.update({url: req.files.images[0].path}, {where: {id: idImage}})
-
-    //         //4. Delete image lama
-    //         deleteFiles({images: [{path: findImage.dataValues.url}]}) // gini tulisnya karena bentuk objekt
-
-    //         //5. Kirim response
-    //         res.status(201).send({
-    //             isError: false,
-    //             message: "Image has been successfully updated!",
-    //             data: null
-    //         })
-    //     } catch (error) {
-    //         deleteFiles(req.files)
-    //         next(error)
-    //     }
-    // }
+    updateImagecashier: async (req, res, next) => {
+        try {
+            const image_user = JSON.parse(req.body)
+            console.log(image_user)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 // ganbatte2023
