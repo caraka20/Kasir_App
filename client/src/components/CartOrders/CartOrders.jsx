@@ -15,7 +15,7 @@ const CartOrders = () => {
       </div>
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-gray-500 text-sm">Extra Cheese</h1>
+
           <Input />
         </div>
         <div className="flex gap-4 items-center">
