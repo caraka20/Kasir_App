@@ -7,7 +7,7 @@ const App = () => {
   return (
     <>
       {/* <Routes>{routes.map((value) => value)}</Routes> */}
-      <ForgetPassword/>
+     
     </>
   );
 };
