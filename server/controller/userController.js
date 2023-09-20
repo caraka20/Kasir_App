@@ -1,6 +1,7 @@
 const conn = require ("../models")
 const upload = require('../middleware/upload')
 const {createJWT} = require('../lib/jwt')
+const {deleteFiles} = require('./../helper/deleteFiles')
 
 module.exports = { //udah bisa namun belum ada validasi samsek
     loginUser: async (req, res, next) => {
@@ -8,7 +9,8 @@ module.exports = { //udah bisa namun belum ada validasi samsek
             const {username, password} = req.query 
             const masuk = await conn.user.findOne({where: {username: username, password: password}});
 
-            if(!masuk) {
+            console.log(masuk);
+            if(masuk == null) {
                 throw {
                     isError: true,
                     message: "Username or password is invalid!"

@@ -7,7 +7,16 @@ const fs = require ('fs').promises
 module.exports = {
     mailForgetPassword: async (req, res, next) => {
         try {
-            const {email} = req.body
+            const {email} = req.query
+            const emailCheck = await conn.user.findOne({where:{email:email}})
+            if(!emailCheck) {
+                
+                throw{
+                    isError:true,
+                    message:"Email was not found",
+                    data:null
+                }
+            }
             const readTemplate = await fs.readFile('./public/template.html','utf-8')
             const compiledTemplate = await handlebars.compile(readTemplate)
             const newTemplate = compiledTemplate ({email})
@@ -15,12 +24,12 @@ module.exports = {
             await transporter.sendMail({
                 from: "Admin TSUGI ",
                 to:"ariefrubani44@gmail.com",
-                subject: "Forget password request successful",
+                subject: "Forget Password Request",
                 html: newTemplate
             })
             res.status(200).send({
                 isError: false,
-                message: "Password successfully changed",
+                message: "An email has been sent to you",
                 data: null
             })
         } catch (error) {
