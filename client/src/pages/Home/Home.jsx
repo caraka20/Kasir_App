@@ -21,7 +21,7 @@ import CartOrders from "../../components/CartOrders/CartOrders";
 import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
 import Modals from "../../components/Modal/Modals";
 // import css
-import "./home.css"
+import "./home.css";
 
 const Home = () => {
   const [modalIsOpen, setModelIsOpen] = useState(false);
@@ -74,8 +74,7 @@ const Home = () => {
             </select>
           </div>
         </div>
-        <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-5 mt-[20px]">
-          <Card />
+        <div className="grid sm:grid-cols-3 lg:grid-cols-4 gap-5 mt-[20px]">
           <Card />
           <Card />
           <Card />
@@ -86,7 +85,7 @@ const Home = () => {
           <Card />
         </div>
 
-        <div className="Pagination  mt-[100px] flex justify-between mb-[20px]">
+        <div className="Pagination  mt-[75px] flex justify-between mb-[20px]">
           <Button
             btnCSS="test1  text-black w-[200px] bg-white  border-2 border-orange-500 "
             btnName="Previously"

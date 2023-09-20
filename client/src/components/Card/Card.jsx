@@ -14,7 +14,7 @@ const Card = () => {
       <div className="card-body">
         <h2 className="card-title mt-[10px]">Nasi Goreng</h2>
         <p className="mt-[10px] text-sm text-gray-400">Nasi, Telor, Kerupuk, Sayuran</p>
-        <p className="mt-[10px] text-sm text-gray-400">Rp. 10.000</p>
+        <p className="mt-[10px] text-sm text-gray-400 text-center">Rp. 10.000</p>
         <div className=" card-actions justify-end ">
 
           <Button  btnName=" Add To Cart" btnCSS="my-[10px] text-sm"/>

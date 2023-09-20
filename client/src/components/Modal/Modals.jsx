@@ -64,7 +64,7 @@ const Modals = (props) => {
               <option>QRIS</option>
               <option>BNI</option>
             </select>
-            <h1 className="text-xl text-center mt-[20px] text-customPrimary">EDIT ORDER</h1>
+            <h1 className="text-xl text-center mt-[20px] text-customPrimary cursor-pointer">CANCEL ORDER</h1>
           </div>
           <Button btnCSS="mt-[40px]" btnName="Confirm Order"/>
         </div>
