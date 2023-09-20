@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "react-modal";
 import { useState } from "react";
+import axios from "axios";
+
 // Icons from React-icons
 import { PiForkKnifeBold } from "react-icons/pi";
 import { RiBillFill } from "react-icons/ri";
@@ -25,11 +27,47 @@ import "./home.css";
 
 const Home = () => {
   const [modalIsOpen, setModelIsOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [idProduct, setIdProduct] = useState(null);
+  const [cart, setCart] = useState([]);
+
+  const getApi = async () => {
+    const getProduct = await axios.get(
+      "http://localhost:3001/transaction/products"
+    );
+    const getCart = await axios.get("http://localhost:3001/transaction/cart");
+
+    setProducts(getProduct.data.data);
+    setCart(getCart.data.data);
+  };
+
+  const addToCart = async (id) => {
+    // console.log(id);
+    try {
+      const add = await axios.post(
+        "http://localhost:3001/transaction/cashier",
+        {
+          idProduct: id,
+          token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1MTk2MTg2LCJleHAiOjE2OTUyODI1ODZ9.YIkZ-7sUVvWrOAKMzAaJv9e_vO2pI0ymJV4tsRuouno",
+        }
+      );
+
+      console.log(add);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getApi();
+  }, []);
+  console.log(cart);
 
   return (
     <div className="screen  w-full h-screen flex ">
       <LeftSideBar />
-      <div className="middle w-8/12 h-full md:px-[50px]  2xl:px-[100px] lg:px-[20px]  overflow-scroll  bg-customBackground">
+      <div className="middle w-8/12 h-full md:px-[20px]  2xl:px-[100px] lg:px-[20px]  overflow-scroll  bg-customBackground">
         <Search className="mt-[50px]" />
         <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
         <div className="flex gap-10 w-full overflow-scroll">
@@ -74,15 +112,12 @@ const Home = () => {
             </select>
           </div>
         </div>
-        <div className="grid sm:grid-cols-3 lg:grid-cols-4 gap-5 mt-[20px]">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+        <div className="grid sm:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-5 mt-[20px]">
+          {products.map((value) => {
+            return (
+              <Card handleAddToCart={addToCart} id={value.id} datas={value} />
+            );
+          })}
         </div>
 
         <div className="Pagination  mt-[75px] flex justify-between mb-[20px]">
@@ -96,16 +131,9 @@ const Home = () => {
       <div className="right-side h-full w-3/12 px-[20px] bg-white relative">
         <h1 className="mt-[50px] text-3xl mb-[20px]">Cart</h1>
         <div className="CartOrders h-[400px] overflow-scroll">
-          <CartOrders />
-          <CartOrders />
-          <CartOrders />
-          <CartOrders />
-          <CartOrders />
-          <CartOrders />
-          <CartOrders />
-          <CartOrders />
-          <CartOrders />
-          <CartOrders />
+          {cart.map((value) => {
+          return  <CartOrders datas={value} />;
+          })}
         </div>
         <div className="mt-[20px] border-t-2 border-b-2 py-[20px]">
           <div className="SubTotal flex justify-between items-center">

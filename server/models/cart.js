@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   cart.init(
     {
+      product_name: DataTypes.STRING,
       quantity: DataTypes.INTEGER,
       note: { type: DataTypes.STRING, defaultValue: null },
       price: DataTypes.INTEGER,

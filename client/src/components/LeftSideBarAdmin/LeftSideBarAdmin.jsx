@@ -6,7 +6,7 @@ import imageLaporan from '../../assets/image/imageLaporan.png'
 // import product from '../../assets/image/product.png'
 import {BsClipboardPlus} from 'react-icons/bs'
 import {TbCategory} from 'react-icons/tb'
-import 'boxicons'
+
 
 const LeftSideBarAdmin = () => {
   return (

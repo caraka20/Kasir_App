@@ -7,7 +7,7 @@ const { userRouter } = require("./routers")
 const { categoryRouter } = require('./routers')
 const { kasirRouter } = require("./routers")
 const { filterRouter } = require('./routers')
-const {kasirRouter} = require("./routers")
+// const {kasirRouter} = require("./routers")
 
 const {authorizationRouter} = require("./routers")
 const {transactionRouter} = require('./routers')
@@ -15,7 +15,7 @@ app.use(cors())
 app.use(express.json())
 
 
-const {kasirRouter} = require("./routers")
+
 const {reportRouter} = require("./routers")
 
 app.use("/user",userRouter)
@@ -25,6 +25,8 @@ app.use("/report", reportRouter)
 
 app.use("/auth", authorizationRouter)
 
+
+//TRANSACTION 
 app.use("/transaction", transactionRouter)
 
 PORT = 3001

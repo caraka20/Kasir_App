@@ -6,22 +6,23 @@ import Input from "../Input/Input";
 import { HiPlus } from "react-icons/hi";
 import { HiMinus } from "react-icons/hi";
 
-const CartOrders = () => {
+const CartOrders = (props) => {
+  const { datas } = props;
+  console.log(">>", datas);
   return (
     <div className="border-b-2 pb-[20px] ">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-medium">Nasi Goreng</h1>
-        <h1 className="font-bold">$25</h1>
+        <h1 className="text-lg font-medium">{datas.product_name}</h1>
+        <h1 className="font-bold">{`Rp.${datas.price}`}</h1>
       </div>
       <div className="flex justify-between items-center">
         <div>
-
           <Input />
         </div>
         <div className="flex gap-4 items-center">
-          <HiMinus className="cursor-pointer border-[1px] border-gray-400 text-customPrimary bg-white rounded-full text-xl"  />
-          <h1 className="font-medium text-xl">2</h1>
-          <HiPlus className="cursor-pointer bg-customPrimary text-white text-xl rounded-full"  />
+          <HiMinus className="cursor-pointer border-[1px] border-gray-400 text-customPrimary bg-white rounded-full text-xl" />
+          <h1 className="font-medium text-xl">{datas.quantity}</h1>
+          <HiPlus className="cursor-pointer bg-customPrimary text-white text-xl rounded-full" />
         </div>
       </div>
     </div>

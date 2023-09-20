@@ -16,6 +16,8 @@ module.exports = {
       const products = await db.produk.findOne({where: {id: id}});
 
         return products
+
+        
     } catch (error) {
       return error;
     }
@@ -27,6 +29,15 @@ module.exports = {
         return cartProducts
     } catch (error) {
         return error
+    }
+  },
+  cartToTransaction: async (data) => {
+    try {
+      const sendCart = await db.transaction.bulkCreate(data)
+
+      return sendCart
+    } catch (error) {
+      return error
     }
   }
 };
