@@ -12,6 +12,7 @@ module.exports = { //udah bisa namun belum ada validasi samsek
             console.log(masuk);
             if(masuk == null) {
                 throw {
+                    status: 409,
                     isError: true,
                     message: "Username or password is invalid!"
                 }
@@ -19,6 +20,7 @@ module.exports = { //udah bisa namun belum ada validasi samsek
             // Validasi ketika user cashier itu berstatus tidak aktif
             if(masuk && masuk.status_user == "inactive") { 
                 throw {
+                    status: 409,
                     isError: true,
                     message: "You are currently deactivated, please contact admin"
                 }
