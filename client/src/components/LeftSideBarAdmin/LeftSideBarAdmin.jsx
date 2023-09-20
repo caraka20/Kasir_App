@@ -53,7 +53,7 @@ const LeftSideBarAdmin = () => {
     <div className="Report w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[75px] rounded">
       <p className="text-4xl text-gray-500" />
           <box-icon class="w-[35px] h-[34px] mr-3" name='log-out'></box-icon>
-      <h1 className="text-gray-500 mt-[13px]">Log Out</h1>
+      <h1 className="text-gray-500 ">Log Out</h1>
     </div>
 
     </div>

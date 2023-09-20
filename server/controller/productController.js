@@ -1,25 +1,26 @@
 const db = require('../models')
+const {deleteFiles} = require('../helper/deleteFiles')
 
 module.exports = {
     create: async (req, res, next) => {
         try {
-            const {nama_produk, deskripsi, stock, harga, kategori_produk_id} = req.body
-            // console.log(nama_produk);
+            const data = JSON.parse(req.body.data)
+            // console.log(data);
 
             // Validasi data tidak boleh kosong
-            if(!nama_produk && !deskripsi && !stock && !harga && !kategori_produk_id) {
+            if(!data.nama_produk && !data.deskripsi && !data.stock && !data.harga && !data.kategori_produk_id) {
                 throw {message : "Tolong... Lengkapi data"}
             }
 
             // Validasi Harga tidak boleh kurang dari 5000
-            if(harga < 5000) {
+            if(data.harga < 5000) {
                 throw {
                     status: 409,
                     message: "Harga minimum 5000"
                 }
             }
 
-            if(stock < 1) {
+            if(data.stock < 1) {
                 throw {
                     status: 409,
                     message:"Stock Jangan 0 woy..."
@@ -28,28 +29,38 @@ module.exports = {
 
             // mencari column nama_produk di dalam table produk
             const product = await db.produk.findOne({
-                where: {nama_produk: nama_produk}
+                where: {nama_produk: data.nama_produk}
             })
-            console.log(product);
+            // console.log(product);
 
             // validasi nama_produk tidak boleh sama
+            // console.log(req.files.images);
+
+            const dataImage = req.files.images.map(value => {
+                return {image_product: value.path}
+            })
+            console.log(dataImage[0].image_product);
             if(product) {
                 throw{
                     status: 409,
                     message : "Produk sudah tersedia harap ganti"
                 }  
             }
-
-            const createProduk = await db.produk.create({
-                nama_produk, deskripsi, stock, harga, status_product:"Active"
-            })
+            console.log(dataImage);
             
+            const createProduk = await db.produk.create({
+                nama_produk: data.nama_produk, deskripsi: data.deskripsi, stock:data.stock, harga: data.harga, status_product:"Active", image_product: dataImage[0].image_product
+            })
+
+            // await db.produk.bulkCreate(createProduk)
+
             res.status(200).send({
                 isError: false,
                 message: "Success Membuat produk",
                 data: createProduk
             })
         } catch (error) {
+            deleteFiles(req.files)
             next(error)
         }
     },
@@ -59,9 +70,9 @@ module.exports = {
             //mengecek id
             const { id }= req.params
             // mengecek isi body
-            const {nama_produk, deskripsi, stock, status_product, harga, kategori_produk_id}  = req.body
-            console.log(id);
-            console.log(nama_produk);
+            const {nama_produk, deskripsi, stock, harga, kategori_produk_id}  = req.body
+            // console.log(id);
+            // console.log(nama_produk);
 
             if(stock < 1) {
                 throw {message:"Jangan edit stock kurang dari 1"}
@@ -77,7 +88,7 @@ module.exports = {
 
             const updateProduk = await db.produk.update(
                 {
-                  ...idProduct, nama_produk, deskripsi, stock, status_product, harga, kategori_produk_id
+                  ...idProduct, nama_produk, deskripsi, stock, harga, kategori_produk_id
                 }, 
                 {
                     where: {id : id}
@@ -96,6 +107,34 @@ module.exports = {
 
         } catch (error) {
             next(error)
+        }
+    },
+
+    updateImageProduk : async(req, res, next) => {
+        try {
+            const {idProduk} = req.params
+            console.log(idProduk);
+
+            const images = req.files.images[0].path
+            console.log(images);
+
+            const getData = await db.produk.findByPk(idProduk)
+            console.log(getData.dataValues.image_product);
+            const updateImage = await db.produk.update(
+                {image_product : images}, {where : {id : idProduk}}
+                )
+
+                await deleteFiles({images: [{path: getData.dataValues.image_product}]})
+
+                const getDataImage = await db.produk.findByPk(idProduk)
+                res.status(200).send({
+                    isError: false,
+                    message: "success update",
+                    data: getDataImage
+                })
+        } catch (error) {
+            deleteFiles(req.files)
+            console.log(error);
         }
     },
 
@@ -126,6 +165,7 @@ module.exports = {
                 data: afterIdProdukStatus.dataValues
             })
         } catch (error) {
+            
             next(error)
         }
     }

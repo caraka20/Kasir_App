@@ -11,17 +11,17 @@ import Button from '../../components/Button/Button'
         harga:"",
         kategori_produk_id:""
     })
-    
+    // console.log();
 
   return (
     <div className='grid h-screen'>
         <div className='flex gap-3'>
-        <LeftSideBarAdmin />
+            <LeftSideBarAdmin />
 
-            <div className='w-[90%] border h-screen bg-blue-100'>
-                <div className='p-10'>
+            <div className='w-full md:w-[90%] border h-full bg-blue-100'>
+                <div className='lg:p-10'>
 
-                    <div className=' flex justify-center text-5xl items-center -semibold border-b-[5px] border-black py-5 mb-10'>
+                    <div className=' flex justify-center text-5xl items-center font-semibold border-b-[5px] border-black py-5 mb-10'>
                        <div>
                         Create Product
                        </div>
@@ -29,8 +29,8 @@ import Button from '../../components/Button/Button'
 
                     {/* Form Input Create Product */}
                         <div className='bg-base-200 shadow-xl rounded-md'>
-                            <div className='grid'>
-                                <div className='grid grid-cols-2 ml-5 mt-5 p-4 pl-8'>
+                            <div className='grid align-middle'>
+                                <div className='flex justify-between lg:grid-cols-2 mx-auto mt-5 p-4 pl-8'>
                                     
                                     <div>
                                         <label htmlFor="" className='font-serif'>Nama Produk</label><br />
@@ -58,27 +58,19 @@ import Button from '../../components/Button/Button'
                                         <input type="text" placeholder='Type here' className='mt-2 mb-5 input input-bordered w-full max-w-xs'/>
                                     </div>
 
-                                    <div>
-                                        <label htmlFor="" className='font-serif'>Pilih Status</label><br />
-                                        <select className='select w-full max-w-xs mt-2 mb-5'>
-                                            <option disabled selected>Status</option>
-                                            <option>Active</option>
-                                            {/* <option>Non-Active</option> */}
-                                        </select>
-                                    </div>
-
                                         <div className=''>
                                             <label htmlFor="" className='font-serif'>Deskripsi Produk</label><br />
                                             <textarea type="text" placeholder='Type here' className='mt-2 mb-5 input input-bordered w-full max-w-xs h-[100px]'/>
                                         </div>
 
-                                        <div className='grid relative bottom-[60px]'>
-                                            <label htmlFor="" className="font-serif">Gambar Hotel</label>
+                                        <div className='mt-[30px]'>
+                                            <label htmlFor="" className="font-serif">Gambar Hotel</label><br />
                                             <input type="file" className="mt-2 mb-5 file-input file-input-bordered w-full max-w-xs bg-white" />
                                         </div>     
                                         
-                                        <div className=''>
-                                            <Button btnName="Submit" btnCSS="w-[35%] ml-[120px]"/> 
+                                        <div></div>
+                                        <div className='flex justify-start'>
+                                            <Button btnName="Submit" btnCSS="w-[35%] ml-0 md:ml-[120px]"/> 
                                         </div>                            
                                     </div>
                                          
