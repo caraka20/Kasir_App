@@ -37,8 +37,56 @@ module.exports = {
     updateCategori: async(req, res, next) =>{
         try {
             const {id} = req.params
-            console.log(id);
-            // const {}
+            // console.log(id);
+            const {nama_kategori} = req.body
+
+            const idCategory = await db.kategori_produk.findByPk(id)
+            console.log(idCategory);
+
+           const updateCategoriProduk = await db.kategori_produk.update(
+                {
+                    nama_kategori
+                },
+                {
+                    where: {id : id}
+                }
+            )
+            console.log(updateCategoriProduk);
+
+            const afterIdCategory = await db.kategori_produk.findByPk(id)
+
+            res.status(200).send({
+                isError:false, 
+                message: "Success Update Category",
+                data: afterIdCategory.dataValues
+            })
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    updateStatus : async (req, res, next) => {
+        try {
+            const {idStatus} = req.params
+
+            const idStatuss = await db.kategori_produk.findByPk(idStatus)
+            console.log(idStatuss.dataValues);
+
+            const updateStatusCategory = await db.kategori_produk.update(
+                {
+                    status: "Non-Active"
+                },
+                {
+                    where : {id : idStatus}
+                }
+            )
+            const idStatusAfter = await db.kategori_produk.findByPk(idStatus)
+            console.log(idStatusAfter);
+            res.status(200).send({
+                isError: false,
+                message: "Success update status",
+                data: idStatusAfter
+            })
         } catch (error) {
             
         }
