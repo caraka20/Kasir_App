@@ -1,12 +1,12 @@
 const db = require("../models")
-const {sequelize} = require("../models")
+const {deleteFiles} = require('../helper/deleteFiles')
 
 module.exports = {
     createKasir : async (req, res, next) => {
         try {
-            // const input = req.body.data
-            const data = db.produk.findAll()
-            console.log(JSON.parse(req.body.data));
+            const dataKasir = JSON.parse(req.files.data)
+            console.log(dataKasir);
+
         } catch (error) {
             next(error)
         }
