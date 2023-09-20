@@ -12,6 +12,9 @@ module.exports = {
       product_name: {
         type: Sequelize.STRING
       },
+      product_kategori: {
+        type: Sequelize.STRING
+      },
       quantity: {
         type: Sequelize.INTEGER
       },
