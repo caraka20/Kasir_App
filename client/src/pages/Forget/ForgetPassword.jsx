@@ -8,7 +8,6 @@ const ForgetPassword = () => {
     })
     
     const handleChange = (e) => {
-      // console.log(e.target.name)
       const newState = {...state}
       newState[e.target.name] = e.target.value
       setState(newState)
