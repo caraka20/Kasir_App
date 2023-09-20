@@ -30,7 +30,8 @@ const Login = () => {
       }
       
     }
-    console.log(state);
+    // console.log(state);
+    console.log(state)
       return (
         <div className='flex justify-center items-center bg-slate-400 h-screen'>
           <Toaster/>
