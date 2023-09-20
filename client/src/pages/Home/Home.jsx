@@ -132,7 +132,7 @@ const Home = () => {
         <h1 className="mt-[50px] text-3xl mb-[20px]">Cart</h1>
         <div className="CartOrders h-[400px] overflow-scroll">
           {cart.map((value) => {
-          return  <CartOrders datas={value} />;
+            return  <CartOrders datas={value} />;
           })}
         </div>
         <div className="mt-[20px] border-t-2 border-b-2 py-[20px]">

@@ -10,21 +10,19 @@ const {
 module.exports = {
   addProductToCart: async (req, res, next) => {
     try {
-      const {idProduct} = req.body
-      const {id} = req.dataToken
+      const { idProduct } = req.body;
+      const { id } = req.dataToken;
 
       const product = await productList(idProduct);
 
       const cartss = await cart();
-
-
 
       const filtered = cartss.filter((value) => {
         return value.dataValues.produk_id == product.dataValues.id;
       });
 
       if (filtered.length > 0) {
-        throw { message: "Product has already exist on cart" , isError: true};
+        throw { message: "Product has already exist on cart", isError: true };
       } else {
         const productAddToCart = await addToCart({
           product_name: product.dataValues.nama_produk,
@@ -82,31 +80,30 @@ module.exports = {
       next(error);
     }
   },
-  productList: async (req,res,next) => {
+  productList: async (req, res, next) => {
     try {
-      const products = await db.produk.findAll()
+      const products = await db.produk.findAll();
 
       res.status(200).send({
         isError: false,
         message: "Products Found",
-        data: products
-      })
-
+        data: products,
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
-  cart: async(req,res,next) => {
+  cart: async (req, res, next) => {
     try {
-      const getCart = await cart()
+      const getCart = await cart();
 
       res.status(200).send({
         isError: false,
         message: "Cart Found",
-        data: getCart
-      })
+        data: getCart,
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  },
 };
