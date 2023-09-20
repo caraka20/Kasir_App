@@ -11,7 +11,7 @@ import Button from '../../components/Button/Button'
         harga:"",
         kategori_produk_id:""
     })
-    
+    // console.log();
 
   return (
     <div className='grid h-screen'>
