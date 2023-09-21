@@ -1,6 +1,8 @@
 const express = require("express")
 const app = express()
 const cors = require("cors")
+app.use(cors())
+PORT = 3001
 
 const { productRouter } = require("./routers")
 const { userRouter } = require("./routers")
@@ -8,18 +10,17 @@ const { categoryRouter } = require('./routers')
 const { kasirRouter } = require("./routers")
 const { filterRouter } = require('./routers')
 
-app.use(cors())
+
 app.use(express.json())
 app.use("/user",userRouter)
 app.use("/kasir", kasirRouter)
-PORT = 3001
 
-// console.log(filterRouter);
+
+// console.log(productRouter);
 app.use('/filter', filterRouter)
 app.use('/product', productRouter)
-app.use('/category', categoryRouter)
-app.use("/kasir", kasirRouter)
-
+// app.use('/category', categoryRouter)
+// app.use("/kasir", kasirRouter)
 
 app.use((err, req, res, next) => {
     const statusCode = err.status || 500

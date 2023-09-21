@@ -11,11 +11,13 @@ const upload = async(req, res, next) => {
 
             // console.log(req.files)
             req.files.images.forEach(values => {
-                if(values.size > 100000000) throw{message: `${value.originalname} is Too Large!`, files: req.files}
+                if(values.size > 100000000) throw{message: `${values.originalname} is Too Large!`, files: req.files}
             })
+            // console.log("haha");
             next()
         } catch (error) {
             deleteFiles(error.files)
+            console.log(error);
             next(error)
         }
     })
