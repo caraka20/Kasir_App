@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Modal from "react-modal";
 import { useState } from "react";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 // Icons from React-icons
 import { PiForkKnifeBold } from "react-icons/pi";
@@ -30,6 +31,7 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [idProduct, setIdProduct] = useState(null);
   const [cart, setCart] = useState([]);
+  const [cartToTransaction, setCartToTransaction] = useState(null);
 
   const getApi = async () => {
     const getProduct = await axios.get(
@@ -40,7 +42,7 @@ const Home = () => {
     setProducts(getProduct.data.data);
     setCart(getCart.data.data);
   };
-
+  console.log(cart);
   const addToCart = async (id) => {
     // console.log(id);
     try {
@@ -49,21 +51,41 @@ const Home = () => {
         {
           idProduct: id,
           token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1MTk2MTg2LCJleHAiOjE2OTUyODI1ODZ9.YIkZ-7sUVvWrOAKMzAaJv9e_vO2pI0ymJV4tsRuouno",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1Mjg4NzQwLCJleHAiOjE2OTUzNzUxNDB9.-yE5m4hVJD8dAff6szp-nM4AWaBkJYeKWmZ30bexwHQ",
         }
       );
+      getApi();
 
       console.log(add);
+
+      toast.success(add.data.data.message);
+
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+  const confirm = async () => {
+    try {
+      const carts = await axios.post(
+        "http://localhost:3001/transaction/transaction",
+        { cartProduct: cart, customer: "epan" }
+      );
+
+      setCartToTransaction(carts.data.dataTransaction);
+      setModelIsOpen(true);
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(cartToTransaction);
 
   useEffect(() => {
     getApi();
   }, []);
-  console.log(cart);
 
+  useEffect(() => {
+    console.log("MM<M<M", cartToTransaction);
+  }, [cartToTransaction]);
   return (
     <div className="screen  w-full h-screen flex ">
       <LeftSideBar />
@@ -128,11 +150,11 @@ const Home = () => {
           <Button btnCSS="test2 w-[200px] text-white" btnName="Next" />
         </div>
       </div>
-      <div className="right-side h-full w-3/12 px-[20px] bg-white relative">
+      <div className="right-side h-full w-3/12 px-[20px] bg-white relative overflow-auto">
         <h1 className="mt-[50px] text-3xl mb-[20px]">Cart</h1>
         <div className="CartOrders h-[400px] overflow-scroll">
           {cart.map((value) => {
-            return  <CartOrders datas={value} />;
+            return <CartOrders datas={value} />;
           })}
         </div>
         <div className="mt-[20px] border-t-2 border-b-2 py-[20px]">
@@ -150,14 +172,11 @@ const Home = () => {
           <h1 className="font-semibold text-xl">$122.1 </h1>
         </div>
         <div className="flex flex-col lg:mt-[75px]  mt-[10px] ">
-          <Button
-            onClick={() => setModelIsOpen(true)}
-            btnCSS="btn-modal"
-            btnName="Confirm"
-          />
+          <Button onClick={confirm} btnCSS="btn-modal" btnName="Confirm" />
         </div>
-        <Modals isOpen={modalIsOpen} />
+        <Modals datas={cartToTransaction} isOpen={modalIsOpen} />
       </div>
+      <Toaster />
     </div>
   );
 };

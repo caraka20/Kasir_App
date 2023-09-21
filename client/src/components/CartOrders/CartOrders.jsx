@@ -8,12 +8,12 @@ import { HiMinus } from "react-icons/hi";
 
 const CartOrders = (props) => {
   const { datas } = props;
-  console.log(">>", datas);
+
   return (
     <div className="border-b-2 pb-[20px] ">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-medium">{datas.product_name}</h1>
-        <h1 className="font-bold">{`Rp.${datas.price}`}</h1>
+        <h1 className="text-lg font-medium">{datas.produk.nama_produk}</h1>
+        <h1 className="font-bold">{`Rp.${datas.produk.harga}`}</h1>
       </div>
       <div className="flex justify-between items-center">
         <div>

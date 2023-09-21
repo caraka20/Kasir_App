@@ -5,6 +5,7 @@ const {
   productList,
   cart,
   cartToTransaction,
+  transaction
 } = require("./../services/transactionService");
 
 module.exports = {
@@ -12,22 +13,28 @@ module.exports = {
     try {
       const { idProduct } = req.body;
       const { id } = req.dataToken;
-
       const product = await productList(idProduct);
 
       const cartss = await cart();
+
 
       const filtered = cartss.filter((value) => {
         return value.dataValues.produk_id == product.dataValues.id;
       });
 
+
+
+      console.log(filtered);
+
       if (filtered.length > 0) {
-        throw { message: "Product has already exist on cart", isError: true };
+        throw {
+          message: "Product is already exist in the cart",
+          isError: true,
+        };  
       } else {
         const productAddToCart = await addToCart({
-          product_name: product.dataValues.nama_produk,
           price: product.dataValues.harga,
-          produk_id: idProduct,
+          produk_id: product.id,
           user_id: id,
           quantity: 1,
         });
@@ -52,29 +59,34 @@ module.exports = {
       return result;
     }
     try {
-      const { customer, metode_pembayaran } = req.body;
-      const listCart = await cart();
-      // let dataToSend = {};
+      const { customer, cartProduct } = req.body;
+      // res.send(cartProduct);
+
+
+
+      const transact = await transaction()
 
       const transaction_id = getRandomCode();
-      const map = listCart.map((value) => {
+
+
+      const maps = cartProduct.map((value) => {
         return {
-          product_name: value.dataValues.product_name,
-          quantity: value.dataValues.quantity,
-          product_price: value.dataValues.price,
+          product_name: value.produk.nama_produk,
+          quantity: value.quantity,
+          product_price: value.produk.harga,
           customer_name: customer,
           transaction_uid: transaction_id,
-          metode_pembayaran: metode_pembayaran,
-          user_id: value.dataValues.user_id,
+          user_id: value.user_id,
         };
       });
 
-      const isConfirm = await cartToTransaction(map);
+      const isConfirm = await cartToTransaction(maps);
 
       res.status(200).send({
         isError: false,
         message: "Transaction Created",
         data: isConfirm,
+        dataTransaction: transact
       });
     } catch (error) {
       next(error);
@@ -102,6 +114,7 @@ module.exports = {
         message: "Cart Found",
         data: getCart,
       });
+
     } catch (error) {
       next(error);
     }

@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import "./modal.css";
 import OrderSummaryCard from "../OrderSummaryCard/OrderSummaryCard";
 import InputName from "../../components/InputName/InputName";
 import Button from "../Button/Button";
 
-
-
-
 const Modals = (props) => {
+  const {datas} = props
+
+  // const transactionUID = datas.
   const customStyle = {
     content: {
       width: "1000px",
@@ -21,20 +21,23 @@ const Modals = (props) => {
       transform: "translate(-50%, -50%)",
     },
   };
+  console.log(datas);
+
+  // useEffect(() => {console.log(dataTransactions);}, [dataTransactions])
 
   return (
     <Modal style={customStyle} isOpen={props.isOpen}>
       <div className="h-full flex ">
         <div className="left-side h-full overflow-scroll w-[60%] px-[20px]">
-          <div className="text-4xl">Order Summary</div>
+          <div>
+            <div className="text-4xl">Order Summary</div>
+            <h1></h1>
+          </div>
           <div className="h-full w-full   mt-[50px]">
-            <OrderSummaryCard className="" />
-            <OrderSummaryCard className="" />
-            <OrderSummaryCard className="" />
-            <OrderSummaryCard className="" />
-            <OrderSummaryCard className="" />
-            <OrderSummaryCard className="" />
-            <OrderSummaryCard className="" />
+            {/* {datas.map((value) => {
+              console.log(value); */}
+            <OrderSummaryCard datas={datas} className="" />
+            {/* })} */}
           </div>
         </div>
         <div className="right-side px-[20px]  w-[40%] ">
@@ -64,9 +67,11 @@ const Modals = (props) => {
               <option>QRIS</option>
               <option>BNI</option>
             </select>
-            <h1 className="text-xl text-center mt-[20px] text-customPrimary cursor-pointer">CANCEL ORDER</h1>
+            <h1 className="text-xl text-center mt-[20px] text-customPrimary cursor-pointer">
+              CANCEL ORDER
+            </h1>
           </div>
-          <Button btnCSS="mt-[40px]" btnName="Confirm Order"/>
+          <Button btnCSS="mt-[40px]" btnName="Confirm Order" />
         </div>
       </div>
     </Modal>
