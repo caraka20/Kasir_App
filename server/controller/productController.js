@@ -18,6 +18,7 @@ module.exports = {
     create: async (req, res, next) => {
         try {
             const data = JSON.parse(req.body.data)
+
             console.log(data);
 
             // Validasi data tidak boleh kosong
@@ -26,6 +27,13 @@ module.exports = {
                         status : 409,
                         message : "Tolong... Lengkapi data"
                       }
+
+            // console.log(data);
+
+            // Validasi data tidak boleh kosong
+            if(!data.nama_produk && !data.deskripsi && !data.stock && !data.harga && !data.kategori_produk_id) {
+                throw {message : "Tolong... Lengkapi data"}
+
             }
 
             // Validasi Harga tidak boleh kurang dari 5000
@@ -51,13 +59,22 @@ module.exports = {
 
             // validasi nama_produk tidak boleh sama
             // console.log(req.files.images);
+
             
+
+
+            const dataImage = req.files.images.map(value => {
+                return {image_product: value.path}
+            })
+            console.log(dataImage[0].image_product);
+
             if(product) {
                 throw{
                     status: 409,
                     message : "Produk sudah tersedia harap ganti"
                 }  
             }
+
             const dataImage = req.files.images.map(value => {
                 return {image_product: value.path}
             })
@@ -68,6 +85,13 @@ module.exports = {
                 nama_produk: data.nama_produk, deskripsi: data.deskripsi, stock:data.stock, harga: data.harga, status_product:"Active", image_product: dataImage[0].image_product
             })
 
+            console.log(dataImage);
+            
+            const createProduk = await db.produk.create({
+                nama_produk: data.nama_produk, deskripsi: data.deskripsi, stock:data.stock, harga: data.harga, status_product:"Active", image_product: dataImage[0].image_product
+            })
+
+
             // await db.produk.bulkCreate(createProduk)
 
             res.status(200).send({
@@ -76,7 +100,11 @@ module.exports = {
                 data: createProduk
             })
         } catch (error) {
+
             // deleteFiles(req.files)
+
+            deleteFiles(req.files)
+
             next(error)
         }
     },
