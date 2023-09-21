@@ -44,6 +44,20 @@ module.exports = { //udah bisa namun belum ada validasi samsek
         } catch (error) {
             console.log(error)
         }
+    },
+    getAllData: async (req, res, next) => {
+    try {
+    const {id} = req.dataToken
+    console.log(id);
+    const data = await conn.user.findByPk(id)
+    res.status(200).send({
+        isError:false,
+        message:"All data successfully obtained!",
+        data: data
+    })
+    } catch (error) {
+        next(error)
+    }
     }
 }
 // ganbatte2023
