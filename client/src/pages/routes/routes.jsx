@@ -12,12 +12,6 @@ const routes = [
   <> 
     <Route path="/home/admin" element={<Admin />}/>
     <Route path="/Category" element={<CreateCategory/>}/>
-
-
-// PAGES
-const routes = [
-  <>
-
     <Route path="/produk" element={<CreatePorduk />}/>
     <Route path="/" element={<Home/>}/>
     <Route path="/" element={<Login/>}/>
@@ -25,6 +19,8 @@ const routes = [
     <Route path="/updatepassword/:email" element={<UpdatePassword/>}/>
     <Route path="/cashier"  element={<Home/>}/>
     <Route path="/cashier/profile"  element={<Profile/>}/>
+
+
   </>
   
 ];
