@@ -73,6 +73,7 @@ module.exports = {
     try {
       // rata rata penjualan hanya bisa 10 hari terahir
       const { awal, akhir } = req.query;
+      // console.log(awal + "lala");
 
       const data = await db.transaction.findAll({
         attributes: [
@@ -83,6 +84,7 @@ module.exports = {
           "transaction_uid",
           "status_transaksi",
           "createdAt",
+          "product_kategori",
           [sequelize.col("pembayaran"), "pembayaran"],
           [sequelize.col("tujuan_pembayaran"), "tujuan_pembayaran"],
           [sequelize.col("nama_lengkap"), "nama_kasir"],
@@ -105,22 +107,24 @@ module.exports = {
         // group : ["transaction.transaction_uid"]
       });
 
+const totalPerKategori = {};
+
+data.forEach(item => {
+    const kategori = item.product_kategori;
+    const jumlah = item.quantity;
+
+    if (kategori in totalPerKategori) {
+        totalPerKategori[kategori] += jumlah;
+    } else {
+        totalPerKategori[kategori] = jumlah;
+    }
+});
       const totalProdukTerjual = data.reduce((acc, curr) => {
         return acc + curr.quantity;
       }, 0);
       const totalPendapatan = data.reduce((acc, curr) => {
         return acc + curr.product_price;
       }, 0);
-      const penjualanBerdasarkanKategori = await db.transaction.findAll({
-        attributes: [
-          "product_kategori",
-          [
-            sequelize.fn("COUNT", sequelize.col("product_kategori")),
-            "total_produk",
-          ],
-        ],
-        group: ["product_kategori"],
-      });
 
       const jumlahTransaksi = await db.transaction.findAll({
         attributes: ["transaction_uid"],
@@ -128,25 +132,69 @@ module.exports = {
       });
       const totalTransaksi = jumlahTransaksi.length;
 
-      const penjualanBerdasarkanTanggal = data.map((item) => {
-        return item.createdAt.toDateString()
-      });
+    // Membuat objek untuk menyimpan data berdasarkan tanggal
+    const groupedData = {};
 
-      const lala = await db.transaction.findAll({
-        attributes: [
-          [sequelize.fn('SUM', sequelize.literal('product_price')), 'total_profit']
-        ],
-        where: {
-          createdAt: {
-            [Op.between]: [awal, akhir]
-          }
-        }})
+    // Mengelompokkan data berdasarkan tanggal
+    const test = data.map(item => {
+      const createdAtDate = item.createdAt.toDateString(); // Mendapatkan tanggal saja (tanpa waktu)
 
+      if (!groupedData[createdAtDate]) {
+        groupedData[createdAtDate] = [];
+      }
+  
+      groupedData[createdAtDate].push(item);
+    });
+    // res.send(groupedData)
+    // Mengonversi objek menjadi array
+    const dataTgl = Object.keys(groupedData).map(date => ({
+      date,
+      data: groupedData[date]
+    }));
+// console.log(dataTgl);
+    const TotalPendapatanPerTgl = {};
+    dataTgl.forEach(item => {
+      const date = item.date;
+      const data = item.data;
+    
+      const totalProductPrice = data.reduce((acc, curr) => acc + curr.product_price, 0);
+    console.log(totalProductPrice);
+      if (!TotalPendapatanPerTgl[date]) {
+        TotalPendapatanPerTgl[date] = 0;
+      }
+    
+      TotalPendapatanPerTgl[date] += totalProductPrice;
+    });
+    // const jumlahProperti = Object.keys(TotalTotalPendapatanPerTgl).length;
+const tanggal = Object.keys(TotalPendapatanPerTgl);
+const jumlahHari = tanggal.length;
+
+let total = 0;
+
+for (const tgl in TotalPendapatanPerTgl) {
+  total += TotalPendapatanPerTgl[tgl];
+}
+console.log(TotalPendapatanPerTgl);
+console.log(totalPerKategori);
+
+const rataRataPendapatan = total / jumlahHari;
+const dataFix =
+  {
+    tanggal_awal : awal,
+    tanggal_akhir : akhir,
+    total_pendapatan : total,
+    jumlah_hari : jumlahHari,
+    rata_rata_pendapatan_perDay: TotalPendapatanPerTgl,
+    total_transaksi : totalTransaksi,
+    total_produk_terjual : totalProdukTerjual,
+    kategori_paling_diminati : totalPerKategori,
+    rata_rata_pendapatan : rataRataPendapatan
+  }
+  // console.log(dataFix);
       res.send({
-        lala,
+        dataFix,
       });
 
-      // const data = await
     } catch (error) {
       console.log(error);
     }
