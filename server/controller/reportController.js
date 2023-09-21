@@ -38,11 +38,12 @@ module.exports = {
   detailTransaction: async (req, res, next) => {
     try {
       const { uid } = req.params;
-      const data = await db.transaction.findOne({
+      const data = await db.transaction.findAll({
         attributes: [
           "product_name",
           "quantity",
           "product_price",
+          "product_kategori",
           "customer_name",
           "transaction_uid",
           "status_transaksi",
@@ -74,6 +75,31 @@ module.exports = {
       // rata rata penjualan hanya bisa 10 hari terahir
       const { awal, akhir } = req.query;
       // console.log(awal + "lala");
+      const dataAll = await db.transaction.findAll({
+        attributes: [
+          "product_name",
+          "quantity",
+          "product_price",
+          "customer_name",
+          "product_kategori",
+          "transaction_uid",
+          "status_transaksi",
+          "createdAt",
+          [sequelize.col("pembayaran"), "pembayaran"],
+          [sequelize.col("tujuan_pembayaran"), "tujuan_pembayaran"],
+          [sequelize.col("nama_lengkap"), "nama_kasir"],
+        ],
+        include: [
+          {
+            model: db.metode_pembayaran,
+            attributes: [],
+          },
+          {
+            model: db.user,
+            attributes: [],
+          },
+        ],
+      });
 
       const data = await db.transaction.findAll({
         attributes: [
@@ -126,11 +152,16 @@ data.forEach(item => {
         return acc + curr.product_price;
       }, 0);
 
-      const jumlahTransaksi = await db.transaction.findAll({
+      const jumlahSemuaTransaksi = await db.transaction.findAll({
         attributes: ["transaction_uid"],
         group: ["transaction_uid"],
+        where: {
+          createdAt: {
+            [Op.between]: [awal, akhir],
+          },
+        },
       });
-      const totalTransaksi = jumlahTransaksi.length;
+      const totalTransaksi = jumlahSemuaTransaksi.length;
 
     // Membuat objek untuk menyimpan data berdasarkan tanggal
     const groupedData = {};
@@ -145,7 +176,6 @@ data.forEach(item => {
   
       groupedData[createdAtDate].push(item);
     });
-    // res.send(groupedData)
     // Mengonversi objek menjadi array
     const dataTgl = Object.keys(groupedData).map(date => ({
       date,
@@ -158,7 +188,7 @@ data.forEach(item => {
       const data = item.data;
     
       const totalProductPrice = data.reduce((acc, curr) => acc + curr.product_price, 0);
-    console.log(totalProductPrice);
+    // console.log(totalProductPrice);
       if (!TotalPendapatanPerTgl[date]) {
         TotalPendapatanPerTgl[date] = 0;
       }
@@ -174,10 +204,45 @@ let total = 0;
 for (const tgl in TotalPendapatanPerTgl) {
   total += TotalPendapatanPerTgl[tgl];
 }
-console.log(TotalPendapatanPerTgl);
-console.log(totalPerKategori);
 
 const rataRataPendapatan = total / jumlahHari;
+// Membuat objek untuk melacak transaction_uid unik pada setiap createdAt
+const transactionPerTgl = {};
+
+data.forEach(item => {
+  const { transaction_uid, createdAt } = item;
+  if (transaction_uid && createdAt) {
+    if (!transactionPerTgl[createdAt.toDateString()]) {
+      transactionPerTgl[createdAt.toDateString()] = new Set();
+    }
+    transactionPerTgl[createdAt.toDateString()].add(transaction_uid);
+  }
+});
+
+// Menghitung jumlah transaction_uid unik pada setiap createdAt
+const result = Object.entries(transactionPerTgl).map(([createdAt, set]) => ({
+  createdAt,
+  total: set.size
+}));
+const totalTransaction = result.reduce((total, item) => total + item.total, 0);
+
+// history transaksi
+const historyTransaksi = {};
+
+data.forEach(item => {
+  const { createdAt, transaction_uid } = item;
+
+  if (!historyTransaksi[createdAt.toDateString()]) {
+    historyTransaksi[createdAt.toDateString()] = {};
+  }
+
+  if (!historyTransaksi[createdAt.toDateString()][transaction_uid]) {
+    historyTransaksi[createdAt.toDateString()][transaction_uid] = [];
+  }
+
+  historyTransaksi[createdAt.toDateString()][transaction_uid].push(item);
+});
+
 const dataFix =
   {
     tanggal_awal : awal,
@@ -185,14 +250,17 @@ const dataFix =
     total_pendapatan : total,
     jumlah_hari : jumlahHari,
     rata_rata_pendapatan_perDay: TotalPendapatanPerTgl,
-    total_transaksi : totalTransaksi,
+    total_transaksi : totalTransaction,
     total_produk_terjual : totalProdukTerjual,
     kategori_paling_diminati : totalPerKategori,
-    rata_rata_pendapatan : rataRataPendapatan
+    rata_rata_pendapatan : rataRataPendapatan,
+    historyTransaksi : historyTransaksi,
+    dataAll : dataAll,
+    jumlahSemuaTransaksi : jumlahSemuaTransaksi
   }
   // console.log(dataFix);
       res.send({
-        dataFix,
+        dataFix
       });
 
     } catch (error) {
@@ -201,3 +269,103 @@ const dataFix =
   },
   
 };
+
+// data = {
+//   "Sun Sep 17 2023" : {
+//     12341234 : [
+//       1 = {
+//         "product_name": "sepatu",
+//         "quantity": 2,
+//         "product_price": 2000,
+//         "customer_name": "lala",
+//         "transaction_uid": "12341234",
+//         "status_transaksi": "payment",
+//         "createdAt": "2023-09-16T18:55:54.000Z",
+//         "product_kategori": "cofe",
+//         "pembayaran": "Cash",
+//         "tujuan_pembayaran": "",
+//         "nama_kasir": "admin"
+//       },
+//       2 = {
+//         "product_name": "sepeda",
+//         "quantity": 3,
+//         "product_price": 5000,
+//         "customer_name": "bonbon",
+//         "transaction_uid": "12341234",
+//         "status_transaksi": "payment",
+//         "createdAt": "2023-09-17T17:55:54.000Z",
+//         "product_kategori": "no-cofe",
+//         "pembayaran": "Cash",
+//         "tujuan_pembayaran": "",
+//         "nama_kasir": "admin"
+//       }
+//     ],
+//     321321 : [
+//       1 = {
+//         "product_name": "baju",
+//         "quantity": 3,
+//         "product_price": 5000,
+//         "customer_name": "bonbon",
+//         "transaction_uid": "321321",
+//         "status_transaksi": "payment",
+//         "createdAt": "2023-09-17T18:55:54.000Z",
+//         "product_kategori": "no-cofe",
+//         "pembayaran": "Cash",
+//         "tujuan_pembayaran": "",
+//         "nama_kasir": "admin"
+//       },
+//       2 = {
+//         "product_name": "celana",
+//         "quantity": 3,
+//         "product_price": 5000,
+//         "customer_name": "bonbon",
+//         "transaction_uid": "321321",
+//         "status_transaksi": "payment",
+//         "createdAt": "2023-09-17T18:55:50.000Z",
+//         "product_kategori": "cofe",
+//         "pembayaran": "Cash",
+//         "tujuan_pembayaran": "",
+//         "nama_kasir": "admin"
+//       }
+//     ],
+//     "Sun Sep 18 2023" : {
+//       111 : [
+//         1 = {
+//           "product_name": "susot",
+//           "quantity": 3,
+//           "product_price": 5000,
+//           "customer_name": "bonbon",
+//           "transaction_uid": "111",
+//           "status_transaksi": "payment",
+//           "createdAt": "2023-09-18T18:55:00.000Z",
+//           "product_kategori": "food",
+//           "pembayaran": "Cash",
+//           "tujuan_pembayaran": "",
+//           "nama_kasir": "admin"
+//         },
+//         2 = {
+//           "product_name": "steak",
+//           "quantity": 3,
+//           "product_price": 5000,
+//           "customer_name": "bonbon",
+//           "transaction_uid": "111",
+//           "status_transaksi": "payment",
+//           "createdAt": "2023-09-18T15:55:54.000Z",
+//           "product_kategori": "no-cofe",
+//           "pembayaran": "Cash",
+//           "tujuan_pembayaran": "",
+//           "nama_kasir": "admin"
+//         }
+//       ]
+//     }
+//     }
+//   }
+
+
+historyTransaksi = [
+  {
+    "2023-09-18" : [
+      111 
+    ]
+  }
+]

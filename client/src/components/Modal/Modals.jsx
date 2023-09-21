@@ -5,9 +5,6 @@ import OrderSummaryCard from "../OrderSummaryCard/OrderSummaryCard";
 import InputName from "../../components/InputName/InputName";
 import Button from "../Button/Button";
 
-
-
-
 const Modals = (props) => {
   const customStyle = {
     content: {

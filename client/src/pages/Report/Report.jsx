@@ -4,6 +4,8 @@ import LeftSideBarAdmin from '../../components/LeftSideBarAdmin/LeftSideBarAdmin
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,  } from 'recharts';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 
 const Report = () => {
 
@@ -15,7 +17,7 @@ const Report = () => {
   const [data, setData] = useState(null)
   const [dataTgl, setDataTgl] = useState(null)
 
-  console.log(data);
+  // console.log(data);
   const handleChange = (e) => {
     // console.log(e.target.value);
     const newTanggal = {...rangeTanggal}
@@ -41,7 +43,7 @@ const Report = () => {
       console.log(error);
     }
   }
-console.log(dataTgl);
+console.log(datas);
   const dataa = [
     {
       name: 'Page A',
@@ -90,7 +92,7 @@ console.log(dataTgl);
   useEffect(()=>{
     apply()
   },[])
-  if (!datas || !data) {
+  if (!datas) {
     return <>loading</>
   }
 
@@ -109,61 +111,64 @@ console.log(dataTgl);
     );
   };
   return (
-    <div className='grid h-screen'>
-    <div className='flex gap-3'>
+    <div className='grid h-full w-auto bg-customBackground'>
+    <div className='flex gap-3 '>
     <LeftSideBarAdmin />
-    <div className='bg-slate-300 h-full px-10'>
+    <div className=' h-full px-12 py-10 border-l-4 border-customPrimary'>
 
       <div className='grid grid-cols-4 '>
         <div className='col-span-2 grid grid-cols-2'>
             <div className='flex justify-between items-center gap-2'>
-            <input name='awal' onChange={handleChange} value={rangeTanggal.awal} placeholder='select date' type="date" className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'/>
+            <input name='awal' onChange={handleChange} value={rangeTanggal.awal} placeholder='select date' type="date" className='bg-gray-50 border-customPrimary text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'/>
                 <span>To</span>
-            <input name='akhir' onChange={handleChange} value={rangeTanggal.akhir} placeholder='select date' type="date" className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'/>
+            <input name='akhir' onChange={handleChange} value={rangeTanggal.akhir} placeholder='select date' type="date" className='bg-gray-50 border border-customPrimary text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'/>
             </div>
             <div className='ml-10'>
                 <button onClick={apply} className='rounded-xl text-white bg-customPrimary px-8 py-[8px]'>Apply</button>
             </div>
         </div>
         <div className='col-span-2 flex justify-end'>
-            <button>Print Report</button>
+            <Link to={`/admin/RecordTransaction/${rangeTanggal.awal}/${rangeTanggal.akhir}`}><button className='rounded-xl text-white bg-customPrimary px-[15px] py-[8px]'>Print Report</button></Link> 
         </div>
       </div>
 
 
-      <div className='mt-10 grid md:grid-cols-4 grid-cols-2 gap-10 '>
+      <div className='mt-5 grid md:grid-cols-4 grid-cols-2 gap-10 '>
         <div className='col-span-2 grid justify-center items-center align-middle grid-cols-1 '>
-          <div className='p-5 border shadow-xl grid gap-5'>
-            <div className='flex justify-between border-b-2 border-orange-400'><span className='text-lg font-semibold'>Time Frame : </span> <span className='font-mono text-base'>{rangeTanggal.awal} To {rangeTanggal.akhir}</span> </div>
-            <div className='flex justify-between border-b-2 border-orange-400'><span className='text-lg font-semibold'>Total Penjualan : </span> <span className='font-mono text-base'>Rp. {(datas.total_pendapatan).toLocaleString()}</span> </div>
-            <div className='flex justify-between border-b-2 border-orange-400'> <span className='text-lg font-semibold'>Total Transaksi :</span> <span className='font-mono text-base'>{datas.total_transaksi}</span> </div>
-            <div className='flex justify-between border-b-2 border-orange-400'> <span className='text-lg font-semibold'>Total Produk Terjual :</span> <span className='font-mono text-base'>{datas.total_produk_terjual}</span> </div>
-            <div className='flex justify-between border-b-2 border-orange-400'> <span className='text-lg font-semibold'>Rata Rata Penjualan :</span> <span className='font-mono text-base'>Rp. {(datas.rata_rata_pendapatan).toLocaleString()}</span> </div>            
+          <div className='p-5 h-full border shadow-xl grid gap-5'>
+            <div className='flex justify-between border-b-2 border-orange-400'><span className='text-lg font-semibold'>Time Frame : </span> <span className='font-mono text-base'>{datas ? rangeTanggal.awal : "-"} To { datas ? rangeTanggal.akhir : "-"}</span> </div>
+            <div className='flex justify-between border-b-2 border-orange-400'><span className='text-lg font-semibold'>Total Penjualan : </span> <span className='font-mono text-base'>Rp. {datas ? (datas.total_pendapatan) : <span>-</span>}</span> </div>
+            <Link to={`/admin/DetailTransaksi/${rangeTanggal.awal}/${rangeTanggal.akhir}`}><div className='flex justify-between border-b-2 border-orange-400'> <span className='text-lg font-semibold'>Total Transaksi :</span> <span className='font-mono text-base'>{datas ? datas.total_transaksi : "-"}</span> </div></Link>
+            <div className='flex justify-between border-b-2 border-orange-400'> <span className='text-lg font-semibold'>Total Produk Terjual :</span> <span className='font-mono text-base'>{datas ? datas.total_produk_terjual : "-"}</span> </div>
+            <div className='flex justify-between border-b-2 border-orange-400'> <span className='text-lg font-semibold'>Rata Rata Penjualan :</span> <span className='font-mono text-base'>Rp. {datas ? (datas.rata_rata_pendapatan) : "-"}</span> </div>            
           </div>
 
         </div>
-        <div className='col-span-2 bg-cyan-300'>
+        <div className='col-span-2 border rounded-lg border-md shadow-sm shadow-customPrimary'>
             <div className='p-5'>
               <div className='flex justify-center'>
-                <span className='text-lg font-bold'>kategori paling banyak diminati</span>
+                <span className='text-lg font-semibold'>Kategori Paling Banyak Diminati</span>
               </div>
-              
-            <PieChart width={250} height={250}>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={renderCustomizedLabel}
-            outerRadius={110}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-        </PieChart>
+              {
+                data ?
+                <PieChart width={250} height={250}>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
+                  outerRadius={110}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {data.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+              </PieChart> : <span></span>
+              }
+
         <div className='grid grid-cols-2 md:flex justify-center'>
           {data ?
             data.map((item, index) => {
@@ -173,13 +178,12 @@ console.log(dataTgl);
                 <span className='text-xs'>{item.name}</span>             
                 </div>
               )
-            }) : <></>
+            }) : <>Belum Ada Transaction</>
           }
         </div>
             </div>
         </div>
       </div>
-
 
       <div className='mt-10'>
         <div>
