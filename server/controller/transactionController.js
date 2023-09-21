@@ -5,7 +5,9 @@ const {
   productList,
   cart,
   cartToTransaction,
-  transaction
+  transaction,
+  createReceipt,
+  totalPrice,
 } = require("./../services/transactionService");
 
 module.exports = {
@@ -17,12 +19,9 @@ module.exports = {
 
       const cartss = await cart();
 
-
       const filtered = cartss.filter((value) => {
         return value.dataValues.produk_id == product.dataValues.id;
       });
-
-
 
       console.log(filtered);
 
@@ -30,7 +29,7 @@ module.exports = {
         throw {
           message: "Product is already exist in the cart",
           isError: true,
-        };  
+        };
       } else {
         const productAddToCart = await addToCart({
           price: product.dataValues.harga,
@@ -59,22 +58,19 @@ module.exports = {
       return result;
     }
     try {
-      const { customer, cartProduct } = req.body;
+      const { cartProduct, uid } = req.body;
       // res.send(cartProduct);
 
-
-
-      const transact = await transaction()
-
-      const transaction_id = getRandomCode();
-
+      const transact = await transaction();
+      console.log(transact);
+      const transaction_id = uid;
 
       const maps = cartProduct.map((value) => {
         return {
           product_name: value.produk.nama_produk,
           quantity: value.quantity,
           product_price: value.produk.harga,
-          customer_name: customer,
+
           transaction_uid: transaction_id,
           user_id: value.user_id,
         };
@@ -86,7 +82,8 @@ module.exports = {
         isError: false,
         message: "Transaction Created",
         data: isConfirm,
-        dataTransaction: transact
+        dataTransaction: transact,
+        transaction_uid: transaction_id,
       });
     } catch (error) {
       next(error);
@@ -114,7 +111,80 @@ module.exports = {
         message: "Cart Found",
         data: getCart,
       });
+    } catch (error) {
+      next(error);
+    }
+  },
+  confirmOrder: async (req, res, next) => {
+    try {
+      const {
+        total_price,
+        customer_name,
+        customer_changes,
+        customer_money,
+        transaction_uid,
+        metode_pembayaran_id,
+      } = req.body;
 
+
+
+
+      if (customer_money === null) {
+        const dataToSend = {
+          total_price: total_price,
+          customer_name: customer_name,
+          customer_changes: customer_changes,
+          customer_money: Number(customer_money),
+          transaction_uid: transaction_uid,
+          metode_pembayaran_id: metode_pembayaran_id,
+          payment_method: null,
+        };
+
+        const create = await db.receipt.create(dataToSend);
+
+        res.status(200).send({
+          isError: false,
+          message: "Transaction Success",
+          data: create,
+        });
+      } else {
+        if (customer_money < total_price) {
+          throw { message: "Money Cann't less than total price" };
+        } else {
+          const dataToSend = {
+            total_price: total_price,
+            customer_name: customer_name,
+            customer_changes: customer_changes,
+            customer_money: customer_money,
+            transaction_uid: transaction_uid,
+            metode_pembayaran_id: metode_pembayaran_id,
+            payment_method: null,
+          };
+
+          const create = await db.receipt.create(dataToSend);
+
+          res.status(200).send({
+            isError: false,
+            message: "Transaction Success",
+            data: create,
+          });
+        }
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+  total_price: async (req, res, next) => {
+    try {
+      const { transaction_uid } = req.body;
+
+      const getTransaction = await totalPrice(transaction_uid);
+
+      res.status(200).send({
+        isError: false,
+        message: "total price",
+        data: getTransaction,
+      });
     } catch (error) {
       next(error);
     }

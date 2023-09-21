@@ -2,6 +2,19 @@ const db = require('../models')
 
 
 module.exports = {
+    get : async (req, res, next) => {
+        try {
+            const findAllData = await db.kategori_produk.findAll()
+            res.status(200).send({
+                isError: false, 
+                message : "Succes Get Data",
+                data : findAllData
+            })
+        } catch (error) {
+            next(error)
+        }
+    },
+
     create: async (req, res, next) => {
         try {
             const {nama_kategori} = req.body
@@ -21,7 +34,7 @@ module.exports = {
             }
 
             const createCategory = await db.kategori_produk.create({
-                nama_kategori
+                nama_kategori, status : "active"
             })
 
             res.status(200).send({

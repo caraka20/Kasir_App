@@ -16,6 +16,13 @@ Router.get("/products", transactionController.productList);
 Router.get("/cart", transactionController.cart);
 
 
+Router.post("/confirm-order", transactionController.confirmOrder);
+
+
+Router.post("/total-price", transactionController.total_price);
+
+
+
 
 
 

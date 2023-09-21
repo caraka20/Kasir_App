@@ -2,14 +2,30 @@ const db = require('../models')
 const {deleteFiles} = require('../helper/deleteFiles')
 
 module.exports = {
+    getData : async(req, res, next) => {
+        try {
+            const findData = await db.produk.findAll()
+            res.status(200).send({
+                isError: false, 
+                message : "success get data",
+                data: findData
+            })
+        } catch (error) {
+            next(error)
+        }
+    },
+
     create: async (req, res, next) => {
         try {
             const data = JSON.parse(req.body.data)
-            // console.log(data);
+            console.log(data);
 
             // Validasi data tidak boleh kosong
             if(!data.nama_produk && !data.deskripsi && !data.stock && !data.harga && !data.kategori_produk_id) {
-                throw {message : "Tolong... Lengkapi data"}
+                throw {
+                        status : 409,
+                        message : "Tolong... Lengkapi data"
+                      }
             }
 
             // Validasi Harga tidak boleh kurang dari 5000
@@ -35,17 +51,17 @@ module.exports = {
 
             // validasi nama_produk tidak boleh sama
             // console.log(req.files.images);
-
-            const dataImage = req.files.images.map(value => {
-                return {image_product: value.path}
-            })
-            console.log(dataImage[0].image_product);
+            
             if(product) {
                 throw{
                     status: 409,
                     message : "Produk sudah tersedia harap ganti"
                 }  
             }
+            const dataImage = req.files.images.map(value => {
+                return {image_product: value.path}
+            })
+            console.log(dataImage[0].image_product);
             console.log(dataImage);
             
             const createProduk = await db.produk.create({
@@ -60,7 +76,7 @@ module.exports = {
                 data: createProduk
             })
         } catch (error) {
-            deleteFiles(req.files)
+            // deleteFiles(req.files)
             next(error)
         }
     },
@@ -75,11 +91,17 @@ module.exports = {
             // console.log(nama_produk);
 
             if(stock < 1) {
-                throw {message:"Jangan edit stock kurang dari 1"}
+                throw {
+                        status : 409,
+                        message:"Jangan edit stock kurang dari 1"
+                      }
             }
 
             if(harga < 5000) {
-                throw {message : "Jangan edit harga kurang dari 5000"}
+                throw {
+                        status : 409,
+                        message : "Jangan edit harga kurang dari 5000"
+                      }
             }
 
             //ambil data produk dengan id yang sesuai dengan param

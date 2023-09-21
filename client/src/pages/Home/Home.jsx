@@ -32,6 +32,7 @@ const Home = () => {
   const [idProduct, setIdProduct] = useState(null);
   const [cart, setCart] = useState([]);
   const [cartToTransaction, setCartToTransaction] = useState(null);
+  const [transactionUID, setTransactionUID] = useState(null);
 
   const getApi = async () => {
     const getProduct = await axios.get(
@@ -64,28 +65,50 @@ const Home = () => {
       toast.error(error.response.data.message);
     }
   };
+
   const confirm = async () => {
     try {
+      setModelIsOpen(true);
+
+      function getRandomCode() {
+        let result = "";
+        for (let i = 0; i < 6; i++) {
+          const randomDigit = Math.floor(Math.random() * 10);
+          result += randomDigit;
+        }
+        return result;
+      }
+      // let hasil = 
       const carts = await axios.post(
         "http://localhost:3001/transaction/transaction",
-        { cartProduct: cart, customer: "epan" }
+        { cartProduct: cart, uid: getRandomCode()}
       );
+      console.log(carts.data.dataTransaction);
+        setTransactionUID(carts.data.transaction_uid)
+        setCartToTransaction(carts.data.dataTransaction);
 
-      setCartToTransaction(carts.data.dataTransaction);
-      setModelIsOpen(true);
+
+
+        console.log("asd");
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(cartToTransaction);
+
 
   useEffect(() => {
     getApi();
   }, []);
 
   useEffect(() => {
-    console.log("MM<M<M", cartToTransaction);
-  }, [cartToTransaction]);
+    console.log(transactionUID);
+  }, [transactionUID]);
+
+  console.log(cartToTransaction);
+  // if(products.length === 0) return console.log("ini product");
+  
+  // if(cart.length === 0) return console.log("ini cart");
+  // if(!cartToTransaction) return console.log("test");
   return (
     <div className="screen  w-full h-screen flex ">
       <LeftSideBar />
@@ -174,9 +197,9 @@ const Home = () => {
         <div className="flex flex-col lg:mt-[75px]  mt-[10px] ">
           <Button onClick={confirm} btnCSS="btn-modal" btnName="Confirm" />
         </div>
-        <Modals datas={cartToTransaction} isOpen={modalIsOpen} />
+        <Modals datas={cartToTransaction} transaction_uid={transactionUID} isOpen={modalIsOpen} />
+
       </div>
-      <Toaster />
     </div>
   );
 };

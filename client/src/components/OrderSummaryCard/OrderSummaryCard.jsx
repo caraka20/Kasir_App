@@ -11,6 +11,7 @@ const OrderSummaryCard = (props) => {
 
   console.log(datas);
 
+  if(!datas) return <div>SABAR BOS</div>;
   return (
     <>
       {datas.map((value) => {

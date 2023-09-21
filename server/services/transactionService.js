@@ -1,4 +1,5 @@
 const db = require("./../models");
+const {sequelize} = require("./../models");
 
 module.exports = {
   addToCart: async (data) => {
@@ -52,13 +53,40 @@ module.exports = {
       return error;
     }
   },
-  transaction: async(data) => {
+  transaction: async (data) => {
     try {
-      const transaction = await db.transaction.findAll()
+      const transaction = await db.transaction.findAll({
+        include: [
+          {
+            model: db.metode_pembayaran,
+            attributes: ["pembayaran", "tujuan_pembayaran"],
+          },
+        ],
+      });
 
-      return transaction
+      return transaction;
     } catch (error) {
-      return error
+      return error;
     }
-  }
+  },
+  createReceipt: async (data) => {
+    try {
+      const createReceipt = await db.receipt.create(dataToSend);
+
+      return createReceipt;
+    } catch (error) {
+      return error;
+    }
+  },
+  totalPrice: async (data) => {
+    try {
+      const totalPrice = await db.transaction.findAll({
+        attributes:[[sequelize.fn('SUM', sequelize.col("product_price")), "total_price"]],
+        where: {transaction_uid: data},
+      });
+      return totalPrice
+    } catch (error) {
+      return error;
+    }
+  },
 };
