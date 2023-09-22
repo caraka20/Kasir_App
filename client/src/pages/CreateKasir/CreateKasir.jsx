@@ -7,7 +7,7 @@ const CreateKasir = () => {
       <div className="flex gap-3 ">
         <LeftSideBarAdmin />
         <div className=" h-full w-full px-12 py-10 border-l-4 border-customPrimary">
-            
+            test
         </div>
       </div>
     </div>
