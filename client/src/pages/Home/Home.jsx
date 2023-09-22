@@ -59,9 +59,9 @@ const Home = () => {
 
       console.log(add);
 
-      toast.success(add.data.data.message);
-
+      toast.success(add.data.message);
     } catch (error) {
+      console.log(error.response.data.message);
       toast.error(error.response.data.message);
     }
   };
@@ -78,23 +78,20 @@ const Home = () => {
         }
         return result;
       }
-      // let hasil = 
+      // let hasil =
       const carts = await axios.post(
         "http://localhost:3001/transaction/transaction",
-        { cartProduct: cart, uid: getRandomCode()}
+        { cartProduct: cart, uid: getRandomCode() }
       );
       console.log(carts.data.dataTransaction);
-        setTransactionUID(carts.data.transaction_uid)
-        setCartToTransaction(carts.data.dataTransaction);
+      setTransactionUID(carts.data.transaction_uid);
+      setCartToTransaction(carts.data.dataTransaction);
 
-
-
-        console.log("asd");
+      console.log("asd");
     } catch (error) {
       console.log(error);
     }
   };
-
 
   useEffect(() => {
     getApi();
@@ -106,7 +103,7 @@ const Home = () => {
 
   console.log(cartToTransaction);
   // if(products.length === 0) return console.log("ini product");
-  
+
   // if(cart.length === 0) return console.log("ini cart");
   // if(!cartToTransaction) return console.log("test");
   return (
@@ -197,8 +194,12 @@ const Home = () => {
         <div className="flex flex-col lg:mt-[75px]  mt-[10px] ">
           <Button onClick={confirm} btnCSS="btn-modal" btnName="Confirm" />
         </div>
-        <Modals datas={cartToTransaction} transaction_uid={transactionUID} isOpen={modalIsOpen} />
-
+        <Modals
+          datas={cartToTransaction}
+          transaction_uid={transactionUID}
+          isOpen={modalIsOpen}
+        />
+        {modalIsOpen === true ? <div></div> : <Toaster />}
       </div>
     </div>
   );

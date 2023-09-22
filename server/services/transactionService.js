@@ -1,5 +1,5 @@
 const db = require("./../models");
-const {sequelize} = require("./../models");
+const { sequelize } = require("./../models");
 
 module.exports = {
   addToCart: async (data) => {
@@ -81,10 +81,22 @@ module.exports = {
   totalPrice: async (data) => {
     try {
       const totalPrice = await db.transaction.findAll({
-        attributes:[[sequelize.fn('SUM', sequelize.col("product_price")), "total_price"]],
-        where: {transaction_uid: data},
+        attributes: [
+          [sequelize.fn("SUM", sequelize.col("product_price")), "total_price"],
+        ],
+        where: { transaction_uid: data },
       });
-      return totalPrice
+      return totalPrice;
+    } catch (error) {
+      return error;
+    }
+  },
+  getReceiptByTransactionId: async (data) => {
+    try {
+      const getReceipt = await db.receipt.findOne({
+        where: { transaction_uid: data },
+      });
+      return getReceipt;
     } catch (error) {
       return error;
     }

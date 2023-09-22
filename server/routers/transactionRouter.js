@@ -22,6 +22,9 @@ Router.post("/confirm-order", transactionController.confirmOrder);
 Router.post("/total-price", transactionController.total_price);
 
 
+Router.post("/receipt", transactionController.getReceiptByIdTransaction);
+
+
 
 
 

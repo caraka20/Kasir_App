@@ -13,7 +13,7 @@ const routes = [
     <Route path="/home/admin" element={<Admin />}/>
     <Route path="/Category" element={<CreateCategory/>}/>
     <Route path="/produk" element={<CreatePorduk />}/>
-    <Route path="/" element={<Home/>}/>
+    {/* <Route path="/" element={<Home/>}/> */}
     <Route path="/" element={<Login/>}/>
     <Route path="/forgetpassword" element={<ForgetPassword/>}/>
     <Route path="/updatepassword/:email" element={<UpdatePassword/>}/>

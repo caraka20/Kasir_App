@@ -6,18 +6,27 @@ import InputName from "../../components/InputName/InputName";
 import Button from "../Button/Button";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-
+import ModalReceipt from "../ModalReceipt/ModalReceipt";
 const Modals = (props) => {
   const { datas, transaction_uid } = props;
 
-
+  const [modalIsOpen, setModalIsOpen] = useState(false)
   // hooks
   const [selectPayment, setSelectPayment] = useState(1);
   const [subTotal, setSubTotal] = useState([]);
-  
+  const [subTotal1, setSubTotal1] = useState([]);
+  console.log(selectPayment);
   const refCustomerName = useRef();
   const refCustomerMoney = useRef();
-  
+  const refCustomerName2 = useRef();
+
+  useEffect(() => {
+    // 👉️ ref could be null here
+    if (refCustomerMoney.current != null) {
+      // 👉️ TypeScript knows that ref is not null here
+      refCustomerMoney.current.focus();
+    }
+  }, []);
   // api
   const getApi = async () => {
     try {
@@ -25,35 +34,18 @@ const Modals = (props) => {
         "http://localhost:3001/transaction/total-price",
         { transaction_uid: transaction_uid }
       );
-      
-      setSubTotal(total.data.data);
+
+      setSubTotal(total.data?.data);
+      setSubTotal1(total.data?.data[0]?.total_price);
     } catch (error) {
       console.log(error);
     }
   };
 
-  
   useEffect(() => {
     getApi();
   }, [transaction_uid, selectPayment]);
-  
 
-  // if(!datas ) return console.log("raka");
-  //     if(!transaction_uid) return console.log("kebon");
-
-
-  // if (subTotal.length === 0) return console.log("raka");;
-  // if (refCustomerMoney.current.value === undefined) {
-  //   return console.log("test");
-  // }
-  
-  
-
-  const vat = subTotal.map((value) => value.total_price * 0.1);
-  const [total] = subTotal.map((value) => value.total_price - vat);
-  
-  const changes = refCustomerMoney.current ? refCustomerMoney.current.value - total : 0;
-  
   const customStyle = {
     content: {
       width: "1000px",
@@ -64,29 +56,24 @@ const Modals = (props) => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
+      borderRadius: '20px'
     },
   };
 
-
-
-  
   const handleSelectPayment = (event) => {
     const newSelectedOption = event.target.value;
     setSelectPayment(newSelectedOption);
   };
-  console.log(selectPayment);
 
-
-  
+  const vat = subTotal1 * 0.1;
+  const total = subTotal1 - vat;
 
 
   const handleConfirmOrder = async () => {
     try {
-  
-  
-  
-      console.log(refCustomerMoney.current.value);
+
       if (selectPayment == 1) {
+        const  changes = refCustomerMoney.current.value - total;
         const onCreateReceipt = await axios.post(
           "http://localhost:3001/transaction/confirm-order",
           {
@@ -97,36 +84,39 @@ const Modals = (props) => {
             transaction_uid: transaction_uid,
             metode_pembayaran_id: selectPayment,
           }
-          );
-          console.log(onCreateReceipt);
-          toast.success(onCreateReceipt.data.message)
-        } else {
-          const onCreateReceipt = await axios.post(
-            "http://localhost:3001/transaction/confirm-order",
-            {
-              total_price: total,
-              customer_name: refCustomerName.current.value,
-              customer_changes: null,
-              customer_money: null,
-              transaction_uid: transaction_uid,
-              metode_pembayaran_id: selectPayment,
-            }
-            );
-            
-            // toast.success(onCreateReceipt.data.message)
-            console.log(onCreateReceipt);
+        );
+        console.log(onCreateReceipt);
+        toast.success(onCreateReceipt.data.message);
+        setModalIsOpen(true)
+      } else {
+        console.log("test");
+
+        const onCreateReceipt = await axios.post(
+          "http://localhost:3001/transaction/confirm-order",
+          {
+            total_price: total,
+            customer_name: refCustomerName2.current?.value,
+            customer_changes: null,
+            customer_money: null,
+            transaction_uid: transaction_uid,
+            metode_pembayaran_id: selectPayment,
           }
-        } catch (error) {
-          console.log(error);
-          toast.error(error.response.data.message)
-        }
-      };
-      
-      // useEffect(() => {console.log(dataTransactions);}, [dataTransactions])
-      
-      
-      return (
-        <Modal style={customStyle} isOpen={props.isOpen}>
+        );
+
+        toast.success(onCreateReceipt.data.message)
+        console.log(onCreateReceipt);
+        setModalIsOpen(true)
+      }
+    } catch (error) {
+      console.log(error);
+      // toast.error(error.response.data.message);
+    }
+  };
+
+  // useEffect(() => {console.log(dataTransactions);}, [dataTransactions])
+
+  return (
+    <Modal style={customStyle} isOpen={props.isOpen}>
       <div className="h-full flex ">
         <div className="left-side h-full overflow-scroll w-[60%] px-[20px]">
           <div className="flex justify-between items-center">
@@ -209,7 +199,7 @@ const Modals = (props) => {
               <InputName
                 name="Input Customer Name"
                 type="text"
-                ref={refCustomerName}
+                ref={refCustomerName2}
                 className=""
               />
               <h1 className="text-xl text-center mt-[20px] text-customPrimary cursor-pointer">
@@ -224,6 +214,7 @@ const Modals = (props) => {
             btnName="Confirm Order"
           />
         </div>
+            <ModalReceipt isOpen={modalIsOpen}/>
       </div>
       <Toaster />
     </Modal>
