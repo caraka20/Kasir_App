@@ -242,7 +242,7 @@ data.forEach(item => {
 
   historyTransaksi[createdAt.toDateString()][transaction_uid].push(item);
 });
-
+console.log(historyTransaksi);
 const dataFix =
   {
     tanggal_awal : awal,

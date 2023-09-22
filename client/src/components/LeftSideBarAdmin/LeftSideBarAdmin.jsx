@@ -33,15 +33,13 @@ const LeftSideBarAdmin = () => {
       <PiCoffeeFill  className=' mt-[50px]'/>
     </div>
 
-  
-      
-
     <div className={`h-[600px] ${isSidebarOpen ? 'block' : 'hidden'}`}>
       <div className='grid gap-5'>
     <div className="Menu w-full cursor-pointer h-[80px] flex flex-col justify-center items-center mt-[50px]">
+      <Link to={"/admin/kasir"}>
       <p className="text-4xl text-gray-500" />
       <img className='w-[50px] h-[55px]' src={cashier} alt="" />
-      <span className="text-gray-500">Create Cashier</span>
+      <span className="text-gray-500">Create Cashier</span></Link>
     </div>
     <div className="Dashboard w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
       <p className="text-4xl text-gray-500 " />

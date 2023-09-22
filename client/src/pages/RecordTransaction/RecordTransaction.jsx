@@ -22,7 +22,7 @@ const RecordTransaction = () => {
   useEffect(() => {
     getData();
   }, []);
-
+console.log("lala");
   console.log(datas);
   if (!datas) {
     console.log("tunggu");

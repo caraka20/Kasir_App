@@ -7,11 +7,19 @@ import UpdatePassword from "../UpdatePassword/UpdatePassword";
 import Profile from "../Profile/Profile";
 import CreateCategory from "../CreateCategory/CreateCategory";
 import Admin from "../HomeAdmin/Admin";
+import Report from "../Report/Report";
+import RecordTransaction from "../RecordTransaction/RecordTransaction";
+import DetailTransaksi from "../DetailTransaksi/DetailTransaksi";
+import CreateKasir from "../CreateKasir/CreateKasir";
 const routes = [
   <>
     <Route path="/home/admin" element={<Admin />} />
     <Route path="/Category" element={<CreateCategory />} />
     <Route path="/produk" element={<CreatePorduk />} />
+    <Route path="/admin/report" element={<Report />} />
+    <Route path="/admin/RecordTransaction/:awal/:akhir" element={<RecordTransaction />} />
+    <Route path="/admin/detailTransaksi/:awal/:akhir" element={<DetailTransaksi />} />
+    <Route path="/admin/kasir" element={<CreateKasir />} />
 
     <Route path="/" element={<Home />} />
     <Route path="/" element={<Login />} />
