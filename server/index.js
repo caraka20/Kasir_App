@@ -15,6 +15,14 @@ const { kasirRouter } = require("./routers")
 const { filterRouter } = require('./routers')
 
 
+const {authorizationRouter} = require("./routers")
+const {transactionRouter} = require('./routers')
+// app.use(cors())
+// app.use(express.json())
+
+
+
+
 
 app.use(express.json())
 app.use("/user",userRouter)
@@ -27,8 +35,9 @@ app.use('/product', productRouter)
 // app.use('/category', categoryRouter)
 // app.use("/kasir", kasirRouter)
 
-const {authorizationRouter} = require("./routers")
-const {transactionRouter} = require('./routers')
+// const {authorizationRouter} = require("./routers")
+// const {transactionRouter} = require('./routers')
+
 const {reportRouter} = require("./routers")
 
 //All app.use are here
