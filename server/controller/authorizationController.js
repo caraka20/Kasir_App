@@ -20,6 +20,7 @@ module.exports = {
             const readTemplate = await fs.readFile('./public/template.html','utf-8')
             const compiledTemplate = await handlebars.compile(readTemplate)
             const newTemplate = compiledTemplate ({email})
+
             await transporter.sendMail({
                 from: "Admin TSUGI ",
                 to:"ariefrubani44@gmail.com",
@@ -49,6 +50,7 @@ module.exports = {
             }
             const hashedPassword = await hash(password, 10); // 10 is the number of salt rounds which is basically 
             const changePassword = await conn.user.update({password: hashedPassword}, {where:{email}})
+
             const updatedPassword = await conn.user.findOne({where: {email}});
             res.status(200).send({
                 isError: false,
@@ -62,20 +64,28 @@ module.exports = {
     resetPassword: async (req, res, next) => {
         try {
             const {id} = req.params
-            const {password} = req.body
+            const {oldPassword, newPassword} = req.body
             const findUser = await conn.user.findByPk(id)
-
-            const hashedPassword = await hash(password, 10)
-            const updatedPassword = await conn.user.update({password: hashedPassword }, {where:{id}})
-
-            if(!updatedPassword) {
-                return res.status(404).json({
-                    isError:true,
-                    message: "User not found",
-                    data: null
-                });
+            
+            console.log(findUser.dataValues.password);
+            const checkPass = await match(oldPassword, findUser.dataValues.password)
+            console.log(checkPass);
+            if(!checkPass) {
+                throw {
+                    message : "Password incorrect"
+                }
             }
-
+            const hasher = await hash(newPassword, 10)
+            const data = await conn.user.update(
+                {
+                    password : hasher
+                },
+                {
+                    where : {id : id}
+                }
+            )
+            // const hashedPassword = await hash(password, 10)
+            // const updatedPassword = await conn.user.update({password: hashedPassword }, {where:{id}})
             res.status(200).json({
                 isError:false,
                 message:"Password have been resetted successfully",
