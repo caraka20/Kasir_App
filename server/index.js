@@ -3,12 +3,30 @@ const express = require("express")
 const app = express()
 const cors = require("cors")
 app.use(cors())
+
+PORT = 3001
+
 app.use(express.json())
+
 const { productRouter } = require("./routers")
 const { userRouter } = require("./routers")
 const { categoryRouter } = require('./routers')
 const { kasirRouter } = require("./routers")
 const { filterRouter } = require('./routers')
+
+
+
+app.use(express.json())
+app.use("/user",userRouter)
+app.use("/kasir", kasirRouter)
+
+
+// console.log(productRouter);
+app.use('/filter', filterRouter)
+app.use('/product', productRouter)
+// app.use('/category', categoryRouter)
+// app.use("/kasir", kasirRouter)
+
 const {authorizationRouter} = require("./routers")
 const {transactionRouter} = require('./routers')
 const {reportRouter} = require("./routers")
@@ -25,6 +43,7 @@ app.use('/category', categoryRouter)
 app.use("/kasir", kasirRouter)
 
 PORT = 3001
+
 
 app.use((err, req, res, next) => {
     const statusCode = err.status || 500
