@@ -4,9 +4,11 @@ import Home from "../Home/Home";
 import Login from "../Login/Login";
 import ForgetPassword from "../Forget/ForgetPassword";
 import UpdatePassword from "../UpdatePassword/UpdatePassword";
+import ChangeOldPass from "../ChangeOldPass/ChangeOldPass";
 import Profile from "../Profile/Profile";
 import CreateCategory from "../CreateCategory/CreateCategory";
 import Admin from "../HomeAdmin/Admin";
+
 import Report from "../Report/Report";
 import RecordTransaction from "../RecordTransaction/RecordTransaction";
 import DetailTransaksi from "../DetailTransaksi/DetailTransaksi";
@@ -21,13 +23,15 @@ const routes = [
     <Route path="/admin/detailTransaksi/:awal/:akhir" element={<DetailTransaksi />} />
     <Route path="/admin/kasir" element={<CreateKasir />} />
 
-    <Route path="/" element={<Home />} />
-    <Route path="/" element={<Login />} />
-    <Route path="/forgetpassword" element={<ForgetPassword />} />
-    <Route path="/updatepassword/:email" element={<UpdatePassword />} />
-    <Route path="/cashier" element={<Home />} />
-    <Route path="/cashier/profile" element={<Profile />} />
+    <Route path="/login" element={<Login/>}/>
+    <Route path="/forgetpassword" element={<ForgetPassword/>}/>
+    <Route path="/updatepassword/:email" element={<UpdatePassword/>}/>
+    <Route path="/changeoldpass/:id" element={<ChangeOldPass/>}/>
+    <Route path="/cashier"  element={<Home/>}/>
+    <Route path="/cashier/profile/:id"  element={<Profile/>}/>
+    <Route path="/cashier/profile"  element={<Profile/>}/>
   </>,
+
 ];
 
 export default routes;

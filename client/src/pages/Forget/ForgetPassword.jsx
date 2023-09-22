@@ -8,7 +8,6 @@ const ForgetPassword = () => {
     })
     
     const handleChange = (e) => {
-      // console.log(e.target.name)
       const newState = {...state}
       newState[e.target.name] = e.target.value
       setState(newState)
@@ -41,7 +40,7 @@ const ForgetPassword = () => {
             <div>
               <label>An email with the link for password recovery will be sent to your mailbox</label>
             </div>
-            <button onClick={passwordForget} type="submit" className="text-white bg-orange-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login</button>
+            <button onClick={passwordForget} type="submit" className="mt-3 text-white bg-orange-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Request Password Recovery</button>
           </form>
           </div>
         </div>
