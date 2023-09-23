@@ -66,5 +66,23 @@ module.exports = {
       } catch (error) {
          next(error)
       }
+   },
+
+   filterCategory : async(req, res, next) => {
+      try {
+         const {idKategori} = req.query
+         // console.log(kategori_id);
+
+         const filterProduk = await db.produk.findAll({
+            where : {kategori_produk_id : idKategori}
+         })
+         res.status(200).send({
+            isError : false,
+            message : "berhasil filter produk",
+            data : filterProduk
+         })
+      } catch (error) {
+         next(error)
+      }
    }
 }

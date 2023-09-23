@@ -49,8 +49,4 @@ module.exports = {
             // console.log(error.message);
         }
     },
-
-    
 }
-
-

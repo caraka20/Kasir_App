@@ -34,10 +34,19 @@ const Admin = () => {
     }
   }
 
+  const handleFilter = async (e) => {
+    try {
+      console.log(e.target.value);
+      const res = await axios.get(`http://localhost:3001/filter/${e.target.value}`)
+      console.log(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   
 
   useEffect(() => {
-    getData()
+    // getData()
   }, [])
 
   return (  
@@ -80,25 +89,25 @@ const Admin = () => {
           categoryCSS=""
         />
       </div>
-      <div className="flex justify-between items-center mt-[20px]">
+      {/* <div className="flex justify-between items-center mt-[20px]">
         <h1 className=" text-2xl">Foods</h1>
         <div className="flex items-center ">
           <h1>Sort by:</h1>
-          <select className="filter select select-ghost text-customPrimary  focus:ring-customPrimary  border-none text-xl bg-customBackground">
+          <select onChange={handleFilter} className="filter select select-ghost text-customPrimary  focus:ring-customPrimary  border-none text-xl bg-customBackground">
             <option className="" disabled selected>
               Select
             </option>
             <option>Foods</option>
-            <option>A/Z</option>
-            <option>Z/A</option>
+            <option >A/Z</option>
+            <option value={"Z-A"}>Z/A</option>
             <option>Highest</option>
             <option>Lowest</option>
           </select>
         </div>
-      </div>
-      <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-5 mt-[20px]">
+      </div> */}
+      
         <CardAdmin />
-      </div>
+      
 
       <div className="Pagination  mt-[100px] flex justify-between mb-[20px]">
         <Button
