@@ -8,20 +8,21 @@ const storage = multer.diskStorage({// Ini setup untuk storagenya, dimana letakn
 
         if(!isDirectoryExist){ //Kondisi jika directory belum dibuat atau gak ada, ini bakalan membuat directory baru
             await fs.promises.mkdir(defaultPath, {recursive: true})
-        } console.log(file)
+        } 
+        // console.log(file)
         cb(null, `${defaultPath}`)
     },
     filename: function (req, file, cb) {
         const extension = (file.mimetype.split("/")[1])
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9) + `.${extension}`
-        console.log(uniqueSuffix)
+        // console.log(uniqueSuffix)
         cb(null, file.fieldname + '-' + uniqueSuffix)
     }
 })
 
 //Setup File Filter
 var fileFilter = (req, file, cb) => {
-    console.log(file)
+    // console.log(file)
     if(file.mimetype.split('/')[0]=== 'image'){
         //Accept
         cb(null, true)
