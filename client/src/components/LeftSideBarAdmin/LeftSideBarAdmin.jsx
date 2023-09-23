@@ -18,8 +18,8 @@ const LeftSideBarAdmin = () => {
     setIsSidebarOpen(!isSidebarOpen); // Toggle the sidebar state
   };
   return (
-    <div className={`left-side ${isSidebarOpen ? 'w-[10%]' : 'w-[5%]'} h-screen rounded-md transition-all duration-300 ease-in-out`}>
-      <div className='flex justify-center'>
+    <div className={`left-side ${isSidebarOpen ? 'w-[15%]' : 'w-[5%]'} h-screen rounded-md transition-all duration-300 ease-in-out`}>
+      <div className='flex justify-center align-middle items-center'>
       <button
           onClick={toggleSidebar}
           className="text-white p-2 rounded-full bg-blue-700 hover:bg-blue-800 focus:outline-none"
@@ -28,20 +28,21 @@ const LeftSideBarAdmin = () => {
         </button>
       </div>
        
-      
+      <div className='grid overflow-hidden '>
     <div className="Logo cursor-pointer w-full flex justify-center text-customPrimary font-bold text-5xl">
       <PiCoffeeFill  className=' mt-[50px]'/>
     </div>
 
     <div className={`h-[600px] ${isSidebarOpen ? 'block' : 'hidden'}`}>
-      <div className='grid gap-5'>
-    <div className="Menu w-full cursor-pointer h-[80px] flex flex-col justify-center items-center mt-[50px]">
+      <div className='grid gap-5 '>
+    <div className=" Menu w-full cursor-pointer h-[80px] flex justify-center mt-[20px]">
       <Link to={"/admin/kasir"}>
       <p className="text-4xl text-gray-500" />
       <img className='w-[50px] h-[55px]' src={cashier} alt="" />
       <span className="text-gray-500">Create Cashier</span></Link>
     </div>
-    <div className="Dashboard w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
+
+    <div className=" Dashboard w-full cursor-pointer h-[80px] flex flex-col justify-center items-center mt-[10px] rounded">
       <Link to="/home/admin">
       <p className="text-4xl text-gray-500 " />
       <div className=''>
@@ -51,23 +52,23 @@ const LeftSideBarAdmin = () => {
       </Link>
     </div>
     
-    <div className="Report w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
+    <div className=" Report w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
       <Link to={"/admin/report"} ><p className="text-4xl text-gray-500" />
       <div className=''>
-      <img className='w-[35px] h-[34px]' src={imageLaporan} alt="" />
+      <img className='w-[35px] h-[34px] ml-[-15px]' src={imageLaporan} alt="" />
       </div>
-      <h1 className="text-gray-500 mt-[13px]">Reports</h1></Link>
+      <h1 className="text-gray-500 ml-[-20px] mt-[13px]">Reports</h1></Link>
     </div>
 
-    <div className='Produk w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] border-l-8  border-l-customPrimary rounded'>
+    <div className=' Produk w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] border-l-8  rounded'>
     <Link to="/produk">
       <p className='text-4xl'/>
         <BsClipboardPlus className='w-[35px] h-[34px]'/>
-      <h1 className=' text-customPrimary mt-[13px]'>Create Produk</h1>
+      <h1 className='  mt-[13px]'>Create Produk</h1>
     </Link>
     </div>
     
-    <div className="Category w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
+    <div className=" Category w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
     <p className="text-4xl text-gray-500" />
       <Link to="/Category">
       <TbCategory className='w-[35px] h-[34px]'/>
@@ -75,12 +76,13 @@ const LeftSideBarAdmin = () => {
     </Link>
     </div>
 
-    <div className="Report w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[75px] rounded">
+    <div className=" Report w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[75px] rounded">
       <p className="text-4xl text-gray-500" />
           <box-icon class="w-[35px] h-[34px] mr-3" name='log-out'></box-icon>
       <h1 className="text-gray-500 ">Log Out</h1>
     </div>
 
+    </div>
     </div>
     </div>
 

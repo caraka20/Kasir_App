@@ -49,6 +49,8 @@ const Admin = () => {
     }
   };
 
+
+
   useEffect(() => {
     getData();
     getKategori();
@@ -69,23 +71,6 @@ const Admin = () => {
               Cashier
             </div>
           </Link>
-        </div>
-        <Search className="" />
-        <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
-        <div className="flex gap-10 w-full overflow-scroll">
-          {!kategori ? (
-            <span>-</span>
-          ) : (
-            kategori.map((item) => {
-              return (
-                <div className="w-[100px] h-[50px] p-5 rounded-2xl bg-white flex flex-col justify-center items-center cursor-pointer ">
-                  <div value={item.id} className={`font-normal`}>
-                    {item.nama_kategori}
-                  </div>
-                </div>
-              );
-            })
-          )}
         </div>
         <CardAdmin />
         <div className="Pagination  mt-[100px] flex justify-between mb-[20px]">

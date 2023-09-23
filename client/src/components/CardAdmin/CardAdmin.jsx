@@ -6,13 +6,16 @@ import Button from "../Button/Button";
 import "./card.css";
 import Modal from "react-modal";
 import toast, { Toaster } from "react-hot-toast";
+import Search from "../Search/Search";
 const CardAdmin = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [datas, setDatas] = useState(null);
   const [modalImage, setModalImage] = useState(false);
   const [images, setImages] = useState([]);
   const [idProduk, setIdProduk] = useState(0);
-
+  const [search, setSearch] = useState("");
+  const [kategori, setKategori] = useState(null);
+  // console.log(search);
   const customStyles = {
     content: {
       top: "50%",
@@ -51,13 +54,12 @@ const CardAdmin = () => {
   const getData = async () => {
     try {
       const fetchData = await axios.get("http://localhost:3001/product");
-      console.log(fetchData.data.data);
+      // console.log(fetchData.data.data);
       setDatas(fetchData.data.data);
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(datas);
 
   const editStatusProduk = async (idProduk) => {
     try {
@@ -170,6 +172,7 @@ const CardAdmin = () => {
       // toast.error(error)
     }
   };
+
   const handleFilter = async (e) => {
     try {
       console.log(e.target.value);
@@ -182,14 +185,80 @@ const CardAdmin = () => {
       console.log(error);
     }
   };
+
+  const statusProduct = async (e) => {
+    try {
+      console.log(e);
+      const res = await axios.patch(`http://localhost:3001/product/${e}`);
+      console.log(res.data);
+      getData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const filterKategori = async (e) => {
+    try {
+      // console.log(e);
+      const res = await axios.get(`http://localhost:3001/filter/${e}`);
+      console.log(res.data.data);
+      setDatas(res.data.data);
+      // getData()
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getKategori = async () => {
+    try {
+      const res = await axios.get("http://localhost:3001/category");
+      // console.log(res.data.data);
+      const hasil = res.data.data.filter((item) => {
+        return item.status === "active";
+      });
+      console.log(hasil);
+      setKategori(hasil);
+      getData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getData();
+    // getData();
+    getKategori();
   }, []);
-  console.log(datas);
+  // console.log(search);
   return (
-    <div>
+    <div className="mt-5">
+      {/* <Search className="" /> */}
+      <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
+      <div className="flex gap-10 w-full overflow-scroll">
+        {!kategori ? (
+          <span>-</span>
+        ) : (
+          kategori.map((item) => {
+            return (
+              <div
+                onClick={() => filterKategori(item.id)}
+                className="w-[100px] h-[50px] p-5 rounded-2xl bg-white flex flex-col justify-center items-center cursor-pointer "
+              >
+                <div value={item.id} className={`font-normal`}>
+                  {item.nama_kategori}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+      <Search
+        className="mt-5"
+        onChange={(e) => setSearch(e.target.value)}
+        value={input}
+      />
       <div className="flex justify-between items-center mt-[20px]">
-        <h1 className=" text-2xl">Foods</h1>
+        {/* <Search /> */}
+        <h1 className=" text-2xl">Products</h1>
         <div className="flex items-center ">
           <h1>Sort by:</h1>
           <select
@@ -212,182 +281,207 @@ const CardAdmin = () => {
         {!datas ? (
           <span>...Loading</span>
         ) : (
-          datas.map((value, index) => {
-            return (
-              <div className="shadow-xl bg-white rounded-2xl p-2  ">
-                <Modal style={customStyless} isOpen={modalImage}>
-                  <button
-                    onClick={tutupModelImage}
-                    className="rounded-full relative   text-white bg-customPrimary  px-[15px] py-[8px]"
-                  >
-                    X
-                  </button>
+          datas
+            .filter((value) => {
+              if (search === "") {
+                return value;
+              } else if (
+                value.nama_produk
+                  .toLocaleLowerCase()
+                  .includes(search.toLocaleLowerCase())
+              ) {
+                return value;
+              }
+            })
+            .map((value, index) => {
+              return (
+                <div
+                  className={
+                    value.status_product === "Active"
+                      ? "shadow-xl bg-white rounded-2xl p-2"
+                      : "shadow-xl opacity-75 rounded-2xl p-2"
+                  }
+                >
+                  <Modal style={customStyless} isOpen={modalImage}>
+                    <button
+                      onClick={tutupModelImage}
+                      className="rounded-full relative   text-white bg-customPrimary  px-[15px] py-[8px]"
+                    >
+                      X
+                    </button>
 
-                  <div className="grid justify-center item-center mt-[30px]">
-                    <label htmlFor="" className="font-serif">
-                      Gambar Product
-                    </label>
-                    <br />
-                    <input
-                      onChange={(e) => onSelectImages(e)}
-                      type="file"
-                      multiple="multiple"
-                      className="mt-2 mb-5 file-input file-input-bordered w-full max-w-xs bg-white"
-                    />
-                  </div>
-                  <Button
-                    onClick={() => updateImage(value.id)}
-                    btnName="Edit"
-                    btnCSS="my-[10px] w-[150px] text-sm"
-                  />
-                </Modal>
-                <img
-                  className="h-[150px] rounded-2xl"
-                  onClick={() => modalOpenImage(value.id)}
-                  src={`http://localhost:3001/${value.image_product.substring(
-                    6
-                  )}`}
-                  alt="Shoes"
-                />
-                <div className="grid item-center">
-                  <h2 className="card-title mt-[10px]">{value.nama_produk}</h2>
-                  <div className="flex overflow-auto h-20">
-                    <p className="mt-[10px] text-sm text-gray-400">
-                    {value.deskripsi}
-                  </p>
-                  </div>
-                  
-                  <p className="mt-[10px] text-sm text-gray-400">
-                    Rp. {value.harga}
-                  </p>
-                  <div className="flex card-actions gap-3 justify-end ">
+                    <div className="grid justify-center item-center mt-[30px]">
+                      <label htmlFor="" className="font-serif">
+                        Gambar Product
+                      </label>
+                      <br />
+                      <input
+                        onChange={(e) => onSelectImages(e)}
+                        type="file"
+                        multiple="multiple"
+                        className="mt-2 mb-5 file-input file-input-bordered w-full max-w-xs bg-white"
+                      />
+                    </div>
                     <Button
-                      onClick={() => editStatusProduk(value.id)}
+                      onClick={() => updateImage(value.id)}
                       btnName="Edit"
                       btnCSS="my-[10px] w-[150px] text-sm"
                     />
+                  </Modal>
+                  <img
+                    className="h-[150px] rounded-2xl"
+                    onClick={() => modalOpenImage(value.id)}
+                    src={`http://localhost:3001/${value.image_product.substring(
+                      6
+                    )}`}
+                    alt="Shoes"
+                  />
+                  <div className="grid item-center">
+                    <h2 className="card-title mt-[10px]">
+                      {value.nama_produk}
+                    </h2>
+                    <div className="flex overflow-auto h-20">
+                      <p className="mt-[10px] text-sm text-gray-400">
+                        {value.deskripsi}
+                      </p>
+                    </div>
 
-                    <Modal style={customStyles} isOpen={modalOpen}>
-                      <div className="grid gap-5">
-                        <button
-                          onClick={tutupModel}
-                          className="rounded-full  text-white bg-customPrimary w-[50px] px-[10px] py-[10px]"
-                        >
-                          X
-                        </button>
+                    <p className="mt-[10px] text-sm text-gray-400">
+                      Rp. {value.harga}
+                    </p>
+                    <div className="flex card-actions gap-3 justify-end ">
+                      <Button
+                        onClick={() => editStatusProduk(value.id)}
+                        btnName="Edit"
+                        btnCSS="my-[10px] w-[150px] text-sm"
+                      />
 
-                        <div className="flex justify-center text-5xl items-center font-semibold border-b-[5px] border-black py-5 mb-10">
-                          <div>Edit Product</div>
-                        </div>
+                      <Modal style={customStyles} isOpen={modalOpen}>
+                        <div className="grid gap-5">
+                          <button
+                            onClick={tutupModel}
+                            className="rounded-full  text-white bg-customPrimary w-[50px] px-[10px] py-[10px]"
+                          >
+                            X
+                          </button>
 
-                        {/* Form Input Create Product */}
-                        <div className="bg-base-200 shadow-xl rounded-md">
-                          <div className="grid grid-col-2  align-middle">
-                            <div className="grid w-[90%] justify-center mr-10 lg:grid-cols-2 mx-auto mt-5 p-4 pl-8">
-                              <div>
-                                <label htmlFor="" className="font-serif">
-                                  Nama Produk
-                                </label>
-                                <br />
-                                <input
-                                  name="nama_produk"
-                                  value={input.nama_produk}
-                                  onChange={handleChange}
-                                  type="text"
-                                  placeholder="Type here"
-                                  className="mt-2 mb-5 input input-bordered w-full max-w-xs"
-                                />
-                              </div>
+                          <div className="flex justify-center text-5xl items-center font-semibold border-b-[5px] border-black py-5 mb-10">
+                            <div>Edit Product</div>
+                          </div>
 
-                              <div>
-                                <label htmlFor="" className="font-serif">
-                                  Pilih Kategori
-                                </label>
-                                <br />
-                                <select
-                                  name="kategori_produk_id"
-                                  onChange={handleChange}
-                                  className="select w-full max-w-xs mt-2 mb-5 "
-                                  style={{ width: "100%" }}
-                                >
-                                  <option disabled selected>
-                                    Kategori Produk
-                                  </option>
-                                  <option value={1}>Snack</option>
-                                  <option value={2}>Main Course</option>
-                                  <option value={3}>Coffee</option>
-                                  <option value={4}>Non-Coffee</option>
-                                </select>
-                              </div>
+                          {/* Form Input Create Product */}
+                          <div className="bg-base-200 shadow-xl rounded-md">
+                            <div className="grid grid-col-2  align-middle">
+                              <div className="grid w-[90%] justify-center mr-10 lg:grid-cols-2 mx-auto mt-5 p-4 pl-8">
+                                <div>
+                                  <label htmlFor="" className="font-serif">
+                                    Nama Produk
+                                  </label>
+                                  <br />
+                                  <input
+                                    name="nama_produk"
+                                    value={input.nama_produk}
+                                    onChange={handleChange}
+                                    type="text"
+                                    placeholder="Type here"
+                                    className="mt-2 mb-5 input input-bordered w-full max-w-xs"
+                                  />
+                                </div>
 
-                              <div>
-                                <label htmlFor="" className="font-serif">
-                                  Stock
-                                </label>
-                                <br />
-                                <input
-                                  name="stock"
-                                  value={input.stock}
-                                  onChange={handleChange}
-                                  type="text"
-                                  placeholder="Type here"
-                                  className="mt-2 mb-5 input input-bordered w-full max-w-xs"
-                                />
-                              </div>
+                                <div>
+                                  <label htmlFor="" className="font-serif">
+                                    Pilih Kategori
+                                  </label>
+                                  <br />
+                                  <select
+                                    name="kategori_produk_id"
+                                    onChange={handleChange}
+                                    className="select w-full max-w-xs mt-2 mb-5 "
+                                    style={{ width: "100%" }}
+                                  >
+                                    <option disabled selected>
+                                      Kategori Produk
+                                    </option>
+                                    <option value={1}>Snack</option>
+                                    <option value={2}>Main Course</option>
+                                    <option value={3}>Coffee</option>
+                                    <option value={4}>Non-Coffee</option>
+                                  </select>
+                                </div>
 
-                              <div>
-                                <label htmlFor="" className="font-serif">
-                                  Price
-                                </label>
-                                <br />
-                                <input
-                                  name="harga"
-                                  value={input.harga}
-                                  onChange={handleChange}
-                                  type="text"
-                                  placeholder="Type here"
-                                  className="mt-2 mb-5 input input-bordered w-full max-w-xs"
-                                />
-                              </div>
+                                <div>
+                                  <label htmlFor="" className="font-serif">
+                                    Stock
+                                  </label>
+                                  <br />
+                                  <input
+                                    name="stock"
+                                    value={input.stock}
+                                    onChange={handleChange}
+                                    type="text"
+                                    placeholder="Type here"
+                                    className="mt-2 mb-5 input input-bordered w-full max-w-xs"
+                                  />
+                                </div>
 
-                              <div className="">
-                                <label htmlFor="" className="font-serif">
-                                  Deskripsi Produk
-                                </label>
-                                <br />
-                                <textarea
-                                  name="deskripsi"
-                                  value={input.deskripsi}
-                                  onChange={handleChange}
-                                  type="text"
-                                  placeholder="Type here"
-                                  className="mt-2 mb-5 input input-bordered w-full max-w-xs h-[100px]"
-                                />
-                              </div>
+                                <div>
+                                  <label htmlFor="" className="font-serif">
+                                    Price
+                                  </label>
+                                  <br />
+                                  <input
+                                    name="harga"
+                                    value={input.harga}
+                                    onChange={handleChange}
+                                    type="text"
+                                    placeholder="Type here"
+                                    className="mt-2 mb-5 input input-bordered w-full max-w-xs"
+                                  />
+                                </div>
 
-                              <div></div>
-                              <div className="flex justify-start w-[75%]">
-                                <Button
-                                  onClick={() => submitEdit(input.id)}
-                                  btnName="Edit"
-                                  btnCSS="md:w-[50%] md:ml-[120px]"
-                                />
+                                <div className="">
+                                  <label htmlFor="" className="font-serif">
+                                    Deskripsi Produk
+                                  </label>
+                                  <br />
+                                  <textarea
+                                    name="deskripsi"
+                                    value={input.deskripsi}
+                                    onChange={handleChange}
+                                    type="text"
+                                    placeholder="Type here"
+                                    className="mt-2 mb-5 input input-bordered w-full max-w-xs h-[100px]"
+                                  />
+                                </div>
+
+                                <div></div>
+                                <div className="flex justify-start w-[75%]">
+                                  <Button
+                                    onClick={() => submitEdit(input.id)}
+                                    btnName="Edit"
+                                    btnCSS="md:w-[50%] md:ml-[120px]"
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </Modal>
+                      </Modal>
 
-                    <Button
-                      btnName="Delete"
-                      btnCSS="my-[10px] w-[150px] text-sm"
-                    />
+                      <Button
+                        onClick={() => statusProduct(value.id)}
+                        btnName={
+                          value.status_product === "Active"
+                            ? "Non-Active"
+                            : "Active"
+                        }
+                        btnCSS="my-[10px] w-[150px] h-[50px] text-sm"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })
+              );
+            })
         )}
       </div>
     </div>
