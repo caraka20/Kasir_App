@@ -2,14 +2,19 @@ const conn = require ("../models")
 const upload = require('../middleware/upload')
 const {createJWT} = require('../lib/jwt')
 const {deleteFiles} = require('./../helper/deleteFiles')
+const {match} = require("../helper/hashing")
 
 module.exports = { //udah bisa namun belum ada validasi samsek
     loginUser: async (req, res, next) => {
         try {
-            const {username, password} = req.query 
-            const masuk = await conn.user.findOne({where: {username: username, password: password}});
+            // console.log("klkl");
+            const {username, password} = req.query
+            // console.log(username, password);
+            const masuk = await conn.user.findOne({where: {username: username}});
+            console.log(masuk.dataValues.password);
 
-            console.log(masuk);
+            const hasil = await match(password, masuk.dataValues.password)
+            console.log(hasil);
             if(masuk == null) {
                 throw {
                     status: 409,
@@ -25,7 +30,16 @@ module.exports = { //udah bisa namun belum ada validasi samsek
                     message: "You are currently deactivated, please contact admin"
                 }
             }
-            console.log(masuk.dataValues.id)
+            // kondisi kalo paswordnya sqlah
+            if (hasil === false) {
+                throw {
+                    status: 409,
+                    isError: true,
+                    message: "Password Salah"
+                }
+            }
+
+            // console.log(masuk.dataValues.id)
             const token = await createJWT({id: masuk.dataValues.id}) // harus dikirim dalam object, karena masuk kedalam payload untuk diencode
             res.status(200).send({
                 isError: false,
