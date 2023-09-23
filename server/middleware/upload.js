@@ -17,6 +17,7 @@ const upload = async (req, res, next) => {
             files: req.files,
           };
       });
+      next()
     } catch (error) {
       deleteFiles(error.files);
       next(error);
