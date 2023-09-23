@@ -14,6 +14,7 @@ import Report from "../Report/Report";
 import RecordTransaction from "../RecordTransaction/RecordTransaction";
 import DetailTransaksi from "../DetailTransaksi/DetailTransaksi";
 import CreateKasir from "../CreateKasir/CreateKasir";
+import ListKasir from "../HomeAdmin/ListKasir";
 const routes = [
   <>
     <Route path="/home/admin" element={<Admin />} />
@@ -24,6 +25,7 @@ const routes = [
     <Route path="/admin/RecordTransaction/:awal/:akhir" element={<RecordTransaction />} />
     <Route path="/admin/detailTransaksi/:awal/:akhir" element={<DetailTransaksi />} />
     <Route path="/admin/kasir" element={<CreateKasir />} />
+    <Route path="/admin/ListKasir" element={<ListKasir />} />
 
     <Route path="/login" element={<Login/>}/>
     <Route path="/forgetpassword" element={<ForgetPassword/>}/>
