@@ -4,5 +4,6 @@ const {kasirController} = require("../controller")
 const upload = require('../middleware/upload')
 
 Router.post("/", upload, kasirController.createKasir)
+Router.put("/:id", kasirController.updateKasir)
 
 module.exports = Router
