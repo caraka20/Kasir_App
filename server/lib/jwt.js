@@ -14,10 +14,11 @@ module.exports = {
         try {
             const {token} = req.body
             const decodeData = jwt.verify(token, 'abc123')
+            // console.log(decodeData);
             req.dataToken = decodeData
             next()
         } catch (error) {
-            
+            console.log(error);
         }
     }
 }
