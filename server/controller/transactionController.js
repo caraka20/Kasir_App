@@ -8,7 +8,12 @@ const {
   transaction,
   createReceipt,
   totalPrice,
-  getReceiptByTransactionId
+  getReceiptByTransactionId,
+  getTransactionByIdTransaction,
+  increaseQty,
+  cartById,
+  decreaseQty,
+  cartDelete,
 } = require("./../services/transactionService");
 
 module.exports = {
@@ -129,26 +134,24 @@ module.exports = {
       console.log(customer_money);
       console.log(customer_changes);
 
-
-
       // if (customer_money == null) {
-        const dataToSend = {
-          total_price: total_price,
-          customer_name: customer_name,
-          customer_changes: customer_changes,
-          customer_money: Number(customer_money),
-          transaction_uid: transaction_uid,
-          metode_pembayaran_id: metode_pembayaran_id,
-          payment_method: null,
-        };
+      const dataToSend = {
+        total_price: total_price,
+        customer_name: customer_name,
+        customer_changes: customer_changes,
+        customer_money: Number(customer_money),
+        transaction_uid: transaction_uid,
+        metode_pembayaran_id: metode_pembayaran_id,
+        payment_method: null,
+      };
 
-        const create = await db.receipt.create(dataToSend);
+      const create = await db.receipt.create(dataToSend);
 
-        res.status(200).send({
-          isError: false,
-          message: "Transaction Success",
-          data: create,
-        });
+      res.status(200).send({
+        isError: false,
+        message: "Transaction Success",
+        data: create,
+      });
       // }
       //  else {
       //   if (customer_money < total_price) {
@@ -192,16 +195,87 @@ module.exports = {
       next(error);
     }
   },
-  getReceiptByIdTransaction: async (req,res,next) => {
+  getReceiptByIdTransaction: async (req, res, next) => {
     try {
-      const {transaction_id} = req.body 
+      const { transaction_id } = req.body;
 
-      const getReceipt = await getReceiptByTransactionId(transaction_id)
+      const getReceipt = await getReceiptByTransactionId(transaction_id);
+
+      const getTransactionByIdTransactions =
+        await getTransactionByIdTransaction(transaction_id);
 
       console.log(getReceipt);
-      console.log();
+      res.status(200).send({
+        isError: false,
+        message: "data found",
+        receiptByIdTransaction: getReceipt,
+        transactionByIdTransaction: getTransactionByIdTransactions,
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  },
+  addQuantity: async (req, res, next) => {
+    try {
+      const { idProduct } = req.body;
+      console.log(idProduct);
+      const updateCartQuantity = await increaseQty(idProduct);
+
+      const cartt = await cart(idProduct);
+
+      res.status(200).send({
+        isError: false,
+        message: "increase 1 success",
+        data: updateCartQuantity,
+        cart: cartt,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  decreaseQuantity: async (req, res, next) => {
+    try {
+      const { idProduct } = req.body;
+
+      const cartData = await decreaseQty(idProduct);
+      const data = await cartById(idProduct);
+
+      res.status(200).send({
+        isError: false,
+        message: "decrease 1 success",
+        data: data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  deleteCartQty: async (req, res, next) => {
+    try {
+      const { idProduct } = req.body;
+
+      const deleteCart = await cartDelete(idProduct);
+
+      res.status(200).send({
+        isError: false,
+        message: "delete success",
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  cartById: async (req, res, next) => {
+    try {
+      const { idProduct } = req.body;
+
+      const cartt = await cartById(idProduct);
+
+      res.status(200).send({
+        isError: false,
+        data: cartt,
+
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

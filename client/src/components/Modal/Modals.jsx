@@ -7,10 +7,11 @@ import Button from "../Button/Button";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import ModalReceipt from "../ModalReceipt/ModalReceipt";
+import { useNavigate } from "react-router-dom";
 const Modals = (props) => {
   const { datas, transaction_uid } = props;
-
-  const [modalIsOpen, setModalIsOpen] = useState(false)
+  const navigate = useNavigate();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   // hooks
   const [selectPayment, setSelectPayment] = useState(1);
   const [subTotal, setSubTotal] = useState([]);
@@ -56,7 +57,7 @@ const Modals = (props) => {
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
-      borderRadius: '20px'
+      borderRadius: "20px",
     },
   };
 
@@ -68,12 +69,10 @@ const Modals = (props) => {
   const vat = subTotal1 * 0.1;
   const total = subTotal1 - vat;
 
-
   const handleConfirmOrder = async () => {
     try {
-
       if (selectPayment == 1) {
-        const  changes = refCustomerMoney.current.value - total;
+        const changes = refCustomerMoney.current.value - total;
         const onCreateReceipt = await axios.post(
           "http://localhost:3001/transaction/confirm-order",
           {
@@ -85,12 +84,11 @@ const Modals = (props) => {
             metode_pembayaran_id: selectPayment,
           }
         );
-        console.log(onCreateReceipt);
-        toast.success(onCreateReceipt.data.message);
-        setModalIsOpen(true)
-      } else {
-        console.log("test");
 
+        getApi();
+        setModalIsOpen(true);
+        toast.success(onCreateReceipt.data.message);
+      } else {
         const onCreateReceipt = await axios.post(
           "http://localhost:3001/transaction/confirm-order",
           {
@@ -103,13 +101,20 @@ const Modals = (props) => {
           }
         );
 
-        toast.success(onCreateReceipt.data.message)
-        console.log(onCreateReceipt);
-        setModalIsOpen(true)
+
+
+        toast.success(onCreateReceipt.data.message);
+        setTimeout(() => {}, 3000);
+
+        // navigate(`/receipt?transaction_uid=${transaction_uid}`);
       }
     } catch (error) {
       console.log(error);
       // toast.error(error.response.data.message);
+    } finally {
+      setTimeout(() => {
+        navigate(`/receipt?transaction_uid=${transaction_uid}`);
+      }, 5000);
     }
   };
 
@@ -214,7 +219,7 @@ const Modals = (props) => {
             btnName="Confirm Order"
           />
         </div>
-            <ModalReceipt isOpen={modalIsOpen}/>
+        {/* <ModalReceipt isOpen={modalIsOpen} datas={transaction_uid} /> */}
       </div>
       <Toaster />
     </Modal>

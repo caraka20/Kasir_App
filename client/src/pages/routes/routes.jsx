@@ -8,6 +8,7 @@ import Profile from "../Profile/Profile";
 
 import CreateCategory from "../CreateCategory/CreateCategory";
 import Admin from "../HomeAdmin/Admin";
+import ModalReceipt from "../../components/ModalReceipt/ModalReceipt";
 const routes = [
   <> 
     <Route path="/home/admin" element={<Admin />}/>
@@ -19,6 +20,7 @@ const routes = [
     <Route path="/updatepassword/:email" element={<UpdatePassword/>}/>
     <Route path="/cashier"  element={<Home/>}/>
     <Route path="/cashier/profile"  element={<Profile/>}/>
+    <Route path="/receipt"  element={<ModalReceipt/>}/>
 
 
   </>

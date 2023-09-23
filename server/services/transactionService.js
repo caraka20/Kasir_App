@@ -28,7 +28,7 @@ module.exports = {
         include: [
           {
             model: db.produk,
-            attributes: ["nama_produk", "harga", "stock"],
+            attributes: ["nama_produk", "harga", "stock", "deskripsi"],
             include: [
               {
                 model: db.kategori_produk,
@@ -94,9 +94,67 @@ module.exports = {
   getReceiptByTransactionId: async (data) => {
     try {
       const getReceipt = await db.receipt.findOne({
+        include: [
+          {
+            model: db.metode_pembayaran,
+            attributes: ["pembayaran"],
+          },
+        ],
         where: { transaction_uid: data },
       });
       return getReceipt;
+    } catch (error) {
+      return error;
+    }
+  },
+  getTransactionByIdTransaction: async (data) => {
+    try {
+      const getTransaction = await db.transaction.findAll({
+        where: { transaction_uid: data },
+      });
+
+      return getTransaction;
+    } catch (error) {
+      return error;
+    }
+  },
+  increaseQty: async (data) => {
+    console.log(data);
+    try {
+      const getCartById = await db.cart.update(
+        { quantity: sequelize.literal("quantity + 1") },
+        { where: { id: data } }
+      );
+
+      return getCartById;
+    } catch (error) {
+      return error;
+    }
+  },
+  cartById: async (data) => {
+    try {
+      const cartById = await db.cart.findByPk(data);
+      return cartById;
+    } catch (error) {
+      return error;
+    }
+  },
+  decreaseQty: async (data) => {
+    try {
+      const getCartById = await db.cart.update(
+        { quantity: sequelize.literal("quantity - 1") },
+        { where: { id: data } }
+      );
+
+      return getCartById;
+    } catch (error) {
+      return error;
+    }
+  },
+  cartDelete: async (data) => {
+    try {
+      const deleteCart = await db.cart.destroy({ where: { id: data } });
+      return deleteCart;
     } catch (error) {
       return error;
     }

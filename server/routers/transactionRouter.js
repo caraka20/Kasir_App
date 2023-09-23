@@ -24,6 +24,14 @@ Router.post("/total-price", transactionController.total_price);
 
 Router.post("/receipt", transactionController.getReceiptByIdTransaction);
 
+Router.put("/increase-quantity", transactionController.addQuantity);
+
+Router.put("/decrease-quantity", transactionController.decreaseQuantity);
+
+Router.post("/cart", transactionController.deleteCartQty);
+
+Router.post("/cartById", transactionController.cartById);
+
 
 
 

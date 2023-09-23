@@ -31,6 +31,8 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [idProduct, setIdProduct] = useState(null);
   const [cart, setCart] = useState([]);
+  const [qty, setQty] = useState([]);
+
   const [cartToTransaction, setCartToTransaction] = useState(null);
   const [transactionUID, setTransactionUID] = useState(null);
 
@@ -39,11 +41,60 @@ const Home = () => {
       "http://localhost:3001/transaction/products"
     );
     const getCart = await axios.get("http://localhost:3001/transaction/cart");
+    const cartById = await axios.post(
+      "http://localhost:3001/transaction/cartById",
+      { idProduct: idProduct }
+    );
+    setQty(cartById.data.data?.quantity);
 
     setProducts(getProduct.data.data);
     setCart(getCart.data.data);
   };
-  console.log(cart);
+
+  // increament
+  const incrementQty = async (id) => {
+    try {
+      setIdProduct(id);
+      const addQuantity = await axios.put(
+        "http://localhost:3001/transaction/increase-quantity",
+        { idProduct: id }
+      );
+
+      // Assuming your API returns the updated cart after adding quantity.
+      // Update the cart state with the updated cart data.
+
+      console.log(addQuantity);
+      getApi();
+    } catch (error) {
+      console.log(error.response.data.message);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const decrementQty = async (id) => {
+    try {
+      const decrease = await axios.put(
+        "http://localhost:3001/transaction/decrease-quantity",
+        { idProduct: id }
+      );
+
+      getApi();
+
+      if (decrease.data.data.quantity <= 0) {
+        const deleteCart = await axios.post(
+          "http://localhost:3001/transaction/cart",
+          { idProduct: id }
+        );
+        console.log(deleteCart);
+
+      }
+      getApi();
+      // }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const addToCart = async (id) => {
     // console.log(id);
     try {
@@ -52,12 +103,10 @@ const Home = () => {
         {
           idProduct: id,
           token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1Mjg4NzQwLCJleHAiOjE2OTUzNzUxNDB9.-yE5m4hVJD8dAff6szp-nM4AWaBkJYeKWmZ30bexwHQ",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1NDQ4Mzg3LCJleHAiOjE2OTU1MzQ3ODd9.FqiweKLJgaVY9imyrWrM4cgmCo81iZfOqpKePZ0vkho",
         }
       );
       getApi();
-
-      console.log(add);
 
       toast.success(add.data.message);
     } catch (error) {
@@ -84,7 +133,7 @@ const Home = () => {
         { cartProduct: cart, uid: getRandomCode() }
       );
       console.log(carts.data.dataTransaction);
-      setTransactionUID(carts.data.transaction_uid);
+      setTransactionUID(carts.data?.transaction_uid);
       setCartToTransaction(carts.data.dataTransaction);
 
       console.log("asd");
@@ -93,15 +142,14 @@ const Home = () => {
     }
   };
 
+  const updateDatas = (updatedDatas) => {
+    setCart(updatedDatas);
+  };
+
   useEffect(() => {
     getApi();
   }, []);
 
-  useEffect(() => {
-    console.log(transactionUID);
-  }, [transactionUID]);
-
-  console.log(cartToTransaction);
   // if(products.length === 0) return console.log("ini product");
 
   // if(cart.length === 0) return console.log("ini cart");
@@ -173,9 +221,13 @@ const Home = () => {
       <div className="right-side h-full w-3/12 px-[20px] bg-white relative overflow-auto">
         <h1 className="mt-[50px] text-3xl mb-[20px]">Cart</h1>
         <div className="CartOrders h-[400px] overflow-scroll">
-          {cart.map((value) => {
-            return <CartOrders datas={value} />;
-          })}
+          {/* {cart.map((value) => { */}
+          <CartOrders
+            datas={cart}
+            increment={incrementQty}
+            decrement={decrementQty}
+          />
+          {/* })} */}
         </div>
         <div className="mt-[20px] border-t-2 border-b-2 py-[20px]">
           <div className="SubTotal flex justify-between items-center">
