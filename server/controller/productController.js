@@ -1,7 +1,8 @@
-const db = require('../models')
-const {deleteFiles} = require('../helper/deleteFiles')
+const db = require("../models");
+const { deleteFiles } = require("../helper/deleteFiles");
 
 module.exports = {
+
     getData : async(req, res, next) => {
         try {
             const findData = await db.produk.findAll()
@@ -17,6 +18,7 @@ module.exports = {
 
     create: async (req, res, next) => {
         try {
+            console.log();
             const data = JSON.parse(req.body.data)
 
             console.log(data);
@@ -27,7 +29,7 @@ module.exports = {
                         status : 409,
                         message : "Tolong... Lengkapi data"
                       }
-
+                    }
             // console.log(data);
 
             // Validasi data tidak boleh kosong
@@ -60,9 +62,6 @@ module.exports = {
             // validasi nama_produk tidak boleh sama
             // console.log(req.files.images);
 
-            
-
-
             const dataImage = req.files.images.map(value => {
                 return {image_product: value.path}
             })
@@ -75,28 +74,15 @@ module.exports = {
                 }  
             }
 
-            const dataImage = req.files.images.map(value => {
-                return {image_product: value.path}
-            })
+            // const dataImage = req.files.images.map(value => {
+            //     return {image_product: value.path}
+            // })
             console.log(dataImage[0].image_product);
             // console.log(dataImage);
             console.log("lala");
             const createProduk = await db.produk.create({
                 nama_produk: data.nama_produk, deskripsi: data.deskripsi, stock:data.stock, harga: Number(data.harga), status_product:"Active", image_product: dataImage[0].image_product
             })
-<<<<<<< HEAD
-            console.log("hehehe");
-=======
-
-            console.log(dataImage);
-            
-            const createProduk = await db.produk.create({
-                nama_produk: data.nama_produk, deskripsi: data.deskripsi, stock:data.stock, harga: data.harga, status_product:"Active", image_product: dataImage[0].image_product
-            })
-
-
->>>>>>> aae8b077733bd0834ce146e072352bf5e5f0d4ac
-            // await db.produk.bulkCreate(createProduk)
 
             res.status(200).send({
                 isError: false,
@@ -104,16 +90,8 @@ module.exports = {
                 data: createProduk
             })
         } catch (error) {
-<<<<<<< HEAD
+console.log(error);
             deleteFiles(req.files)
-            console.log(error);
-=======
-
-            // deleteFiles(req.files)
-
-            deleteFiles(req.files)
-
->>>>>>> aae8b077733bd0834ce146e072352bf5e5f0d4ac
             next(error)
         }
     },
@@ -194,40 +172,79 @@ module.exports = {
         } catch (error) {
             deleteFiles(req.files)
             console.log(error);
-        }
-    },
+        }},
+    //   console.log(updateProduk);
 
-    deleteStatus: async (req, res, next) => {
-        try {
-            const { id } = req.params
-            // const { status_product } = req.body
-            console.log(id);
-            // console.log(status_product);
+//       const afterUpdateProduk = await db.produk.findByPk(id);
+//       console.log(afterUpdateProduk);
 
-            const idProductStatus = await db.produk.findByPk(id)
-            console.log(idProductStatus.dataValues);
+//       res.status(200).send({
+//         isError: false,
+//         message: "Success Update",
+//         data: afterUpdateProduk.dataValues,
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   },
 
-            const edtiStatus = await db.produk.update(
-                {
-                    status_product: "Non-Active"
-                },
-                {
-                    where: {id : id}
-                }
-            )
+  updateImageProduk: async (req, res, next) => {
+    try {
+      const { idProduk } = req.params;
+      console.log(idProduk);
 
-            const afterIdProdukStatus = await db.produk.findByPk(id)
+      const images = req.files.images[0].path;
+      console.log(images);
 
-            res.status(200).send({
-                isError: false,
-                message : "Status berhasil di update",
-                data: afterIdProdukStatus.dataValues
-            })
+      const getData = await db.produk.findByPk(idProduk);
+      console.log(getData.dataValues.image_product);
+      const updateImage = await db.produk.update(
+        { image_product: images },
+        { where: { id: idProduk } }
+      );
+
+      await deleteFiles({
+        images: [{ path: getData.dataValues.image_product }],
+      });
+
+      const getDataImage = await db.produk.findByPk(idProduk);
+      res.status(200).send({
+        isError: false,
+        message: "success update",
+        data: getDataImage,
+      });
+    } catch (error) {
+      deleteFiles(req.files);
+      console.log(error);
+    }
+  },
+
+  deleteStatus: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      // const { status_product } = req.body
+      console.log(id);
+      // console.log(status_product);
+
+      const idProductStatus = await db.produk.findByPk(id);
+      console.log(idProductStatus.dataValues);
+
+      const edtiStatus = await db.produk.update(
+        {
+          status_product: "Non-Active",
+        },
+        {
+          where: { id: id },
+        })
+        res.status(200).send({
+            isError: false,
+            message: "Status berhasil di update",
+            data: afterIdProdukStatus.dataValues,
+          });
+
         } catch (error) {
-            
-            next(error)
-        }
-    },
+      next(error);
+    }},
 
     getById : async (req, res, next) => {
         try {
@@ -243,5 +260,14 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
-    }
-}
+    },
+
+    //   const afterIdProdukStatus = await db.produk.findByPk(id);
+
+
+    // } catch (error) {
+    //   next(error);
+
+    // }
+//   },
+};
