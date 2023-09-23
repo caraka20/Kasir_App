@@ -240,6 +240,9 @@ module.exports = {
       const cartData = await decreaseQty(idProduct);
       const data = await cartById(idProduct);
 
+      
+
+
       res.status(200).send({
         isError: false,
         message: "decrease 1 success",
