@@ -6,11 +6,6 @@ const upload = require('../middleware/upload')
 
 Router.get('/', productController.getData)
 
-// Router.get('/:id', productController.getById)
-
-
-// Router.get('/:id', productController.getById)
-
 Router.post('/', upload, productController.create)
 Router.put('/:id', productController.update)
 Router.patch('/:id', productController.deleteStatus)
