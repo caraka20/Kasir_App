@@ -171,7 +171,7 @@ console.log(category);
         {
           !allCategory ? <span>...Loading lagi muter</span> : allCategory.map((value, index) => {
             return (
-              <tr>
+              <tr className={value.status === "active" ? "" : "opacity-70"}>
             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
               <div className="text-sm leading-5 text-gray-900">{index + 1}</div>
             </td>
@@ -179,7 +179,7 @@ console.log(category);
               <div className="text-sm leading-5 text-gray-900">{value.nama_kategori}</div>
             </td>
             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="text-sm leading-5 text-gray-900">{value.status}</div>
+              <div className="text-sm w-10 leading-5 text-gray-900">{value.status}</div>
             </td>
             <td className="px-6 py-4  whitespace-no-wrap border-b border-gray-200">
               <div className="grid text-sm gap-5 leading-5 text-gray-900">

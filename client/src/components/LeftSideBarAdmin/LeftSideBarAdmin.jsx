@@ -7,8 +7,8 @@ import imageLaporan from '../../assets/image/imageLaporan.png'
 import {BsClipboardPlus} from 'react-icons/bs'
 import {TbCategory} from 'react-icons/tb'
 import 'boxicons'
-import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 
 const LeftSideBarAdmin = () => {
