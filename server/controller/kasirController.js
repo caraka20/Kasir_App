@@ -1,5 +1,6 @@
 const db = require("../models")
 const {deleteFiles} = require('../helper/deleteFiles')
+const {hash, } = require("../helper/hashing")
 
 module.exports = {
     createKasir : async (req, res, next) => {
@@ -32,8 +33,9 @@ module.exports = {
             })
             // console.log(image);
 
+            const hasilHash = await hash(data.password, 10);
             const creatKasirr = await db.user.create({
-                nama_lengkap : data.nama_lengkap, role : "cashier", username : data.username, password : data.password, status_user:"active", email : data.email, image_user: image[0].image_user
+                nama_lengkap : data.nama_lengkap, role : "cashier", username : data.username, password : hasilHash, status_user:"active", email : data.email, image_user: image[0].image_user
             })
             res.status(200).send({
                 isError: false, 
@@ -78,6 +80,43 @@ module.exports = {
     deleteStatus : async (req,res,next) => {
         try {
             const {id} = req.params
+            const idStatuss = await db.user.findByPk(id)
+            // console.log(idStatuss.dataValues.status_user)
+            const data = {}
+            if (idStatuss.dataValues.status_user === "active") {
+                data["status"] = "Non-Active"
+            } else {
+                data["status"] = "active"
+            }
+            const updateStatusUser = await db.user.update(
+                {
+                    status_user : data.status
+                },
+                {
+                    where : {id : id}
+                }
+            )
+            res.status(200).send({
+                isError : false,
+                message : "Berhasil diubah",
+                data : null
+            })
+        } catch (error) {
+            next(error)
+        }
+    },
+
+    getAllKasir : async (req, res, next) => {
+        try {
+            const respon = await db.user.findAll(
+                {where : {role : "cashier"}}
+            )
+            
+            res.status(200).send({
+                isError : false,
+                message : "Seluruh data kasir",
+                data : respon
+            })
         } catch (error) {
             next(error)
         }
