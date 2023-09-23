@@ -170,12 +170,39 @@ const updateImage = async (e) => {
       // toast.error(error)
   }
 }
+const handleFilter = async (e) => {
+  try {
+    console.log(e.target.value);
+    const res = await axios.get(`http://localhost:3001/filter/${e.target.value}`)
+    console.log(res.data.data);
+    setDatas(res.data.data)
+  } catch (error) {
+    console.log(error);
+  }
+}
   useEffect(() => {
     getData()
   }, [])
 console.log(datas);
   return (
     <div>
+            <div className="flex justify-between items-center mt-[20px]">
+        <h1 className=" text-2xl">Foods</h1>
+        <div className="flex items-center ">
+          <h1>Sort by:</h1>
+          <select onChange={handleFilter} className="filter select select-ghost text-customPrimary  focus:ring-customPrimary  border-none text-xl bg-customBackground">
+            <option className="" disabled selected>
+              Select
+            </option>
+            <option>Foods</option>
+            <option value={"A-Z"}>A/Z</option>
+            <option value={"Z-A"}>Z/A</option>
+            <option value={"H-L"}>Highest</option>
+            <option value={"L-H"}>Lowest</option>
+          </select>
+        </div>
+      </div>
+      <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-5 mt-[20px]">
       <Toaster />
       {
         !datas ? <span>...Loading</span> : datas.map((value, index) => {
@@ -275,7 +302,7 @@ console.log(datas);
           )
         })
       }
-
+</div>
     </div>
   );
 }

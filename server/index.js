@@ -15,29 +15,16 @@ const { categoryRouter } = require('./routers')
 const { kasirRouter } = require("./routers")
 const { filterRouter } = require('./routers')
 
-
 const {authorizationRouter} = require("./routers")
 const {transactionRouter} = require('./routers')
-// app.use(cors())
-// app.use(express.json())
-
-// console.log(productRouter);
-
-
 
 app.use(express.json())
 app.use("/user",userRouter)
 app.use("/kasir", kasirRouter)
 
 
-// console.log(productRouter);
 app.use('/filter', filterRouter)
 app.use('/product', productRouter)
-// app.use('/category', categoryRouter)
-// app.use("/kasir", kasirRouter)
-
-// const {authorizationRouter} = require("./routers")
-// const {transactionRouter} = require('./routers')
 
 const {reportRouter} = require("./routers")
 
@@ -64,7 +51,6 @@ app.use((err, req, res, next) => {
         data: null
     })
 })
-
 
 
 app.listen(PORT, () => {

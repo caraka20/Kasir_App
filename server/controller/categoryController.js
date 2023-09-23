@@ -86,6 +86,7 @@ module.exports = {
             const idStatuss = await db.kategori_produk.findByPk(idStatus)
             console.log(idStatuss.dataValues.status);
             const data = {}
+            console.log(data);
             if (idStatuss.dataValues.status === "active") {
                 data["status"] = "Non-Active"
             } else {
@@ -101,7 +102,7 @@ module.exports = {
                 }
             )
             const idStatusAfter = await db.kategori_produk.findByPk(idStatus)
-            console.log(idStatusAfter);
+            // console.log(idStatusAfter);
             res.status(200).send({
                 isError: false,
                 message: "Success update status",
