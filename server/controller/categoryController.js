@@ -2,8 +2,9 @@ const db = require('../models')
 
 
 module.exports = {
-    get : async (req, res, next) => {
+    getData : async (req, res, next) => {
         try {
+            // console.log("ok");
             const findAllData = await db.kategori_produk.findAll()
             res.status(200).send({
                 isError: false, 
@@ -83,11 +84,17 @@ module.exports = {
             const {idStatus} = req.params
 
             const idStatuss = await db.kategori_produk.findByPk(idStatus)
-            console.log(idStatuss.dataValues);
-
+            console.log(idStatuss.dataValues.status);
+            const data = {}
+            if (idStatuss.dataValues.status === "active") {
+                data["status"] = "Non-Active"
+            } else {
+                data["status"] = "active"
+            }
+            console.log(data);
             const updateStatusCategory = await db.kategori_produk.update(
                 {
-                    status: "Non-Active"
+                    status : data.status
                 },
                 {
                     where : {id : idStatus}

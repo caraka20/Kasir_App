@@ -2,6 +2,7 @@ const express = require("express")
 const app = express()
 const cors = require("cors")
 app.use(cors())
+app.use(express.static('public'))
 PORT = 3001
 
 const { productRouter } = require("./routers")
@@ -16,10 +17,11 @@ app.use("/user",userRouter)
 app.use("/kasir", kasirRouter)
 
 
+
 // console.log(productRouter);
 app.use('/filter', filterRouter)
 app.use('/product', productRouter)
-// app.use('/category', categoryRouter)
+app.use('/category', categoryRouter)
 // app.use("/kasir", kasirRouter)
 
 app.use((err, req, res, next) => {

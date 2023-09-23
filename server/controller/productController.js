@@ -62,12 +62,12 @@ module.exports = {
                 return {image_product: value.path}
             })
             console.log(dataImage[0].image_product);
-            console.log(dataImage);
-            
+            // console.log(dataImage);
+            console.log("lala");
             const createProduk = await db.produk.create({
-                nama_produk: data.nama_produk, deskripsi: data.deskripsi, stock:data.stock, harga: data.harga, status_product:"Active", image_product: dataImage[0].image_product
+                nama_produk: data.nama_produk, deskripsi: data.deskripsi, stock:data.stock, harga: Number(data.harga), status_product:"Active", image_product: dataImage[0].image_product
             })
-
+            console.log("hehehe");
             // await db.produk.bulkCreate(createProduk)
 
             res.status(200).send({
@@ -76,7 +76,8 @@ module.exports = {
                 data: createProduk
             })
         } catch (error) {
-            // deleteFiles(req.files)
+            deleteFiles(req.files)
+            console.log(error);
             next(error)
         }
     },

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import LeftSideBarAdmin from '../../components/LeftSideBarAdmin/LeftSideBarAdmin'
-// import Sidebar from '../../components/LeftSideBarAdmin/Sidebar'
+
 import Button from '../../components/Button/Button'
 import axios from 'axios'
 import toast, {Toaster} from 'react-hot-toast'
-// import Sidebar from '../../components/LeftSideBarAdmin/Sidebar'
-
 
     const CreatePorduk = () => {
     const [input, setInput] = useState({
@@ -24,6 +22,7 @@ import toast, {Toaster} from 'react-hot-toast'
                 setDatas(getData)
                 console.log(getData.data.data);
         } catch (error) {
+            console.log(error);
             toast.error(error)
         }
     }
@@ -37,6 +36,7 @@ import toast, {Toaster} from 'react-hot-toast'
 
             setImages(files)
         } catch (error) {
+            console.log(error);
             alert(error.message)
         }
     }
@@ -48,7 +48,7 @@ import toast, {Toaster} from 'react-hot-toast'
             images.forEach(value => {
                 fd.append('images', value)
             })
-
+            console.log(fd);
             if(input.nama_produk === "" || input.deskripsi === "" || input.harga === "" || input.stock === "" || input.kategori_produk_id === "" || images.length === 0) {
                 return toast.error("Form Harus Dilengkapi")
             }
@@ -69,10 +69,10 @@ import toast, {Toaster} from 'react-hot-toast'
                     toast.error("Produk Already Exist")
                 } 
                 const create = await axios.post("http://localhost:3001/product", fd)
-                // console.log(create.data);
-                toast.success(create)
+                console.log(create.data.message);
+                toast.success(create.data.message)
         } catch (error) {
-            console.log(error.message);
+            console.log(error);
             // toast.error(error)
         }
     }
@@ -117,7 +117,7 @@ import toast, {Toaster} from 'react-hot-toast'
 
                                     <div>
                                         <label htmlFor="" className='font-serif'>Pilih Kategori</label><br />
-                                        <select name='kategori_produk_id' onChange={handleChange} className='select w-full max-w-xs mt-2 mb-5' style={{ width: '100%' }}>
+                                        <select name='kategori_produk_id' onChange={handleChange} className='select w-full max-w-xs mt-2 mb-5 ' style={{ width: '100%' }}>
                                             <option disabled selected>Kategori Produk</option>
                                             <option value={1}>Snack</option>
                                             <option value={2}>Main Course</option>
