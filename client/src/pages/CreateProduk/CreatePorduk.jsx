@@ -15,7 +15,7 @@ const CreatePorduk = () => {
     })
     const [datas, setDatas] = useState(null)
     const [images, setImages] = useState([])
-
+console.log("lala");
     const getData = async () => {
         try {
             const getData = await axios.get("http://localhost:3001/product")
