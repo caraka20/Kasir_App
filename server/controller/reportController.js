@@ -74,7 +74,8 @@ module.exports = {
     try {
       // rata rata penjualan hanya bisa 10 hari terahir
       const { awal, akhir } = req.query;
-      // console.log(awal + "lala");
+      console.log(awal);
+      console.log(akhir);
       const dataAll = await db.transaction.findAll({
         attributes: [
           "product_name",
