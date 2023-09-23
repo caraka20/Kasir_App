@@ -3,11 +3,11 @@ const express = require("express")
 const app = express()
 const cors = require("cors")
 app.use(cors())
-<<<<<<< HEAD
-app.use(express.static('public'))
-=======
 
->>>>>>> aae8b077733bd0834ce146e072352bf5e5f0d4ac
+app.use(express.static('public'))
+
+
+
 PORT = 3001
 
 app.use(express.json())
