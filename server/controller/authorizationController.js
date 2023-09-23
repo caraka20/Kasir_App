@@ -6,6 +6,7 @@ const { log } = require("util")
 const fs = require ('fs').promises
 
 module.exports = {
+    //LALAAYEYEYEYELALALAYEYEYE
     mailForgetPassword: async (req, res, next) => {
         try {
             const {email} = req.query
