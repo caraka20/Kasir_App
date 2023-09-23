@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     customer_name: DataTypes.STRING,
     transaction_uid: DataTypes.STRING,
     status_transaksi: DataTypes.STRING,
+    nama_kasir: DataTypes.STRING,
     createdAt : {
       type: DataTypes.DATE,
       defaultValue: new Date()

@@ -2,12 +2,22 @@ const conn = require ("../models")
 const transporter = require ("../helper/transporter")
 const handlebars = require ('handlebars')
 const {hash, match} = require ('../helper/hashing')
+const { log } = require("util")
 const fs = require ('fs').promises
 
 module.exports = {
     mailForgetPassword: async (req, res, next) => {
         try {
-            const {email} = req.body
+            const {email} = req.query
+            const emailCheck = await conn.user.findOne({where:{email:email}})
+            if(!emailCheck) {
+                
+                throw{
+                    isError:true,
+                    message:"Email was not found",
+                    data:null
+                }
+            }
             const readTemplate = await fs.readFile('./public/template.html','utf-8')
             const compiledTemplate = await handlebars.compile(readTemplate)
             const newTemplate = compiledTemplate ({email})
@@ -15,12 +25,12 @@ module.exports = {
             await transporter.sendMail({
                 from: "Admin TSUGI ",
                 to:"ariefrubani44@gmail.com",
-                subject: "Forget password request successful",
+                subject: "Forget Password Request",
                 html: newTemplate
             })
             res.status(200).send({
                 isError: false,
-                message: "Password successfully changed",
+                message: "An email has been sent to you",
                 data: null
             })
         } catch (error) {
@@ -54,22 +64,32 @@ module.exports = {
     },
     resetPassword: async (req, res, next) => {
         try {
-            const {id} = req.params
-            const {password} = req.body
+            
+            const {id} = req.dataToken
+            // console.log(id);
+            const {oldPassword, newPassword} = req.body
             const findUser = await conn.user.findByPk(id)
-
-            const hashedPassword = await hash(password, 10)
-            const updatedPassword = await conn.user.update({password: hashedPassword }, {where:{id}})
-
-            if(!updatedPassword) {
-                return res.status(404).json({
-                    isError:true,
-                    message: "User not found",
-                    data: null
-                });
+            // console.log(oldPassword, newPassword);
+            // console.log(findUser.dataValues.password);
+            const checkPass = await match(oldPassword, findUser.dataValues.password)
+            // console.log(checkPass);
+            if(!checkPass) {
+                throw {
+                    message : "Password incorrect"
+                }
             }
-
-            res.status(200).json({
+            const hasher = await hash(newPassword, 10)
+            const data = await conn.user.update(
+                {
+                    password : hasher
+                },
+                {
+                    where : {id : id}
+                }
+            )
+            // const hashedPassword = await hash(password, 10)
+            // const updatedPassword = await conn.user.update({password: hashedPassword }, {where:{id}})
+            res.status(200).send({
                 isError:false,
                 message:"Password have been resetted successfully",
                 data:null
