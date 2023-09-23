@@ -7,8 +7,8 @@ import imageLaporan from '../../assets/image/imageLaporan.png'
 import {BsClipboardPlus} from 'react-icons/bs'
 import {TbCategory} from 'react-icons/tb'
 import 'boxicons'
-import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 
 const LeftSideBarAdmin = () => {
@@ -42,11 +42,13 @@ const LeftSideBarAdmin = () => {
       <span className="text-gray-500">Create Cashier</span></Link>
     </div>
     <div className="Dashboard w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
+      <Link to="/home/admin">
       <p className="text-4xl text-gray-500 " />
       <div className=''>
       <img className='w-[35px] h-[34px]' src={dashboardAdmin} alt="" />
       </div>
       <h1 className="mt-[13px] text-gray-500">Dashboard</h1>
+      </Link>
     </div>
     
     <div className="Report w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
@@ -58,15 +60,19 @@ const LeftSideBarAdmin = () => {
     </div>
 
     <div className='Produk w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] border-l-8  border-l-customPrimary rounded'>
+    <Link to="/produk">
       <p className='text-4xl'/>
         <BsClipboardPlus className='w-[35px] h-[34px]'/>
       <h1 className=' text-customPrimary mt-[13px]'>Create Produk</h1>
+    </Link>
     </div>
-
+    
     <div className="Category w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
-      <p className="text-4xl text-gray-500" />
+    <p className="text-4xl text-gray-500" />
+      <Link to="/Category">
       <TbCategory className='w-[35px] h-[34px]'/>
       <h1 className="text-gray-500 mt-[13px]">Create Category</h1>
+    </Link>
     </div>
 
     <div className="Report w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[75px] rounded">

@@ -1,10 +1,11 @@
+
 //all const and importants are heere
 const express = require("express")
 const app = express()
 const cors = require("cors")
 app.use(cors())
-
-PORT = 3001
+app.use(express.static('public'))
+// PORT = 3001
 
 app.use(express.json())
 
@@ -20,7 +21,7 @@ const {transactionRouter} = require('./routers')
 // app.use(cors())
 // app.use(express.json())
 
-
+// console.log(productRouter);
 
 
 
@@ -47,7 +48,7 @@ app.use("/report", reportRouter)
 app.use("/auth", authorizationRouter)
 app.use("/transaction", transactionRouter)
 app.use('/filter', filterRouter)
-app.use('/product', productRouter)
+// app.use('/product', productRouter)
 app.use('/category', categoryRouter)
 app.use("/kasir", kasirRouter)
 
@@ -69,4 +70,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log("Sedang Berjalan " + PORT);
 })
-

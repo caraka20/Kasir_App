@@ -2,6 +2,7 @@ const conn = require ("../models")
 const transporter = require ("../helper/transporter")
 const handlebars = require ('handlebars')
 const {hash, match} = require ('../helper/hashing')
+const { log } = require("util")
 const fs = require ('fs').promises
 
 module.exports = {
@@ -63,13 +64,15 @@ module.exports = {
     },
     resetPassword: async (req, res, next) => {
         try {
-            const {id} = req.params
+            
+            const {id} = req.dataToken
+            // console.log(id);
             const {oldPassword, newPassword} = req.body
             const findUser = await conn.user.findByPk(id)
-            
-            console.log(findUser.dataValues.password);
+            // console.log(oldPassword, newPassword);
+            // console.log(findUser.dataValues.password);
             const checkPass = await match(oldPassword, findUser.dataValues.password)
-            console.log(checkPass);
+            // console.log(checkPass);
             if(!checkPass) {
                 throw {
                     message : "Password incorrect"
@@ -86,7 +89,7 @@ module.exports = {
             )
             // const hashedPassword = await hash(password, 10)
             // const updatedPassword = await conn.user.update({password: hashedPassword }, {where:{id}})
-            res.status(200).json({
+            res.status(200).send({
                 isError:false,
                 message:"Password have been resetted successfully",
                 data:null

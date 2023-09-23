@@ -7,6 +7,7 @@ import UpdatePassword from "../UpdatePassword/UpdatePassword";
 import ChangeOldPass from "../ChangeOldPass/ChangeOldPass";
 import Profile from "../Profile/Profile";
 import CreateCategory from "../CreateCategory/CreateCategory";
+import CardAdmin from "../../components/CardAdmin/CardAdmin";
 import Admin from "../HomeAdmin/Admin";
 
 import Report from "../Report/Report";
@@ -16,6 +17,7 @@ import CreateKasir from "../CreateKasir/CreateKasir";
 const routes = [
   <>
     <Route path="/home/admin" element={<Admin />} />
+    <Route path="/card" element={<CardAdmin />}/>
     <Route path="/Category" element={<CreateCategory />} />
     <Route path="/produk" element={<CreatePorduk />} />
     <Route path="/admin/report" element={<Report />} />
