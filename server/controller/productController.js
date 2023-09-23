@@ -111,7 +111,7 @@ module.exports = {
 
             const updateProduk = await db.produk.update(
                 {
-                  ...idProduct, nama_produk, deskripsi, stock, harga, kategori_produk_id
+                  ...idProduct, nama_produk, deskripsi, stock: Number(stock), harga : Number(harga), kategori_produk_id : Number(kategori_produk_id)
                 }, 
                 {
                     where: {id : id}
@@ -190,6 +190,22 @@ module.exports = {
         } catch (error) {
             
             next(error)
+        }
+    },
+
+    getById : async (req, res, next) => {
+        try {
+            const {id} = req.params
+            // console.log(id);
+            const getDataById = await db.produk.findByPk(id)
+
+            res.status(200).send({
+                isError: false,
+                message : "Success databyid",
+                data: getDataById
+            })
+        } catch (error) {
+            console.log(error);
         }
     }
 }

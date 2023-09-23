@@ -1,81 +1,41 @@
-import React, { useEffect, useState } from 'react'
-import LeftSideBarAdmin from '../../components/LeftSideBarAdmin/LeftSideBarAdmin'
+import React from 'react'
+import Modal from 'react-modal'
+import Button from '../Button/Button';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
-import Button from '../../components/Button/Button'
-import axios from 'axios'
-import toast, {Toaster} from 'react-hot-toast'
+const ModalEdit = (props) => {
+    const customStyles = {
+        content: {
+          top: '50%',
+          left: '50%',
+          right: 'auto',
+          bottom: 'auto',
+          marginRight: '-50%',
+          transform: 'translate(-50%, -50%)',
+          width: "1000px",
+      height: "600px",
+        },
+      };
 
-const CreatePorduk = () => {
-    const [input, setInput] = useState({
+      const [input, setInput] = useState({
         nama_produk:"",
         deskripsi:"",
         stock:"",
         harga:"",
         kategori_produk_id:""
     })
-    const [datas, setDatas] = useState(null)
-    const [images, setImages] = useState([])
 
-    const getData = async () => {
+    const [closeModel, setCloseModel] = useState(false)
+    
+    const tutupModel = async () => {
         try {
-            const getData = await axios.get("http://localhost:3001/product")
-                setDatas(getData)
-                console.log(getData.data.data);
+            setCloseModel(false)
         } catch (error) {
             console.log(error);
-            toast.error(error)
         }
     }
-    console.log(datas);
-    const onSelectImages = (event) => {
-        try {
-            const files = [...event.target.files]
-            files.forEach(value => {
-                if(value.size > 10000000 || value.type.split('/')[0] !== 'image') throw {message: `${value.name} Size Too Large / File Must be Image`}
-            })
-
-            setImages(files)
-        } catch (error) {
-            console.log(error);
-            alert(error.message)
-        }
-    }
-    const createProduk = async () => {
-        try {
-            const fd = new FormData()
-            console.log(fd);
-            fd.append('data', JSON.stringify(input))
-            images.forEach(value => {
-                fd.append('images', value)
-            })
-            console.log(fd);
-            if(input.nama_produk === "" || input.deskripsi === "" || input.harga === "" || input.stock === "" || input.kategori_produk_id === "" || images.length === 0) {
-                return toast.error("Form Harus Dilengkapi")
-            }
-
-            if(input.harga < 5000) {
-                return alert("harga tidak boleh kurang dari 5000")
-            }
-
-            if(input.stock < 1) {
-                return alert('stock tidak boleh 0 atau minus')
-            }
-
-                const findProduk = datas.data.data.find((value) => {
-                    return value.nama_produk === input.nama_produk
-                })
-                console.log(findProduk);
-                if(findProduk) {
-                    toast.error("Produk Already Exist")
-                } 
-                const create = await axios.post("http://localhost:3001/product", fd)
-                console.log(create.data.message);
-                toast.success(create.data.message)
-        } catch (error) {
-            console.log(error);
-            // toast.error(error)
-        }
-    }
+    // console.log(closeModel);
     const handleChange = (e) =>{
         const nama_produk = e.target.name
         const value = e.target.value
@@ -85,23 +45,24 @@ const CreatePorduk = () => {
         newData[nama_produk] = value
         setInput(newData)
     }
-    // console.log(input);
 
-    useEffect(() => {
-        getData()
-    }, [])
+    // const klik = () => {
+    //     setCloseModel(true)
+    // }
+    // useEffect (()=> {
+
+    // }, [closeModel, setCloseModel])
 
   return (
-    <div className='grid h-screen'>
-        <Toaster />
-        <div className='flex gap-3'>
-            <LeftSideBarAdmin />
-            <div className='w-full md:w-[90%] border h-full bg-blue-100'>
-                <div className='lg:p-10'>
+      <Modal style={customStyles} isOpen={closeModel} onClick={() => props.isOpen(()=>{setCloseModel(true)})} >
+        <div className='grid gap-5'>
+            <button onClick={tutupModel} className='rounded-full  text-white bg-customPrimary w-[50px] px-[10px] py-[10px]'>
+                 X
+                </button>
 
                     <div className='flex justify-center text-5xl items-center font-semibold border-b-[5px] border-black py-5 mb-10'>
                        <div>
-                        Create Product
+                        Edit Product
                        </div>
                     </div>
 
@@ -139,16 +100,11 @@ const CreatePorduk = () => {
                                         <div className=''>
                                             <label htmlFor="" className='font-serif'>Deskripsi Produk</label><br />
                                             <textarea name='deskripsi' value={input.deskripsi} onChange={handleChange} type="text" placeholder='Type here' className='mt-2 mb-5 input input-bordered w-full max-w-xs h-[100px]'/>
-                                        </div>
-
-                                        <div className='mt-[30px]'>
-                                            <label htmlFor="" className="font-serif">Gambar Hotel</label><br />
-                                            <input type='file' multiple='multiple' onChange={(e) => onSelectImages(e)} className="mt-2 mb-5 file-input file-input-bordered w-full max-w-xs bg-white" />
-                                        </div>     
+                                        </div>  
                                         
                                         <div></div>
                                         <div className='flex justify-start w-[75%]'>
-                                            <Button onClick={createProduk} btnName="Submit" btnCSS="md:w-[50%] md:ml-[120px]"/> 
+                                            <Button btnName="Edit" btnCSS="md:w-[50%] md:ml-[120px]"/> 
                                         </div>                            
                                     </div>
                                          
@@ -157,11 +113,8 @@ const CreatePorduk = () => {
                                 </div>
                             </div>
                         </div>
-                </div>
-            </div>
-
-            </div>
+      </Modal>
   )
 }
 
-export default CreatePorduk
+export default ModalEdit
