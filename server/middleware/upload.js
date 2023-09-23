@@ -9,7 +9,7 @@ const upload = async (req, res, next) => {
     try {
       if (err) throw err;
 
-      console.log(req.files);
+      // console.log(req.files);
       req.files.images.forEach((values) => {
         if (values.size > 1000000)
           throw {
@@ -26,3 +26,4 @@ const upload = async (req, res, next) => {
 };
 
 module.exports = upload;
+
