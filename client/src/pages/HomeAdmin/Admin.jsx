@@ -28,7 +28,7 @@ const Admin = () => {
     try {
       const fetchData = await axios.get("http://localhost:3001/product")
       console.log(fetchData.data.data);
-      setDatas(fetchData)
+      setDatas(fetchData.data.data)
     } catch (error) {
       console.log(error);
     }
@@ -41,9 +41,17 @@ const Admin = () => {
   }, [])
 
   return (  
-  <div className="screen  w-full h-screen flex ">
+  <div className="screen w-screen h-screen flex ">
     <LeftSideBarAdmin />
-    <div className="middle w-8/12 h-full md:px-[50px]  2xl:px-[100px] lg:px-[20px]  overflow-scroll  bg-customBackground">
+    <div className="middle w-screen h-full md:px-[50px]  2xl:px-[100px] lg:px-[20px]  overflow-scroll  bg-customBackground">
+      <div className='grid grid-cols-2 ml-[250px]'>
+      <button className='rounded-xl text-white bg-customPrimary w-[35%] my-[50px] px-[10px] py-[8px]'>
+        ProdukList
+      </button>
+      <button className='rounded-xl text-white bg-customPrimary w-[35%] my-[50px] px-[10px] py-[8px]'>
+        Cashier
+      </button>
+      </div>
       <Search className="mt-[50px]" />
       <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
       <div className="flex gap-10 w-full overflow-scroll">
@@ -89,12 +97,6 @@ const Admin = () => {
         </div>
       </div>
       <div className="grid sm:grid-cols-3 lg:grid-cols-5 gap-5 mt-[20px]">
-        <CardAdmin />
-        <CardAdmin />
-        <CardAdmin />
-        <CardAdmin />
-        <CardAdmin />
-        <CardAdmin />
         <CardAdmin />
       </div>
 

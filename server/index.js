@@ -3,7 +3,11 @@ const express = require("express")
 const app = express()
 const cors = require("cors")
 app.use(cors())
+<<<<<<< HEAD
+app.use(express.static('public'))
+=======
 
+>>>>>>> aae8b077733bd0834ce146e072352bf5e5f0d4ac
 PORT = 3001
 
 app.use(express.json())
@@ -29,10 +33,11 @@ app.use("/user",userRouter)
 app.use("/kasir", kasirRouter)
 
 
+
 // console.log(productRouter);
 app.use('/filter', filterRouter)
 app.use('/product', productRouter)
-// app.use('/category', categoryRouter)
+app.use('/category', categoryRouter)
 // app.use("/kasir", kasirRouter)
 
 // const {authorizationRouter} = require("./routers")
