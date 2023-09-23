@@ -25,7 +25,7 @@ module.exports = {
                 throw {message: "Maaf Data tolong di isi...!!"}
             }
 
-           const findCategoriProduk = await db.kategori_produk.findOne({
+            const findCategoriProduk = await db.kategori_produk.findOne({
                 where : {nama_kategori : nama_kategori}
             })
             console.log(findCategoriProduk);
