@@ -69,10 +69,8 @@ const CreatePorduk = () => {
                     toast.error("Produk Already Exist")
                 } 
                 const create = await axios.post("http://localhost:3001/product", fd)
-
                 console.log(create.data.message);
                 toast.success(create.data.message)
-
         } catch (error) {
             console.log(error);
             // toast.error(error)
@@ -162,11 +160,6 @@ const CreatePorduk = () => {
                 </div>
             </div>
 
-            </div>
-            </div>
-            </div>
-            </div>
-            </div>
             </div>
   )
 }
