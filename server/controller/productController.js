@@ -18,6 +18,7 @@ module.exports = {
 
     create: async (req, res, next) => {
         try {
+            console.log("haha");
             const data = JSON.parse(req.body.data)
 
             console.log(data);
@@ -28,7 +29,7 @@ module.exports = {
                         status : 409,
                         message : "Tolong... Lengkapi data"
                       }
-
+                    }
             // console.log(data);
 
             // Validasi data tidak boleh kosong
@@ -61,9 +62,6 @@ module.exports = {
             // validasi nama_produk tidak boleh sama
             // console.log(req.files.images);
 
-            
-
-
             const dataImage = req.files.images.map(value => {
                 return {image_product: value.path}
             })
@@ -76,18 +74,14 @@ module.exports = {
                 }  
             }
 
-            const dataImage = req.files.images.map(value => {
-                return {image_product: value.path}
-            })
+            // const dataImage = req.files.images.map(value => {
+            //     return {image_product: value.path}
+            // })
             console.log(dataImage[0].image_product);
             // console.log(dataImage);
             console.log("lala");
             const createProduk = await db.produk.create({
                 nama_produk: data.nama_produk, deskripsi: data.deskripsi, stock:data.stock, harga: Number(data.harga), status_product:"Active", image_product: dataImage[0].image_product
-            })
-            
-            const createProduk = await db.produk.create({
-                nama_produk: data.nama_produk, deskripsi: data.deskripsi, stock:data.stock, harga: data.harga, status_product:"Active", image_product: dataImage[0].image_product
             })
 
             res.status(200).send({
@@ -96,7 +90,7 @@ module.exports = {
                 data: createProduk
             })
         } catch (error) {
-
+console.log(error);
             deleteFiles(req.files)
             next(error)
         }
@@ -178,22 +172,21 @@ module.exports = {
         } catch (error) {
             deleteFiles(req.files)
             console.log(error);
-        }
-      );
-      console.log(updateProduk);
+        }},
+    //   console.log(updateProduk);
 
-      const afterUpdateProduk = await db.produk.findByPk(id);
-      console.log(afterUpdateProduk);
+//       const afterUpdateProduk = await db.produk.findByPk(id);
+//       console.log(afterUpdateProduk);
 
-      res.status(200).send({
-        isError: false,
-        message: "Success Update",
-        data: afterUpdateProduk.dataValues,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
+//       res.status(200).send({
+//         isError: false,
+//         message: "Success Update",
+//         data: afterUpdateProduk.dataValues,
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   },
 
   updateImageProduk: async (req, res, next) => {
     try {
@@ -242,9 +235,16 @@ module.exports = {
         },
         {
           where: { id: id },
-        }
+        })
+        res.status(200).send({
+            isError: false,
+            message: "Status berhasil di update",
+            data: afterIdProdukStatus.dataValues,
+          });
 
-    },
+        } catch (error) {
+      next(error);
+    }},
 
     getById : async (req, res, next) => {
         try {
@@ -260,18 +260,14 @@ module.exports = {
         } catch (error) {
             console.log(error);
         }
-      );
+    },
 
-      const afterIdProdukStatus = await db.produk.findByPk(id);
+    //   const afterIdProdukStatus = await db.produk.findByPk(id);
 
-      res.status(200).send({
-        isError: false,
-        message: "Status berhasil di update",
-        data: afterIdProdukStatus.dataValues,
-      });
-    } catch (error) {
-      next(error);
 
-    }
-  },
+    // } catch (error) {
+    //   next(error);
+
+    // }
+//   },
 };
