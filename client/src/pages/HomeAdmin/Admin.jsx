@@ -60,26 +60,26 @@ const Admin = () => {
     <div className="screen h-screen flex ">
       <LeftSideBarAdmin />
       <div className="middle w-screen h-full md:px-[50px]  2xl:px-[100px] lg:px-[20px]  overflow-scroll  bg-customBackground">
-        <div className="grid grid-cols-2 ml-[250px]">
+        <div className="grid grid-cols-2 ml-[50px] gap-5 w-1/4">
           <Link to={"/home/admin"}>
-            <div className="text-center rounded-xl text-white bg-customPrimary w-[35%] my-[50px] px-[10px] py-[8px]">
+            <div className="text-center rounded-xl text-white bg-customPrimary my-[20px] px-[10px] py-[8px]">
               ProdukList
             </div>
           </Link>
           <Link to={"/admin/ListKasir"}>
-            <div className="text-center rounded-xl text-white bg-customPrimary w-[35%] my-[50px] px-[10px] py-[8px]">
+            <div className="text-center rounded-xl text-white bg-customPrimary my-[20px] px-[10px] py-[8px]">
               Cashier
             </div>
           </Link>
         </div>
         <CardAdmin />
-        <div className="Pagination  mt-[100px] flex justify-between mb-[20px]">
+        {/* <div className="Pagination  mt-[100px] flex justify-between mb-[20px]">
           <Button
             btnCSS="test1  text-black w-[200px] bg-white  border-2 border-orange-500 "
             btnName="Previously"
           />
           <Button btnCSS="test2 w-[200px] text-white" btnName="Next" />
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -16,6 +16,9 @@ const CardAdmin = () => {
   const [search, setSearch] = useState("");
   const [kategori, setKategori] = useState(null);
   // console.log(search);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(8);
+
   const customStyles = {
     content: {
       top: "50%",
@@ -223,7 +226,7 @@ const CardAdmin = () => {
       console.log(error);
     }
   };
-
+console.log(datas);
   useEffect(() => {
     // getData();
     getKategori();
@@ -268,7 +271,6 @@ const CardAdmin = () => {
             <option className="" disabled selected>
               Select
             </option>
-            <option>Foods</option>
             <option value={"A-Z"}>A/Z</option>
             <option value={"Z-A"}>Z/A</option>
             <option value={"H-L"}>Highest</option>

@@ -65,7 +65,8 @@ module.exports = { //udah bisa namun belum ada validasi samsek
             res.status(200).send({
                 isError: false,
                 message:"Welcome back, have a pleasant day!",
-                data: token
+                data: token,
+                role : masuk.dataValues.role
             })
             //data token diatas yang akan kita masukan kemudian kedalam localStorage di bagian frontend
         } catch (error) {
@@ -90,7 +91,7 @@ module.exports = { //udah bisa namun belum ada validasi samsek
     res.status(200).send({
         isError:false,
         message:"All data successfully obtained!",
-        data: data
+        data: [data]
     })
     } catch (error) {
         next(error)
