@@ -7,6 +7,7 @@ import "./card.css";
 import Modal from "react-modal";
 import toast, { Toaster } from "react-hot-toast";
 import Search from "../Search/Search";
+import Paginasi from "./Paginasi";
 const CardAdmin = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [datas, setDatas] = useState(null);
@@ -16,8 +17,8 @@ const CardAdmin = () => {
   const [search, setSearch] = useState("");
   const [kategori, setKategori] = useState(null);
   // console.log(search);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8);
+
+  const paginate = (totalPage) => setCurrentPage(totalPage);
 
   const customStyles = {
     content: {
@@ -231,9 +232,17 @@ console.log(datas);
     // getData();
     getKategori();
   }, []);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(9);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = datas?.slice(indexOfFirstItem, indexOfLastItem);
+
+
   // console.log(search);
   return (
-    <div className="mt-5">
+    <div className="mt-5 mx-10">
       {/* <Search className="" /> */}
       <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
       <div className="flex gap-10 w-full overflow-scroll">
@@ -283,7 +292,7 @@ console.log(datas);
         {!datas ? (
           <span>...Loading</span>
         ) : (
-          datas
+          currentItems
             .filter((value) => {
               if (search === "") {
                 return value;
@@ -485,6 +494,13 @@ console.log(datas);
               );
             })
         )}
+      </div>
+      <div className="mt-10 bg-orange-400">
+        <Paginasi
+          itemsPerPage={itemsPerPage}
+          totalItems={datas?.length}
+          paginate={paginate}
+        />
       </div>
     </div>
   );
