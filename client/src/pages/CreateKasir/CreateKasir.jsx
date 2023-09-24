@@ -11,7 +11,7 @@ const CreateKasir = () => {
     password: "",
   });
   const [images, setImages] = useState([])
-
+  const nav = useNavigate()
   const handleChange = (e) => {
     const newState = { ...state };
     newState[e.target.name] = e.target.value;
@@ -45,6 +45,10 @@ const onSubmit = async(e) => {
       await axios.post('http://localhost:3001/kasir', fd)
 
       toast.success('Data Created!')
+      setTimeout(() => {
+        nav("/home/admin")
+      }, 2000);
+      
   } catch (error) {
       toast.error(error.response.data.message);
   }

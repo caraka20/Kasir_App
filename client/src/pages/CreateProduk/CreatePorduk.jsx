@@ -4,8 +4,9 @@ import LeftSideBarAdmin from '../../components/LeftSideBarAdmin/LeftSideBarAdmin
 import Button from '../../components/Button/Button'
 import axios from 'axios'
 import toast, {Toaster} from 'react-hot-toast'
-
+import { useNavigate } from 'react-router-dom'
 const CreatePorduk = () => {
+    const nav = useNavigate()
     const [input, setInput] = useState({
         nama_produk:"",
         deskripsi:"",
@@ -72,6 +73,9 @@ const CreatePorduk = () => {
                 const create = await axios.post("http://localhost:3001/product", fd)
                 // console.log(create.data.message);
                 toast.success(create.data.message)
+                // setTimeout(() => {
+                //     nav("/home/admin")
+                // }, 2000);
         } catch (error) {
             // console.log(error);
             toast.error(error.response.data.message)
@@ -99,6 +103,8 @@ const CreatePorduk = () => {
             console.log(error);
         }
     }
+
+    console.log(input);
     useEffect(() => {
         getData()
         getAllProduk()
