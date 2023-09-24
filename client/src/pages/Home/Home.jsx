@@ -155,14 +155,16 @@ const Home = () => {
     }
   };
 
-  const updateDatas = (updatedDatas) => {
-    setCart(updatedDatas);
+  const modal = () => {
+    setModelIsOpen(false);
   };
 
   useEffect(() => {
     getApi();
   }, []);
+
   
+
   const vat = Math.floor(subTotal * 0.1);
   const total = Number(subTotal) + Number(vat);
 
@@ -241,10 +243,10 @@ const Home = () => {
           />
           {/* })} */}
         </div>
-        <div className="mt-[20px] border-t-2 border-b-2 py-[20px]">
+        <div className="mt-[10px] border-t-2 border-b-2 py-[20px]">
           <div className="SubTotal flex justify-between items-center">
             <h1 className="text-lg">Sub Total</h1>
-            <h1 className="text-xl  font-normal">{`Rp. ${subTotal}`}</h1>
+            <h1 className="text-xl  font-normal">{`Rp. ${subTotal? subTotal: 0}`}</h1>
           </div>
           <div className="VAT flex justify-between items-center">
             <h1 className="text-lg">VAT (10%)</h1>
@@ -255,7 +257,7 @@ const Home = () => {
           <h1 className="font-semibold text-xl">TOTAL : </h1>
           <h1 className="font-semibold text-xl">{`Rp. ${total}`}</h1>
         </div>
-        <div className="flex flex-col lg:mt-[75px]  mt-[10px] ">
+        <div className="flex flex-col lg:mt-[10px]  mt-[10px] ">
           <Button
             onClick={confirm}
             btnCSS="btn-modal"
@@ -267,6 +269,7 @@ const Home = () => {
           datas={cartToTransaction}
           transaction_uid={transactionUID}
           isOpen={modalIsOpen}
+          modal={modal}
         />
         {modalIsOpen === true ? <div></div> : <Toaster />}
       </div>

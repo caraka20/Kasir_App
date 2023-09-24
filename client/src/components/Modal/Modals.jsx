@@ -8,9 +8,9 @@ import Button from "../Button/Button";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import ModalReceipt from "../ModalReceipt/ModalReceipt";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 const Modals = (props) => {
-  const { datas, transaction_uid } = props;
+  const { datas, transaction_uid, modal } = props;
   // hooks
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -24,7 +24,6 @@ const Modals = (props) => {
   const refCustomerMoney = useRef();
   const refCustomerName2 = useRef();
 
-
   // api
   const getApi = async () => {
     try {
@@ -35,7 +34,7 @@ const Modals = (props) => {
 
       setSubTotal(total.data?.data);
       setSubTotal1(total.data?.data[0]?.total_price);
-        console.log(total);
+      console.log(total);
     } catch (error) {
       console.log(error);
     }
@@ -69,15 +68,13 @@ const Modals = (props) => {
 
   const handleConfirmOrder = async () => {
     try {
-
-
       if (selectPayment == 1) {
         const changes = refCustomerMoney.current.value - total;
 
         if (!refCustomerName.current.value || !refCustomerMoney.current.value) {
           toast.error("Customer Name or Customer Money Can Not Empty");
         } else {
-          setDisabled(true)
+          setDisabled(true);
           const onCreateReceipt = await axios.post(
             "http://localhost:3001/transaction/confirm-order",
             {
@@ -112,7 +109,7 @@ const Modals = (props) => {
         if (!refCustomerName.current.value) {
           return toast.error("Customer Name Can Not Empty");
         }
-        setDisabled(true)
+        setDisabled(true);
         const onCreateReceipt = await axios.post(
           "http://localhost:3001/transaction/confirm-order",
           {
@@ -143,14 +140,13 @@ const Modals = (props) => {
         }, 3000);
       }
     } catch (error) {
-
       toast.error(error.response.data.message);
-    }finally{
-      setDisabled(false)
+    } finally {
+      setDisabled(false);
     }
   };
 
-  // useEffect(() => {console.log(dataTransactions);}, [dataTransactions])
+  
 
   return (
     <Modal style={customStyle} isOpen={props.isOpen}>
@@ -217,7 +213,8 @@ const Modals = (props) => {
                 name="Input Customer Money"
                 className=""
               />
-              <h1 className="text-xl text-center mt-[20px] text-customPrimary cursor-pointer">
+
+              <h1 onClick={modal} className="text-xl text-center mt-[20px] text-customPrimary cursor-pointer">
                 CANCEL ORDER
               </h1>
             </div>

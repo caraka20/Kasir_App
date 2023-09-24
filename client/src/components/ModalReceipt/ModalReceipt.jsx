@@ -54,15 +54,15 @@ const ModalReceipt = (props) => {
     "YYYY-MM-DD HH:mm:ss"
   );
 
-  const vat = receiptDatas?.total_price * 0.1;
-  const total = receiptDatas?.total_price - vat;
+  const vat = Math.floor(receiptDatas?.total_price * 0.1);
+  const total = receiptDatas?.total_price + vat;
   const changes = receiptDatas?.customer_money - total;
 
   return (
     // <Modal style={customStyles} isOpen={true}>
     <div className="flex">
       <LeftSideBar />
-      <div className="px-[500px] mt-[100px] w-full ">
+      <div className="px-[200px] mt-[100px] w-full ">
         <div className="px-[20px] border-2  rounded-3xl py-[100px]">
           <div className="">
             <h1 className="text-center mb-[20px] text-4xl">RECEIPT</h1>
@@ -84,22 +84,66 @@ const ModalReceipt = (props) => {
           <div className=" mb-[20px] mt-[20px] bg-customPrimary h-[10px] w-full "></div>
           <div>
             <div>
-              <div className="flex justify-between items-center font-semibold">
-                <h1>Product</h1>
-                <h1>Qty</h1>
-                <h1>Price</h1>
+              <div class="relative overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                      <th scope="col" class="px-24 py-3">
+                        Product
+                      </th>
+                      <th scope="col" class="px-24 py-3">
+                        Qty
+                      </th>
+                      <th scope="col" class="px-24 py-3">
+                        Price
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {transactionDatas.map((value) => {
+                      const price = value.product_price * value.quantity;
+                      return (
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                          <th
+                            scope="row"
+                            class="px-24 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                          >
+                            {value.product_name}
+                          </th>
+                          <td class="px-24 py-3">{`x${value.quantity}`}</td>
+                          <td class="px-24 py-3">{`Rp. ${price} `}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
-              {transactionDatas.map((value) => {
-                return (
-                  <>
-                    <div className="flex justify-between items-center ">
+
+              {/* <table className="w-full">
+                <thead>
+                  <tr>Product</tr>
+                  <tr>Qty</tr>
+                  <tr>Price</tr>
+                </thead>
+                {transactionDatas.map((value) => {
+                  const price = value.product_price * value.quantity;
+                  return (
+                    <>
+                      {/* <div className="flex justify-between items-center ">
                       <h1 className="">{value.product_name}</h1>
                       <span className="ml-[20px]">{`x${value.quantity}`}</span>
-                      <h1>{`Rp. ${value.product_price} `}</h1>
-                    </div>
-                  </>
-                );
-              })}
+                      <h1>{`Rp. ${price} `}</h1>
+                    </div> */}
+
+              {/* <tbody>
+                        <td>{value.product_name}</td>
+                        <td>{`x${value.quantity}`}</td>
+                        <td>{`Rp. ${price} `}</td>
+                      </tbody> */}
+              {/* </> */}
+              {/* );
+                })}
+              </table> */}
               <div className="  mt-[20px] bg-customPrimary h-[10px] w-full mb-[20px] "></div>
             </div>
             {receiptDatas?.metode_pembayaran_id === 1 ? (
