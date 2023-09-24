@@ -363,10 +363,10 @@ const dataFix =
 //   }
 
 
-historyTransaksi = [
-  {
-    "2023-09-18" : [
-      111 
-    ]
-  }
-]
+// historyTransaksi = [
+//   {
+//     "2023-09-18" : [
+//       111 
+//     ]
+//   }
+// ]
