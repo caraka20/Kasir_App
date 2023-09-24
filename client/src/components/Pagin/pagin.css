@@ -1,0 +1,12 @@
+.pagination {
+    display: inline-block;
+  }
+  
+  .page-item {
+    display: inline-block;
+    margin: 0 2px;
+  }
+  
+  .page-link {
+    cursor: pointer;
+  }
