@@ -49,6 +49,8 @@ const Admin = () => {
     }
   };
 
+
+
   useEffect(() => {
     getData();
     getKategori();
@@ -58,43 +60,26 @@ const Admin = () => {
     <div className="screen h-screen flex ">
       <LeftSideBarAdmin />
       <div className="middle w-screen h-full md:px-[50px]  2xl:px-[100px] lg:px-[20px]  overflow-scroll  bg-customBackground">
-        <div className="grid grid-cols-2 ml-[250px]">
+        <div className="grid grid-cols-2 ml-[50px] gap-5 w-1/4">
           <Link to={"/home/admin"}>
-            <div className="text-center rounded-xl text-white bg-customPrimary w-[35%] my-[50px] px-[10px] py-[8px]">
+            <div className="text-center rounded-xl text-white bg-customPrimary my-[20px] px-[10px] py-[8px]">
               ProdukList
             </div>
           </Link>
           <Link to={"/admin/ListKasir"}>
-            <div className="text-center rounded-xl text-white bg-customPrimary w-[35%] my-[50px] px-[10px] py-[8px]">
+            <div className="text-center rounded-xl text-white bg-customPrimary my-[20px] px-[10px] py-[8px]">
               Cashier
             </div>
           </Link>
         </div>
-        <Search className="" />
-        <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
-        <div className="flex gap-10 w-full overflow-scroll">
-          {!kategori ? (
-            <span>-</span>
-          ) : (
-            kategori.map((item) => {
-              return (
-                <div className="w-[100px] h-[50px] p-5 rounded-2xl bg-white flex flex-col justify-center items-center cursor-pointer ">
-                  <div value={item.id} className={`font-normal`}>
-                    {item.nama_kategori}
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
         <CardAdmin />
-        <div className="Pagination  mt-[100px] flex justify-between mb-[20px]">
+        {/* <div className="Pagination  mt-[100px] flex justify-between mb-[20px]">
           <Button
             btnCSS="test1  text-black w-[200px] bg-white  border-2 border-orange-500 "
             btnName="Previously"
           />
           <Button btnCSS="test2 w-[200px] text-white" btnName="Next" />
-        </div>
+        </div> */}
       </div>
     </div>
   );

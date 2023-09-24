@@ -49,33 +49,36 @@ module.exports = {
         }
     },
 
-    updateKasir : async (req, res, next) => {
+    updateImageKasir: async (req, res, next) => {
         try {
-            // console.log("hemm");
-            const data = JSON.parse(req.body.data)
-            
-            // get data user dengan menargetkan username
-            const userCashier = await db.user.findByPk(data.id)
-            console.log(data);
-            
-            const image = req.files.images.map(idx => {
-                return {image_user: idx.path}
-            })
-
-            const editKasir = await db.user.update({
-                ...userCashier, nama_lengkap : data.nama_lengkap, role : "cashier", username : data.username, password : data.password, status_user:"active", email : data.email, image_user: image[0].image_user
-            })
-            res.status(200).send({
-                isError: false, 
-                message: "success create",
-                data: null
-            })
-
+          const { idKasir } = req.params;
+          console.log(idKasir);
+    
+          const images = req.files.images[0].path;
+          console.log(images);
+    
+          const getData = await db.user.findByPk(idKasir);
+        //   console.log(getData.dataValues.image_user);
+          const updateImage = await db.user.update(
+            { image_user: images },
+            { where: { id: idKasir } }
+          );
+    
+          await deleteFiles({
+            images: [{ path: getData.dataValues.image_user }],
+          });
+    
+          const getDataImage = await db.user.findByPk(idKasir);
+          res.status(200).send({
+            isError: false,
+            message: "success update",
+            data: getDataImage,
+          });
         } catch (error) {
-            deleteFiles(req.files)
-            next(error)
+          deleteFiles(req.files);
+          console.log(error);
         }
-    },
+      },
 
     deleteStatus : async (req,res,next) => {
         try {
@@ -122,5 +125,7 @@ module.exports = {
             next(error)
             // console.log(error.message);
         }
-    },
+
+    }
 }
+

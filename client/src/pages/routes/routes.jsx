@@ -15,27 +15,29 @@ import RecordTransaction from "../RecordTransaction/RecordTransaction";
 import DetailTransaksi from "../DetailTransaksi/DetailTransaksi";
 import CreateKasir from "../CreateKasir/CreateKasir";
 import ListKasir from "../HomeAdmin/ListKasir";
-const routes = [
-  <>
-    <Route path="/home/admin" element={<Admin />} />
-    <Route path="/card" element={<CardAdmin />}/>
-    <Route path="/Category" element={<CreateCategory />} />
-    <Route path="/produk" element={<CreatePorduk />} />
-    <Route path="/admin/report" element={<Report />} />
-    <Route path="/admin/RecordTransaction/:awal/:akhir" element={<RecordTransaction />} />
-    <Route path="/admin/detailTransaksi/:awal/:akhir" element={<DetailTransaksi />} />
-    <Route path="/admin/kasir" element={<CreateKasir />} />
-    <Route path="/admin/ListKasir" element={<ListKasir />} />
 
-    <Route path="/login" element={<Login/>}/>
-    <Route path="/forgetpassword" element={<ForgetPassword/>}/>
-    <Route path="/updatepassword/:email" element={<UpdatePassword/>}/>
-    <Route path="/changeoldpass/:id" element={<ChangeOldPass/>}/>
-    <Route path="/cashier"  element={<Home/>}/>
-    <Route path="/cashier/profile/:id"  element={<Profile/>}/>
-    <Route path="/cashier/profile"  element={<Profile/>}/>
-    <Route path="/receipt"  element={<ModalReceipt/>}/>
-  </>,
+import Protected from "./protected";
+import ItemList from "../../components/Pagin/ItemList";
+const routes = [
+    <Route path="/home/admin" element={<Protected adminPage={true}><Admin /></Protected>} />,,
+    <Route path="/card" element={<Protected adminPage={true}><CardAdmin /></Protected>}/>,
+    <Route path="/Category" element={<Protected adminPage={true}><CreateCategory /></Protected>} />,
+    <Route path="/produk" element={<Protected adminPage={true}><CreatePorduk /></Protected>} />,
+    <Route path="/admin/report" element={<Protected adminPage={true}><Report /></Protected>} />,
+    <Route path="/admin/RecordTransaction/:awal/:akhir" element={<Protected adminPage={true}><RecordTransaction /></Protected>} />,
+    <Route path="/admin/detailTransaksi/:awal/:akhir" element={<Protected adminPage={true}><DetailTransaksi /></Protected>} />,
+    <Route path="/admin/kasir" element={<Protected adminPage={true}><CreateKasir /></Protected>} />,
+    <Route path="/admin/ListKasir" element={<Protected adminPage={true}><ListKasir /></Protected>} />,
+      
+    <Route path="/" element={<Login/>}/>,
+    <Route path="/forgetpassword" element={<ForgetPassword/>}/>,
+    <Route path="/updatepassword/:email" element={<UpdatePassword/>}/>,
+    <Route path="/changeoldpass/:id" element={<ChangeOldPass/>}/>,
+    <Route path="/cashier"  element={<Protected kasirPage={true}><Home/></Protected>}/>,
+    <Route path="/cashier/profile/:id"  element={<Profile/>}/>,
+    <Route path="/cashier/profile"  element={<Profile/>}/>,
+    <Route path="/test"  element={<ItemList />}/>
+
 
 ];
 

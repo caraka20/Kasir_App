@@ -1,5 +1,10 @@
+
 import React, { useEffect } from "react";
 import Modal from "react-modal";
+
+import React from "react";
+import Modal from 'react-modal'
+
 import { useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
@@ -23,6 +28,7 @@ import Input from "../../components/Input/Input";
 import CartOrders from "../../components/CartOrders/CartOrders";
 import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
 import Modals from "../../components/Modal/Modals";
+
 // import css
 import "./home.css";
 
@@ -168,6 +174,11 @@ const Home = () => {
   const vat = Math.floor(subTotal * 0.1);
   const total = Number(subTotal) + Number(vat);
 
+
+const Home = () => {
+    const [modalIsOpen, setModelIsOpen] = useState(false)
+
+
   return (
     <div className="screen  w-full h-screen flex ">
       <LeftSideBar />
@@ -204,7 +215,7 @@ const Home = () => {
           <h1 className=" text-2xl">Foods</h1>
           <div className="flex items-center ">
             <h1>Sort by:</h1>
-            <select className="filter select select-ghost text-customPrimary  focus:ring-customPrimary  border-none text-xl bg-customBackground">
+            <select className="filter select select-ghost text-customPrimary  border-none text-xl bg-customBackground">
               <option className="" disabled selected>
                 Select
               </option>
@@ -224,16 +235,21 @@ const Home = () => {
           })}
         </div>
 
+
         <div className="Pagination  mt-[75px] flex justify-between mb-[20px]">
+
+        <div className="Pagination mt-[100px] flex justify-between mb-[20px]">
+
           <Button
-            btnCSS="test1  text-black w-[200px] bg-white  border-2 border-orange-500 "
+            btnCSS="w-[200px] bg-white text-orange-500 border-2 border-orange-500 "
             btnName="Previously"
           />
-          <Button btnCSS="test2 w-[200px] text-white" btnName="Next" />
+          <Button btnCSS="w-[200px]" btnName="Next" />
         </div>
       </div>
       <div className="right-side h-full w-3/12 px-[20px] bg-white relative overflow-auto">
         <h1 className="mt-[50px] text-3xl mb-[20px]">Cart</h1>
+
         <div className="CartOrders h-[400px] overflow-scroll">
           {/* {cart.map((value) => { */}
           <CartOrders
@@ -242,6 +258,19 @@ const Home = () => {
             decrement={decrementQty}
           />
           {/* })} */}
+
+        <div className="CartOrders h-[400px]  overflow-scroll">
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+          <CartOrders />
+
         </div>
         <div className="mt-[10px] border-t-2 border-b-2 py-[20px]">
           <div className="SubTotal flex justify-between items-center">
@@ -257,6 +286,7 @@ const Home = () => {
           <h1 className="font-semibold text-xl">TOTAL : </h1>
           <h1 className="font-semibold text-xl">{`Rp. ${total}`}</h1>
         </div>
+
         <div className="flex flex-col lg:mt-[10px]  mt-[10px] ">
           <Button
             onClick={confirm}
@@ -272,6 +302,12 @@ const Home = () => {
           modal={modal}
         />
         {modalIsOpen === true ? <div></div> : <Toaster />}
+
+        <div className="flex flex-col  ">
+          <Button onClick={() => setModelIsOpen(true)} btnCSS="btn-modal" btnName="Confirm" />
+          <Modals isOpen={modalIsOpen}/>
+        </div>
+
       </div>
     </div>
   );

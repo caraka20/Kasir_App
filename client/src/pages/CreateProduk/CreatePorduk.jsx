@@ -11,7 +11,98 @@ const CreatePorduk = () => {
         harga:"",
         kategori_produk_id:""
     })
-    // console.log();
+
+    const [datas, setDatas] = useState(null)
+    const [images, setImages] = useState([])
+    const [kategori, setKategori] = useState(null)
+// console.log("lala");
+    const getData = async () => {
+        try {
+            const getData = await axios.get("http://localhost:3001/product")
+                setDatas(getData)
+                console.log(getData.data.data);
+        } catch (error) {
+            console.log(error);
+            toast.error(error)
+        }
+    }
+    // console.log(datas);
+    const onSelectImages = (event) => {
+        try {
+            const files = [...event.target.files]
+            files.forEach(value => {
+                if(value.size > 10000000 || value.type.split('/')[0] !== 'image') throw {message: `${value.name} Size Too Large / File Must be Image`}
+            })
+
+            setImages(files)
+        } catch (error) {
+            console.log(error);
+            alert(error.message)
+        }
+    }
+    const createProduk = async () => {
+        try {
+            const fd = new FormData()
+            console.log(fd);
+            fd.append('data', JSON.stringify(input))
+            images.forEach(value => {
+                fd.append('images', value)
+            })
+            console.log(fd);
+            if(input.nama_produk === "" || input.deskripsi === "" || input.harga === "" || input.stock === "" || input.kategori_produk_id === "" || images.length === 0) {
+                return toast.error("Form Harus Dilengkapi")
+            }
+
+            if(input.harga < 5000) {
+                return alert("harga tidak boleh kurang dari 5000")
+            }
+
+            if(input.stock < 1) {
+                return alert('stock tidak boleh 0 atau minus')
+            }
+
+                const findProduk = datas.data.data.find((value) => {
+                    return value.nama_produk === input.nama_produk
+                })
+                console.log(findProduk);
+                if(findProduk) {
+                    toast.error("Produk Already Exist")
+                } 
+                const create = await axios.post("http://localhost:3001/product", fd)
+                console.log(create.data.message);
+                toast.success(create.data.message)
+        } catch (error) {
+            console.log(error);
+            // toast.error(error)
+        }
+    }
+    const handleChange = (e) =>{
+        const nama_produk = e.target.name
+        const value = e.target.value
+        const newData = {
+            ...input
+        }
+        newData[nama_produk] = value
+        setInput(newData)
+    }
+    // console.log(input);
+
+    const getAllProduk = async () => {
+        try {
+            const respon = await axios.get(`http://localhost:3001/category`)
+            const hasil = respon.data.data.filter((item) => {
+                return item.status === "active"
+            })
+            setKategori(hasil)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        getData()
+        getAllProduk()
+    }, [])
+
 
   return (
     <div className='grid h-screen'>
@@ -41,10 +132,12 @@ const CreatePorduk = () => {
                                         <label htmlFor="" className='font-serif'>Pilih Kategori</label><br />
                                         <select name='kategori_produk_id' onChange={handleChange} className='select w-full max-w-xs mt-2 mb-5 ' style={{ width: '100%' }}>
                                             <option disabled selected>Kategori Produk</option>
-                                            <option value={1}>Snack</option>
-                                            <option value={2}>Main Course</option>
-                                            <option value={3}>Coffee</option>
-                                            <option value={4}>Non-Coffee</option>
+                                                {
+                                                    !kategori ? <option>-</option> :
+                                                    kategori.map((item) => {
+                                                        return <option value={item.id} >{item.nama_kategori}</option> 
+                                                    })
+                                                }
                                         </select>
                                     </div>
 

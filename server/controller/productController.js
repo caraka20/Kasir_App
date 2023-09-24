@@ -165,11 +165,17 @@ module.exports = {
       // console.log(status_product);
 
       const idProductStatus = await db.produk.findByPk(id);
-      console.log(idProductStatus.dataValues);
+      // console.log(idProductStatus.dataValues);
+      const data = {}
+      if (idProductStatus.dataValues.status_product === "Active") {
+          data["status"] = "Non-Active"
+      } else {
+          data["status"] = "Active"
+      }
 
       const edtiStatus = await db.produk.update(
         {
-          status_product: "Non-Active",
+          status_product: data.status,
         },
         {
           where: { id: id },

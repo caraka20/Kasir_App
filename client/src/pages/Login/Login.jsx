@@ -16,13 +16,26 @@ const Login = () => {
     }
     const loginMasuk = async (e) => {
       e.preventDefault()
+      if (!state.username) {
+        return toast.error('Username required')
+      }
+      if(!state.password) {
+        return toast.error('Password required')
+      }
       try {
         const {username, password} = state;
         const data = await axios.get(`http://localhost:3001/user/login?username=${username}&password=${password}`)
-        console.log(data)
+        // console.log(data.data.role)
         localStorage.setItem("userId",data.data.data) //encryption masuk ke localstorage
+        localStorage.setItem("role",data.data.role) // role
         toast.success(data.data.message)
-        setTimeout(() =>{nav('/')},3000)
+
+        if (data.data.role === "admin") {
+          setTimeout(() => {nav("/home/admin")}, 2000);
+        } else {
+          setTimeout(() =>{nav('/cashier')},3000)
+        }
+        
       } catch (error) {
         console.log(error)
         toast.error(error.response.data.message)
@@ -57,4 +70,3 @@ const Login = () => {
     }
     
     export default Login
-    
