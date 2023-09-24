@@ -5,6 +5,8 @@ import "./cardcss.css";
 const Card = (props) => {
   const {datas} = props
 
+
+  
   return (
     
     <div className="card  sm:w-38 lg:w-[180px] xl:w-[260px] shadow-xl bg-white rounded-2xl px-[10px]">

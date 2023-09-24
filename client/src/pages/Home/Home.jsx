@@ -32,7 +32,7 @@ const Home = () => {
   const [idProduct, setIdProduct] = useState(null);
   const [cart, setCart] = useState([]);
   const [kategori, setKategori] = useState([]);
-  const [search,setSearch] = useState("")
+  const [search, setSearch] = useState("");
 
   const [disabled, setDisabled] = useState(false);
   const [cartToTransaction, setCartToTransaction] = useState(null);
@@ -58,7 +58,29 @@ const Home = () => {
     setCart(getCart.data.data);
   };
 
-  // increament
+  //PAGINATION
+
+  const cardsPerPage = 9; // Number of cards to display per page
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Calculate the index range for the current page
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const currentCards = products.slice(indexOfFirstCard, indexOfLastCard);
+
+  const nextPage = () => {
+    if (indexOfLastCard < products.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const previousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // increment
   const incrementQty = async (id) => {
     try {
       setIdProduct(id);
@@ -211,12 +233,16 @@ const Home = () => {
 
   const vat = Math.floor(subTotal * 0.1);
   const total = Number(subTotal) + Number(vat);
-
+console.log(search);
   return (
     <div className="screen  w-full h-screen flex ">
       <LeftSideBar />
       <div className="middle w-8/12 h-full md:px-[20px]  2xl:px-[100px] lg:px-[20px]  overflow-scroll  bg-customBackground">
-        <Search onChange={(e) => setSearch(e.current.value)} className="mt-[50px]" />
+        <Search
+          onChange={(e) => setSearch(e.target.value)}
+          className="mt-[50px]"
+          value={search}
+        />
         <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
         <div className="flex gap-10 w-full overflow-scroll">
           {kategori.map((value) => {
@@ -227,7 +253,7 @@ const Home = () => {
                 iconsCSS=""
                 categoryCSS=""
                 datas={value}
-                onClick={() => filterKategori(value.id)} 
+                onClick={() => filterKategori(value.id)}
               />
             );
           })}
@@ -236,7 +262,10 @@ const Home = () => {
           <h1 className=" text-2xl">Foods</h1>
           <div className="flex items-center ">
             <h1>Sort by:</h1>
-            <select className="filter select select-ghost text-customPrimary  focus:ring-customPrimary  border-none text-xl bg-customBackground">
+            <select
+              onChange={handleFilter}
+              className="filter select select-ghost text-customPrimary  focus:ring-customPrimary  border-none text-xl bg-customBackground"
+            >
               <option className="" disabled selected>
                 Select
               </option>
@@ -248,20 +277,46 @@ const Home = () => {
             </select>
           </div>
         </div>
-        <div className="grid sm:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-5 mt-[20px]">
-          {products.map((value) => {
+        <div className="grid sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-4 gap-5 mt-[20px]">
+          {/* {products} */}
+          {!products ? (
+            <span>Loading....</span>
+          ) : (
+            currentCards
+              .filter((value) => {
+                if (search === "") {
+                  return value;
+                } else if (
+                  value.nama_produk
+                    .toLocaleLowerCase()
+                    .includes(search.toLocaleLowerCase())
+                ) {
+                  return value;
+                }
+              })
+              .map((value) => {
+                return (
+                  <Card
+                    handleAddToCart={addToCart}
+                    id={value.id}
+                    datas={value}
+                  />
+                );
+              })
+          )}
+          {/* {products.map((value) => {
             return (
-              <Card handleAddToCart={addToCart} id={value.id} datas={value} />
             );
-          })}
+          })} */}
         </div>
 
         <div className="Pagination  mt-[75px] flex justify-between mb-[20px]">
           <Button
             btnCSS="test1  text-black w-[200px] bg-white  border-2 border-orange-500 "
             btnName="Previously"
+            onClick={previousPage}
           />
-          <Button btnCSS="test2 w-[200px] text-white" btnName="Next" />
+          <Button onClick={nextPage} btnCSS="test2 w-[200px] text-white" btnName="Next" />
         </div>
       </div>
       <div className="right-side h-full w-3/12 px-[20px] bg-white relative overflow-auto">
