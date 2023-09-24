@@ -31,6 +31,8 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [idProduct, setIdProduct] = useState(null);
   const [cart, setCart] = useState([]);
+  const [kategori, setKategori] = useState([]);
+  const [search,setSearch] = useState("")
 
   const [disabled, setDisabled] = useState(false);
   const [cartToTransaction, setCartToTransaction] = useState(null);
@@ -159,11 +161,53 @@ const Home = () => {
     setModelIsOpen(false);
   };
 
+  const handleFilter = async (e) => {
+    try {
+      console.log(e.target.value);
+      const res = await axios.get(
+        `http://localhost:3001/filter/${e.target.value}`
+      );
+      console.log(res.data.data);
+      setProducts(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const filterKategori = async (e) => {
+    try {
+      // console.log(e);
+      const res = await axios.get(`http://localhost:3001/filter/${e}`);
+      console.log(res.data.data);
+      setProducts(res.data.data);
+      // getData()
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getKategori = async () => {
+    try {
+      const res = await axios.get("http://localhost:3001/category");
+      // console.log(res.data.data);
+      const hasil = res.data.data.filter((item) => {
+        return item.status === "active";
+      });
+
+      setKategori(hasil);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    // getData();
+    getKategori();
+  }, []);
+
   useEffect(() => {
     getApi();
   }, []);
-
-  
 
   const vat = Math.floor(subTotal * 0.1);
   const total = Number(subTotal) + Number(vat);
@@ -172,33 +216,21 @@ const Home = () => {
     <div className="screen  w-full h-screen flex ">
       <LeftSideBar />
       <div className="middle w-8/12 h-full md:px-[20px]  2xl:px-[100px] lg:px-[20px]  overflow-scroll  bg-customBackground">
-        <Search className="mt-[50px]" />
+        <Search onChange={(e) => setSearch(e.current.value)} className="mt-[50px]" />
         <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
         <div className="flex gap-10 w-full overflow-scroll">
-          <CategoryCard
-            icons={<PiBowlFood />}
-            categoryName="Foods"
-            iconsCSS=""
-            categoryCSS=""
-          />
-          <CategoryCard
-            icons={<PiBowlFood />}
-            categoryName="Foods"
-            iconsCSS=""
-            categoryCSS=""
-          />
-          <CategoryCard
-            icons={<PiBowlFood />}
-            categoryName="Foods"
-            iconsCSS=""
-            categoryCSS=""
-          />
-          <CategoryCard
-            icons={<PiBowlFood />}
-            categoryName="Foods"
-            iconsCSS=""
-            categoryCSS=""
-          />
+          {kategori.map((value) => {
+            return (
+              <CategoryCard
+                icons={<PiBowlFood />}
+                categoryName={value.nama_kategori}
+                iconsCSS=""
+                categoryCSS=""
+                datas={value}
+                onClick={() => filterKategori(value.id)} 
+              />
+            );
+          })}
         </div>
         <div className="flex justify-between items-center mt-[20px]">
           <h1 className=" text-2xl">Foods</h1>
@@ -208,11 +240,11 @@ const Home = () => {
               <option className="" disabled selected>
                 Select
               </option>
-              <option>Foods</option>
-              <option>A/Z</option>
-              <option>Z/A</option>
-              <option>Highest</option>
-              <option>Lowest</option>
+              {/* <option>Foods</option> */}
+              <option value={"A-Z"}>A/Z</option>
+              <option value={"Z-A"}>Z/A</option>
+              <option value={"H-L"}>Highest</option>
+              <option value={"L-H"}>Lowest</option>
             </select>
           </div>
         </div>
@@ -246,7 +278,9 @@ const Home = () => {
         <div className="mt-[10px] border-t-2 border-b-2 py-[20px]">
           <div className="SubTotal flex justify-between items-center">
             <h1 className="text-lg">Sub Total</h1>
-            <h1 className="text-xl  font-normal">{`Rp. ${subTotal? subTotal: 0}`}</h1>
+            <h1 className="text-xl  font-normal">{`Rp. ${
+              subTotal ? subTotal : 0
+            }`}</h1>
           </div>
           <div className="VAT flex justify-between items-center">
             <h1 className="text-lg">VAT (10%)</h1>
