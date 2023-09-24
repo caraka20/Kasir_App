@@ -7,81 +7,98 @@ import imageLaporan from '../../assets/image/imageLaporan.png'
 import {BsClipboardPlus} from 'react-icons/bs'
 import {TbCategory} from 'react-icons/tb'
 import 'boxicons'
-import { Link } from 'react-router-dom'
 import { useState } from 'react'
-// import { Link } from 'react-router-dom'
+
+import { Link } from 'react-router-dom'
+import { PiAddressBookBold } from "react-icons/pi";
+import { LuLayoutDashboard } from "react-icons/lu";
+import { ImFileText2 } from "react-icons/im";
+import { TbLogout2 } from "react-icons/tb";
+import { useNavigate } from 'react-router-dom'
+import toast, { Toaster } from "react-hot-toast";
 
 
 const LeftSideBarAdmin = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Initial state, the sidebar is open by default
-
+  const nav = useNavigate()
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen); // Toggle the sidebar state
   };
+  const logOut = async () => {
+    localStorage.removeItem('userId');
+    localStorage.removeItem('role');
+    toast.success("Logout Berhasil")
+    setTimeout(() => {
+      nav("/")
+    }, 2000);
+    }
   return (
-    <div className={`left-side ${isSidebarOpen ? 'w-[10%]' : 'w-[5%]'} h-screen rounded-md transition-all duration-300 ease-in-out`}>
-      <div className='flex justify-center'>
+    <div className={`left-side ${isSidebarOpen ? 'w-[15%]' : 'w-[5%]'} border-r-4 border-customPrimary h-screen rounded-md transition-all duration-300 ease-in-out`}>
+      {/* <div className='flex justify-center align-middle items-center'>
       <button
           onClick={toggleSidebar}
           className="text-white p-2 rounded-full bg-blue-700 hover:bg-blue-800 focus:outline-none"
         >
           {isSidebarOpen ? 'Close' : 'Open'}
         </button>
-      </div>
-       
-      
+      </div> */}
+       <Toaster />
+      <div className='grid overflow-hidden '>
     <div className="Logo cursor-pointer w-full flex justify-center text-customPrimary font-bold text-5xl">
-      <PiCoffeeFill  className=' mt-[50px]'/>
+      <PiCoffeeFill  className=' mt-[30px]'/>
     </div>
 
     <div className={`h-[600px] ${isSidebarOpen ? 'block' : 'hidden'}`}>
       <div className='grid gap-5'>
-    <div className="Menu w-full cursor-pointer h-[80px] flex flex-col justify-center items-center mt-[50px]">
+
+
+    <div className="Menu w-full px-5 cursor-pointer h-[75px] flex flex-col mt-[50px] border-l-8  border-l-customPrimary rounded">
       <Link to={"/admin/kasir"}>
-      <p className="text-4xl text-gray-500" />
-      <img className='w-[50px] h-[55px]' src={cashier} alt="" />
-      <span className="text-gray-500">Create Cashier</span></Link>
+      <PiAddressBookBold className="text-4xl text-customPrimary"/>
+      <h1 className="text-customPrimary">Create Cashier</h1>
+      </Link>
     </div>
-    <div className="Dashboard w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
+
+    {/* <div className="Menu w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[50px] border-l-8  border-l-customPrimary rounded">
+        <PiForkKnifeBold className="text-4xl text-customPrimary " />
+        <h1 className="text-customPrimary">Menu</h1>
+      </div> */}
+
+<div className="Menu px-5  w-full cursor-pointer h-[75px] flex flex-col  border-l-8  border-l-customPrimary rounded">
       <Link to="/home/admin">
-      <p className="text-4xl text-gray-500 " />
-      <div className=''>
-      <img className='w-[35px] h-[34px]' src={dashboardAdmin} alt="" />
-      </div>
-      <h1 className="mt-[13px] text-gray-500">Dashboard</h1>
+      <LuLayoutDashboard className='text-4xl text-customPrimary'/>
+      <h1 className="text-customPrimary">Dashboard</h1>
       </Link>
     </div>
     
-    <div className="Report w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
-      <Link to={"/admin/report"} ><p className="text-4xl text-gray-500" />
-      <div className=''>
-      <img className='w-[35px] h-[34px]' src={imageLaporan} alt="" />
-      </div>
-      <h1 className="text-gray-500 mt-[13px]">Reports</h1></Link>
+    <div className="Menu px-5  w-full cursor-pointer h-[75px] flex flex-col border-l-8  border-l-customPrimary rounded">
+      <Link to={"/admin/report"} >
+      <ImFileText2 className='text-4xl text-customPrimary'/>
+      <h1 className="text-customPrimary">Reports</h1>
+      </Link>
     </div>
 
-    <div className='Produk w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] border-l-8  border-l-customPrimary rounded'>
+    <div className="Menu px-5  w-full cursor-pointer h-[75px] flex flex-col border-l-8  border-l-customPrimary rounded">
     <Link to="/produk">
-      <p className='text-4xl'/>
-        <BsClipboardPlus className='w-[35px] h-[34px]'/>
-      <h1 className=' text-customPrimary mt-[13px]'>Create Produk</h1>
+
+        <BsClipboardPlus className='text-4xl text-customPrimary'/>
+      <h1 className='  text-customPrimary'>Create Produk</h1>
     </Link>
     </div>
     
-    <div className="Category w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
-    <p className="text-4xl text-gray-500" />
+    <div className="Menu px-5  w-full cursor-pointer h-[75px] flex flex-col] border-l-8  border-l-customPrimary rounded">
       <Link to="/Category">
-      <TbCategory className='w-[35px] h-[34px]'/>
-      <h1 className="text-gray-500 mt-[13px]">Create Category</h1>
+      <TbCategory className='text-4xl text-customPrimary'/>
+      <h1 className="text-customPrimary">Create Category</h1>
     </Link>
     </div>
 
-    <div className="Report w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[75px] rounded">
-      <p className="text-4xl text-gray-500" />
-          <box-icon class="w-[35px] h-[34px] mr-3" name='log-out'></box-icon>
-      <h1 className="text-gray-500 ">Log Out</h1>
+    <div onClick={logOut} className=" px-5 Menu w-full cursor-pointer h-[75px] flex flex-col border-l-8  border-l-customPrimary rounded">
+      <TbLogout2 className='text-4xl text-customPrimary'/>
+      <h1 className="text-customPrimary">Log Out</h1>
     </div>
 
+    </div>
     </div>
     </div>
 

@@ -18,9 +18,11 @@ const LeftSideBar = () => {
 
   return (
     <div className="left-side  w-1/12 h-full bg-white">
+      <Link to={"/cashier"}>
       <div className="Logo mt-[50px] cursor-pointer w-full flex justify-center text-customPrimary font-bold text-5xl">
         <PiCoffeeFill />
       </div>
+      </Link>
       <div className="Menu w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[50px] border-l-8  border-l-customPrimary rounded">
         <PiForkKnifeBold className="text-4xl text-customPrimary " />
         <h1 className="text-customPrimary">Menu</h1>

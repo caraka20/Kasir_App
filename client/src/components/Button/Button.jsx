@@ -6,6 +6,7 @@ const Button = (props) => {
       <button
         onClick={props.onClick}
         className={`rounded-xl text-white bg-customPrimary w-full px-[10px] py-[8px] ${props.btnCSS}`}
+        disabled={props.disabled}
       >
         {props.btnName}
       </button>
