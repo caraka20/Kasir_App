@@ -36,7 +36,7 @@ const Profile = () => {
   const logOut = async () => {
   localStorage.removeItem('userId');
   localStorage.removeItem('role');
-  toast.success("Logout Berhasil")
+  toast.success("Logging you out... See you later :V")
   setTimeout(() => {
     nav("/")
   }, 2000);

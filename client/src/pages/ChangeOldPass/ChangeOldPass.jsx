@@ -24,7 +24,7 @@ console.log(id);
         const data = await axios.put(`http://localhost:3001/auth/resetpassword`, {...state, token: id})
         console.log(data)
         toast.success(data.data.message)
-        setTimeout(() =>{nav('/')},3000)
+        setTimeout(() =>{nav(`/cashier/profile/${id}`)},3000)
       } catch (error) {
         console.log(error)
         toast.error(error.response.data.message)
