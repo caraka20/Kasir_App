@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import LeftSideBarAdmin from '../../components/LeftSideBarAdmin/LeftSideBarAdmin'
-
 import Button from '../../components/Button/Button'
-import axios from 'axios'
-import toast, {Toaster} from 'react-hot-toast'
+
 
 const CreatePorduk = () => {
     const [input, setInput] = useState({
@@ -13,6 +11,7 @@ const CreatePorduk = () => {
         harga:"",
         kategori_produk_id:""
     })
+
     const [datas, setDatas] = useState(null)
     const [images, setImages] = useState([])
     const [kategori, setKategori] = useState(null)
@@ -103,6 +102,7 @@ const CreatePorduk = () => {
         getData()
         getAllProduk()
     }, [])
+
 
   return (
     <div className='grid h-screen'>

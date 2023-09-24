@@ -1,26 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../Input/Input";
 
 //icons
 
 import { HiPlus } from "react-icons/hi";
 import { HiMinus } from "react-icons/hi";
+import axios from "axios";
 
 const OrderSummaryCard = (props) => {
+  const { datas, transaction_uid } = props;
+
+  const [transactionDatas, setDatasTransaction] = useState([])
+
+  const getApi = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3001/transaction/transactionUID",
+        { transaction_uid: transaction_uid }
+      );
+
+      setDatasTransaction(res.data.data)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getApi()
+  }, [transactionDatas]);
+
+
+
+  if (transactionDatas.length === 0) return <div>SABAR BOS</div>;
   return (
-    <div className={`border-b-2 pb-[20px] ${props.className}`}>
-      <div className="flex items-center justify-between ">
-        <div>
-          <h1 className="text-lg font-medium">Nasi Goreng</h1>
-          <h1 className="text-gray-500 text-sm">Extra Cheese</h1>
-          <Input />
-        </div>
-        <div className="flex justify-center items-center">
-          <h1 className="font-bold text-xl ">$25</h1>
-          <h1 className="ml-[20px] text-gray-400">x1</h1>
-        </div>
-      </div>
-    </div>
+    <>
+      {transactionDatas.map((value) => {
+        const price = value.product_price * value.quantity
+        return (
+          <div className={`border-b-2 pb-[20px] ${props.className}`}>
+            <div className="flex items-center justify-between ">
+              <div>
+                <h1 className="text-lg font-medium">{value.product_name}</h1>
+                <h1 className="text-gray-500 text-sm">notes</h1>
+              </div>
+              <div className="flex justify-center items-center">
+                <h1 className="font-bold text-xl ">{`Rp.${price}`}</h1>
+                <h1 className="ml-[20px] text-gray-400">{`x${value.quantity}`}</h1>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </>
   );
 };
 

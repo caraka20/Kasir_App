@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       quantity: DataTypes.INTEGER,
       note: { type: DataTypes.STRING, defaultValue: null },
-      price: DataTypes.INTEGER,
+
       createdAt: {
         type: DataTypes.DATE,
         defaultValue: new Date(),

@@ -19,8 +19,9 @@ const {authorizationRouter} = require("./routers")
 const {transactionRouter} = require('./routers')
 
 app.use(express.json())
-app.use("/user",userRouter)
-app.use("/kasir", kasirRouter)
+
+const PORT = 3001
+
 
 
 app.use('/filter', filterRouter)
@@ -30,16 +31,16 @@ const {reportRouter} = require("./routers")
 
 //All app.use are here
 app.use("/user",userRouter)
-app.use("/kasir", kasirRouter)
+
 app.use("/report", reportRouter)
 app.use("/auth", authorizationRouter)
 app.use("/transaction", transactionRouter)
-app.use('/filter', filterRouter)
+
 // app.use('/product', productRouter)
 app.use('/category', categoryRouter)
 app.use("/kasir", kasirRouter)
 
-PORT = 3001
+
 
 
 app.use((err, req, res, next) => {
