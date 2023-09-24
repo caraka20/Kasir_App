@@ -13,7 +13,6 @@ module.exports = {
         role:"admin",
         status_user:"active",
         image_user:"",
-        code: "123"
       },
     ])
   },

@@ -24,9 +24,6 @@ module.exports = {
       status_user: {
         type: Sequelize.STRING
       },
-      code: {
-        type: Sequelize.STRING
-      },
       image_user: {
         type: Sequelize.STRING
       },

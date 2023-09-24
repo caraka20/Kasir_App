@@ -15,6 +15,9 @@ module.exports = {
       deskripsi: {
         type: Sequelize.STRING
       },
+      status_product: {
+        type: Sequelize.STRING
+      },
       harga: {
         type: Sequelize.INTEGER
       },

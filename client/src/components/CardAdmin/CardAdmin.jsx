@@ -182,7 +182,7 @@ const CardAdmin = () => {
       const res = await axios.get(
         `http://localhost:3001/filter/${e.target.value}`
       );
-      console.log(res.data.data);
+      // console.log(res.data.data);
       setDatas(res.data.data);
     } catch (error) {
       console.log(error);

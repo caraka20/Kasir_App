@@ -1,211 +1,182 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import LeftSideBarAdmin from '../../components/LeftSideBarAdmin/LeftSideBarAdmin'
-// import Button from '../../components/Button/Button'
-import { useState } from 'react';
-import Button from '../../components/Button/Button';
-import axios from 'axios';
-import { useEffect } from 'react';
 
-const CreateCategory = () => {
-// const [state, setState] = useState(null)
-    const [category, setCategory] = useState({nama_kategori:""});
-    const [allCategory, setAllCategory] = useState(null)
-    const [idUpdate, setIdUpdate] = useState(0)
-    // const [idStatus, setIdStatus] = useState(0)
+import Button from '../../components/Button/Button'
+import axios from 'axios'
+import toast, {Toaster} from 'react-hot-toast'
 
-    const getDataAll = async () => {
-       try {
-        const findDataCategory = await axios.get("http://localhost:3001/category")
-        // console.log(findDataCategory.data.data);
-        setAllCategory(findDataCategory.data.data)
-       } catch (error) {
-          console.log(error.message);
-       }
-    }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if(idUpdate !== 0) {
-        if(category.nama_kategori === "") {
-          alert("Silahkan isi form")
+const CreatePorduk = () => {
+    const [input, setInput] = useState({
+        nama_produk:"",
+        deskripsi:"",
+        stock:"",
+        harga:"",
+        kategori_produk_id:""
+    })
+    const [datas, setDatas] = useState(null)
+    const [images, setImages] = useState([])
+    const [kategori, setKategori] = useState(null)
+// console.log("lala");
+    const getData = async () => {
+        try {
+            const getData = await axios.get("http://localhost:3001/product")
+                setDatas(getData.data.data)
+                console.log(getData.data.data);
+        } catch (error) {
+            console.log(error);
+            // toast.error(error)
         }
-        const editCategory = await axios.patch(`http://localhost:3001/category/${idUpdate}`, category)
-        console.log(editCategory);
-        setCategory({nama_kategori:""})
-        setIdUpdate(0)
-        getDataAll()
-      }
-      else {
-        if(category.nama_kategori === "") {
-          alert("Silahkan isi form")
+    }
+    // console.log(datas);
+    const onSelectImages = (event) => {
+        try {
+            const files = [...event.target.files]
+            files.forEach(value => {
+                if(value.size > 10000000 || value.type.split('/')[0] !== 'image') throw {message: `${value.name} Size Too Large / File Must be Image`}
+            })
+
+            setImages(files)
+        } catch (error) {
+            console.log(error);
+            alert(error.message)
         }
-  
-        const CreateCategori = await axios.post("http://localhost:3001/category", category)
-        console.log(CreateCategori);
-        getDataAll()
-        setCategory({
-          nama_kategori : ""
-        })
-      }
-      
-      
-    } catch (error) {
-      console.log(error);
     }
-    // You can add your logic here to handle the form submission
-    // console.log('Product Name:', category);
-  };
+    const createProduk = async () => {
+        try {
+            const fd = new FormData()
+            console.log(fd);
+            fd.append('data', JSON.stringify(input))
+            images.forEach(value => {
+                fd.append('images', value)
+            })
+            console.log(fd);
+            if(input.nama_produk === "" || input.deskripsi === "" || input.harga === "" || input.stock === "" || input.kategori_produk_id === "" || images.length === 0) {
+                return toast.error("Form Harus Dilengkapi")
+            }
 
-  // ini edit produk dengan menggunakan 2 req dari backend dengan req.body dan req,params
-  const edit = async (e) => {
-    try {
-      console.log(e);
-      const data = allCategory.find((value) => {
-        return value.id === e
-      })
-      setIdUpdate(e)
-      console.log(data);
-      setCategory({nama_kategori: data.nama_kategori})
-    } catch (error) {
-      console.log(error);
+            if(input.harga < 5000) {
+                return alert("harga tidak boleh kurang dari 5000")
+            }
+
+            if(input.stock < 1) {
+                return alert('stock tidak boleh 0 atau minus')
+            }
+
+                const findProduk = datas.data.data.find((value) => {
+                    return value.nama_produk === input.nama_produk
+                })
+                console.log(findProduk);
+                if(findProduk) {
+                    toast.error("Produk Already Exist")
+                } 
+                const create = await axios.post("http://localhost:3001/product", fd)
+                // console.log(create.data.message);
+                toast.success(create.data.message)
+        } catch (error) {
+            console.log(error);
+            // toast.error(error.response.data.message)
+        }
     }
-  } 
-console.log(allCategory);
-
-  //ini untuk edit status dimana hanya menggunakan 1 req dari backend dengan req.params
-  const editStatus = async (id) => {
-    try {
-      console.log(id);
-      const res = await axios.patch(`http://localhost:3001/category/img/${id}`)
-      console.log(res);
-      getDataAll()
-    } catch (error) {
-      console.log(error);
+    const handleChange = (e) =>{
+        const nama_produk = e.target.name
+        const value = e.target.value
+        const newData = {
+            ...input
+        }
+        newData[nama_produk] = value
+        setInput(newData)
     }
-  }
+    // console.log(input);
 
-console.log(allCategory);
-  const handleChange = (e) =>{
-    const nama_kategori = e.target.name
-    const value = e.target.value
-    const newData = {
-        ...category
+    const getAllProduk = async () => {
+        try {
+            const respon = await axios.get(`http://localhost:3001/category`)
+            const hasil = respon.data.data.filter((item) => {
+                return item.status === "active"
+            })
+            setKategori(hasil)
+        } catch (error) {
+            console.log(error);
+        }
     }
-    newData[nama_kategori] = value
-    setCategory(newData)
-}
-console.log(category);
+    useEffect(() => {
+        getData()
+        getAllProduk()
+    }, [])
 
-  useEffect (() => {
-    getDataAll()
-  }, [])
-
-  if(allCategory === null) {
-    return <h1>...Loading</h1>
-  }
   return (
-    <div className="grid h-screen">
-    <div className="flex gap-2">
-      <LeftSideBarAdmin />
-      <div className="w-full md:w-[90%] border h-full bg-blue-100">
-        <div className="lg:p-10">
-          <div className="flex justify-center text-5xl items-center font-semibold border-b-[5px] border-black py-5 mb-10">
-            <div>Create Category</div>
-          </div>
+    <div className='grid h-screen'>
+        <Toaster />
+        <div className='flex gap-3'>
+            <LeftSideBarAdmin />
+            <div className='w-full md:w-[90%] border h-full bg-blue-100'>
+                <div className='lg:p-10'>
 
-          {/* Form Input Create Product */}
-          <div className="grid bg-base-200 justify-center shadow-xl rounded-md">
-            <div className="align-middle">
-              <form onSubmit={handleSubmit}>
-                <div className="grid w-[70%] justify-center mr-10 lg:grid-cols-2 mx-auto mt-5 p-4 pl-8">
-                  <div>
-                    <label htmlFor="productName" className="font-serif">
-                      Category Name
-                    </label>
-                    <br />
-                    <input
-                      type="text"
-                      placeholder="Type here"
-                      className="mt-2 mb-5 w-[500px] input input-bordered max-w-xs"
-                      name='nama_kategori'
-                      value={category.nama_kategori}
-                      onChange={handleChange}
+                    <div className='flex justify-center text-5xl items-center font-semibold border-b-[5px] border-black py-5 mb-10'>
+                       <div>
+                        Create Product
+                       </div>
+                    </div>
 
-                    />
-                  </div>
+                    {/* Form Input Create Product */}
+                        <div className='bg-base-200 shadow-xl rounded-md'>
+                            <div className='grid grid-col-2  align-middle'>
+                                <div className='grid w-[90%] justify-center mr-10 lg:grid-cols-2 mx-auto mt-5 p-4 pl-8'>
+                                    
+                                    <div>
+                                        <label htmlFor="" className='font-serif'>Nama Produk</label><br />
+                                        <input name='nama_produk' value={input.nama_produk} onChange={handleChange} type="text" placeholder='Type here' className='mt-2 mb-5 input input-bordered w-full max-w-xs'/>
+                                    </div>
 
-                  <div></div>
-                  <div className="flex justify-start w-[75%]">
-                    <button
-                      type="submit"
-                      className="md:w-[50%] md:ml-[120px] bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    >
-                      Submit
-                    </button>
-                  </div>
+                                    <div>
+                                        <label htmlFor="" className='font-serif'>Pilih Kategori</label><br />
+                                        <select name='kategori_produk_id' onChange={handleChange} className='select w-full max-w-xs mt-2 mb-5 ' style={{ width: '100%' }}>
+                                            <option disabled selected>Kategori Produk</option>
+                                                {
+                                                    !kategori ? <option>-</option> :
+                                                    kategori.map((item) => {
+                                                        return <option value={item.id} >{item.nama_kategori}</option> 
+                                                    })
+                                                }
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="" className='font-serif'>Stock</label><br />
+                                        <input name='stock' value={input.stock} onChange={handleChange} type="text" placeholder='Type here' className='mt-2 mb-5 input input-bordered w-full max-w-xs'/>
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="" className='font-serif'>Price</label><br />
+                                        <input name='harga' value={input.harga} onChange={handleChange} type="text" placeholder='Type here' className='mt-2 mb-5 input input-bordered w-full max-w-xs'/>
+                                    </div>
+
+                                        <div className=''>
+                                            <label htmlFor="" className='font-serif'>Deskripsi Produk</label><br />
+                                            <textarea name='deskripsi' value={input.deskripsi} onChange={handleChange} type="text" placeholder='Type here' className='mt-2 mb-5 input input-bordered w-full max-w-xs h-[100px]'/>
+                                        </div>
+
+                                        <div className='mt-[30px]'>
+                                            <label htmlFor="" className="font-serif">Gambar Produk</label><br />
+                                            <input type='file' multiple='multiple' onChange={(e) => onSelectImages(e)} className="mt-2 mb-5 file-input file-input-bordered w-full max-w-xs bg-white" />
+                                        </div>     
+                                        
+                                        <div></div>
+                                        <div className='flex justify-start w-[75%]'>
+                                            <Button onClick={createProduk} btnName="Submit" btnCSS="md:w-[50%] md:ml-[120px]"/> 
+                                        </div>                            
+                                    </div>
+                                         
+                                        
+                                        
+                                </div>
+                            </div>
+                        </div>
                 </div>
-              </form>
             </div>
-          </div>
-        </div>
-        <div className='px-10'>
-        <table className="min-w-full">
-      <thead>
-        <tr>
-          <th className="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-            ID
-          </th>
-          <th className="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-            Category Name
-          </th>
-          <th className="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-            Status
-          </th>
-          <th className="px-6 py-3 bg-gray-100 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-            Action
-          </th>
-        </tr>
-      </thead>
-      <tbody className="bg-white">
-        {
-          !allCategory ? <span>...Loading lagi muter</span> : allCategory.map((value, index) => {
-            return (
-              <tr className={value.status === "active" ? "" : "opacity-70"}>
-            <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="text-sm leading-5 text-gray-900">{index + 1}</div>
-            </td>
-            <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="text-sm leading-5 text-gray-900">{value.nama_kategori}</div>
-            </td>
-            <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-              <div className="text-sm w-10 leading-5 text-gray-900">{value.status}</div>
-            </td>
-            <td className="px-6 py-4  whitespace-no-wrap border-b border-gray-200">
-              <div className="grid text-sm gap-5 leading-5 text-gray-900">
-                <Button onClick={() => edit(value.id)} btnName="Edit" btnCSS="w-[35%]"/>
-                <button onClick={() => editStatus(value.id)} className="rounded-xl text-white bg-customPrimary w-full px-[10px] py-[8px]">
-                  {
-                    value.status === "active" ? <span>Non-Active</span> : <span>Active</span>
-                  }
-                </button>
-              </div>
-            </td>
-          </tr>
-            )
-          })
-        }
-          
 
-      </tbody>
-    </table>
-</div>
-      </div>
-      
-    </div>
-    
-  </div>
-);
-};
+            </div>
+  )
+}
 
-export default CreateCategory
+export default CreatePorduk

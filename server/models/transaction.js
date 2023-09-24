@@ -10,14 +10,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate({ user, metode_pembayaran, receipt }) {
       // define association here
       this.belongsTo(user, { foreignKey: "user_id" });
-      this.belongsTo(metode_pembayaran, { foreignKey: "metode_pembayaran_id" });
-      this.hasMany(receipt, {foreignKey: "transaction_id"})
+      // this.belongsTo(metode_pembayaran, { foreignKey: "metode_pembayaran_id" });
+      // this.hasMany(receipt, {foreignKey: "transaction_id"})
     }
   }
   transaction.init(
     {
       product_name: DataTypes.STRING,
-      moneyFromCustomer: DataTypes.INTEGER,
       quantity: DataTypes.INTEGER,
       product_price: DataTypes.INTEGER,
       customer_name: DataTypes.STRING,

@@ -75,14 +75,14 @@ const LeftSideBarAdmin = () => {
       <h1 className="text-customPrimary">Reports</h1>
       </Link>
     </div>
-
+<Link to="/produk">
     <div className="Menu px-5  w-full cursor-pointer h-[75px] flex flex-col border-l-8  border-l-customPrimary rounded">
-    <Link to="/produk">
+    
 
         <BsClipboardPlus className='text-4xl text-customPrimary'/>
       <h1 className='  text-customPrimary'>Create Produk</h1>
-    </Link>
-    </div>
+    
+    </div></Link>
     
     <div className="Menu px-5  w-full cursor-pointer h-[75px] flex flex-col] border-l-8  border-l-customPrimary rounded">
       <Link to="/Category">

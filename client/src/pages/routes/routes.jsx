@@ -22,7 +22,7 @@ const routes = [
     <Route path="/home/admin" element={<Protected adminPage={true}><Admin /></Protected>} />,,
     <Route path="/card" element={<Protected adminPage={true}><CardAdmin /></Protected>}/>,
     <Route path="/Category" element={<Protected adminPage={true}><CreateCategory /></Protected>} />,
-    <Route path="/produk" element={<Protected adminPage={true}><CreatePorduk /></Protected>} />,
+    <Route path="/produk" element={<CreatePorduk />} />,
     <Route path="/admin/report" element={<Protected adminPage={true}><Report /></Protected>} />,
     <Route path="/admin/RecordTransaction/:awal/:akhir" element={<Protected adminPage={true}><RecordTransaction /></Protected>} />,
     <Route path="/admin/detailTransaksi/:awal/:akhir" element={<Protected adminPage={true}><DetailTransaksi /></Protected>} />,

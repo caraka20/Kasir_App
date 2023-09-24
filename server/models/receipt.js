@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate({ transaction, metode_pembayaran }) {
       // define association here
 
-      this.belongsTo(transaction, { foreignKey: "transaction_id" });
+      // this.belongsTo(transaction, { foreignKey: "transaction_id" });
       this.belongsTo(metode_pembayaran, { foreignKey: "metode_pembayaran_id" });
     }
   }
@@ -21,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
       customer_changes: DataTypes.INTEGER,
       customer_money: DataTypes.INTEGER,
       transaction_uid: DataTypes.STRING,
-      payment_method: DataTypes.STRING,
       createdAt : {
         type: DataTypes.DATE,
         defaultValue: new Date()

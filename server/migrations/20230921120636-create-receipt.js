@@ -24,9 +24,6 @@ module.exports = {
       transaction_uid: {
         type: Sequelize.STRING
       },
-      payment_method: {
-        type: Sequelize.STRING
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

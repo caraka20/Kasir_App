@@ -8,25 +8,21 @@ module.exports = {
     {
      id: 1,
      nama_kategori : "Snack",
-     image_kategori : "GiFrenchFries",
      status : "active"
     },
     {
      id: 2,
      nama_kategori : "Main Course",
-     image_kategori : "PiBowlFood",
      status : "active"
     },
     {
      id: 3,
      nama_kategori : "Coffee",
-     image_kategori : "CgCoffee",
      status : "active"
     },
     {
      id: 4,
      nama_kategori : "Non-Coffee",
-     image_kategori : "BiDrink",
      status : "active"
     },
 ], {});
