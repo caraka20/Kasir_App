@@ -2,37 +2,15 @@ const db = require("../models");
 const { deleteFiles } = require("../helper/deleteFiles");
 
 module.exports = {
-  getData: async (req, res, next) => {
-    try {
-      const findData = await db.produk.findAll();
-      res.status(200).send({
-        isError: false,
-        message: "success get data",
-        data: findData,
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
+    create: async (req, res, next) => {
+        try {
+            const data = JSON.parse(req.body.data)
+            // console.log(data);
 
-  create: async (req, res, next) => {
-    try {
-      const data = JSON.parse(req.body.data);
-      console.log(data);
-
-      // Validasi data tidak boleh kosong
-      if (
-        !data.nama_produk &&
-        !data.deskripsi &&
-        !data.stock &&
-        !data.harga &&
-        !data.kategori_produk_id
-      ) {
-        throw {
-          status: 409,
-          message: "Tolong... Lengkapi data",
-        };
-      }
+            // Validasi data tidak boleh kosong
+            if(!data.nama_produk && !data.deskripsi && !data.stock && !data.harga && !data.kategori_produk_id) {
+                throw {message : "Tolong... Lengkapi data"}
+            }
 
       // Validasi Harga tidak boleh kurang dari 5000
       if (data.harga < 5000) {

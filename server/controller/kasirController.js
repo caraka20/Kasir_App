@@ -121,7 +121,11 @@ module.exports = {
                 data : respon
             })
         } catch (error) {
+            deleteFiles(req.files)
             next(error)
+            // console.log(error.message);
         }
+
     }
 }
+
