@@ -4,7 +4,7 @@ const Router = express.Router()
 const {productController} = require('../controller')
 const upload = require('../middleware/upload')
 
-
+Router.get('/', productController.getData)
 
 Router.post('/', upload, productController.create)
 Router.put('/:id', productController.update)

@@ -27,9 +27,9 @@ const Report = () => {
 
   const apply = async () => {
     try {
-      // console.log("test");
+      console.log("test");
       const res = await axios.get(`http://localhost:3001/report/tanggal?awal=${rangeTanggal.awal}&akhir=${rangeTanggal.akhir}`)
-      // console.log(res);
+      console.log(res);
       setDatas(res.data.dataFix)
       const hasil = Object.entries(res.data.dataFix.kategori_paling_diminati).map(([kategori, jumlah]) => ({ name: kategori, value: jumlah }));
       setData(hasil)

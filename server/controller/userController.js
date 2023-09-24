@@ -25,7 +25,6 @@ module.exports = { //udah bisa namun belum ada validasi samsek
             const {username, password} = req.query
 
             const masuk = await conn.user.findOne({where: {username: username}});
-
             if(masuk === null) {
                 throw {
                     status: 409,
@@ -34,7 +33,6 @@ module.exports = { //udah bisa namun belum ada validasi samsek
                 }
             }
             console.log(masuk.dataValues.password);
-
 
             const hasil = await match(password, masuk.dataValues.password)
             console.log(hasil);

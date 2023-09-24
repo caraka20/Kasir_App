@@ -7,6 +7,7 @@ import "./card.css";
 import Modal from "react-modal";
 import toast, { Toaster } from "react-hot-toast";
 import Search from "../Search/Search";
+import Paginasi from "./Paginasi";
 const CardAdmin = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [datas, setDatas] = useState(null);
@@ -16,8 +17,8 @@ const CardAdmin = () => {
   const [search, setSearch] = useState("");
   const [kategori, setKategori] = useState(null);
   // console.log(search);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8);
+
+  const paginate = (totalPage) => setCurrentPage(totalPage);
 
   const customStyles = {
     content: {
@@ -231,9 +232,17 @@ console.log(datas);
     // getData();
     getKategori();
   }, []);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(9);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = datas?.slice(indexOfFirstItem, indexOfLastItem);
+
+
   // console.log(search);
   return (
-    <div className="mt-5">
+    <div className="mt-5 mx-10">
       {/* <Search className="" /> */}
       <h1 className="font-bold my-[20px] text-2xl">Category Menu</h1>
       <div className="flex gap-10 w-full overflow-scroll">
@@ -283,7 +292,7 @@ console.log(datas);
         {!datas ? (
           <span>...Loading</span>
         ) : (
-          datas
+          currentItems
             .filter((value) => {
               if (search === "") {
                 return value;
@@ -331,7 +340,7 @@ console.log(datas);
                     />
                   </Modal>
                   <img
-                    className="h-[150px] rounded-2xl"
+                    className="h-[150px] rounded-2xl object-cover w-full"
                     onClick={() => modalOpenImage(value.id)}
                     src={`http://localhost:3001/${value.image_product.substring(
                       6
@@ -461,7 +470,7 @@ console.log(datas);
                                   <Button
                                     onClick={() => submitEdit(input.id)}
                                     btnName="Edit"
-                                    btnCSS="md:w-[50%] md:ml-[120px]"
+                                    btnCSS="w-[50%] md:ml-[120px]"
                                   />
                                 </div>
                               </div>
@@ -477,7 +486,7 @@ console.log(datas);
                             ? "Non-Active"
                             : "Active"
                         }
-                        btnCSS="my-[10px] w-[150px] h-[50px] text-sm"
+                        btnCSS="my-[10px]  w-[50%] text-sm"
                       />
                     </div>
                   </div>
@@ -485,6 +494,13 @@ console.log(datas);
               );
             })
         )}
+      </div>
+      <div className="mt-10 bg-orange-400">
+        <Paginasi
+          itemsPerPage={itemsPerPage}
+          totalItems={datas?.length}
+          paginate={paginate}
+        />
       </div>
     </div>
   );

@@ -73,6 +73,7 @@ module.exports = {
   transaksiPerTanggal: async (req, res, next) => {
     try {
       // rata rata penjualan hanya bisa 10 hari terahir
+      console.log("lala");
       const { awal, akhir } = req.query;
       console.log(awal);
       console.log(akhir);
@@ -363,10 +364,10 @@ const dataFix =
 //   }
 
 
-historyTransaksi = [
-  {
-    "2023-09-18" : [
-      111 
-    ]
-  }
-]
+// historyTransaksi = [
+//   {
+//     "2023-09-18" : [
+//       111 
+//     ]
+//   }
+// ]

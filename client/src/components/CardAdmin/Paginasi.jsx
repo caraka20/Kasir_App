@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import "./pagin.css"
+import React, { useState } from "react";
+import "./card.css";
 
-const Pagin = ({ itemsPerPage, totalItems, paginate }) => {
+const Paginasi = ({ itemsPerPage, totalItems, paginate }) => {
   const totalPage = [];
 
   for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
@@ -9,18 +9,23 @@ const Pagin = ({ itemsPerPage, totalItems, paginate }) => {
   }
 
   return (
-    <nav>
-      <ul className="pagination">
+    <div className="join flex gap-10 justify-center">
         {totalPage.map(number => (
-          <li key={number} className="page-item">
-            <button onClick={() => paginate(number)} className="page-link">
-              {number}
-            </button>
-          </li>
+            <button onClick={() => paginate(number)} className="p-3 text-lg font-bold join-item btn page-link">{number}</button>
         ))}
-      </ul>
-    </nav>
+    </div>
+    // <nav>
+    //   <ul className="pagination">
+    //     {totalPage.map(number => (
+    //       <li key={number} className="page-item">
+    //         <button onClick={() => paginate(number)} className="page-link">
+    //           {number}
+    //         </button>
+    //       </li>
+    //     ))}
+    //   </ul>
+    // </nav>
   );
 };
 
-export default Pagin;
+export default Paginasi;

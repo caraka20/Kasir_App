@@ -9,7 +9,7 @@ import Profile from "../Profile/Profile";
 import CreateCategory from "../CreateCategory/CreateCategory";
 import CardAdmin from "../../components/CardAdmin/CardAdmin";
 import Admin from "../HomeAdmin/Admin";
-import ModalReceipt from "../../components/ModalReceipt/ModalReceipt";
+
 import Report from "../Report/Report";
 import RecordTransaction from "../RecordTransaction/RecordTransaction";
 import DetailTransaksi from "../DetailTransaksi/DetailTransaksi";
@@ -28,7 +28,7 @@ const routes = [
     <Route path="/admin/detailTransaksi/:awal/:akhir" element={<Protected adminPage={true}><DetailTransaksi /></Protected>} />,
     <Route path="/admin/kasir" element={<Protected adminPage={true}><CreateKasir /></Protected>} />,
     <Route path="/admin/ListKasir" element={<Protected adminPage={true}><ListKasir /></Protected>} />,
-      
+
     <Route path="/" element={<Login/>}/>,
     <Route path="/forgetpassword" element={<ForgetPassword/>}/>,
     <Route path="/updatepassword/:email" element={<UpdatePassword/>}/>,
@@ -37,7 +37,6 @@ const routes = [
     <Route path="/cashier/profile/:id"  element={<Profile/>}/>,
     <Route path="/cashier/profile"  element={<Profile/>}/>,
     <Route path="/test"  element={<ItemList />}/>
-
 
 ];
 

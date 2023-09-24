@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     harga: DataTypes.INTEGER,
     stock: DataTypes.INTEGER,
     image_product: DataTypes.STRING,
+    status_product: DataTypes.STRING,
     createdAt : {
       type: DataTypes.DATE,
       defaultValue: new Date()
