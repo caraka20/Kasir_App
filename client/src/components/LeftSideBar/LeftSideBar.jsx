@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { PiForkKnifeBold } from "react-icons/pi";
 import { RiBillFill } from "react-icons/ri";
@@ -8,7 +8,14 @@ import { BsFillPersonFill } from "react-icons/bs";
 
 import { Link } from "react-router-dom";
 
+
 const LeftSideBar = () => {
+  const [state, setState] = useState(localStorage.getItem("userId"))
+  console.log(state)
+
+
+
+
   return (
     <div className="left-side  w-1/12 h-full bg-white">
       <Link to={"/cashier"}>
@@ -20,7 +27,7 @@ const LeftSideBar = () => {
         <PiForkKnifeBold className="text-4xl text-customPrimary " />
         <h1 className="text-customPrimary">Menu</h1>
       </div>
-      <Link to="/cashier/profile">
+      <Link to={`/cashier/profile/${state}`}>
         <div className="Bills w-full cursor-pointer h-[75px] flex flex-col justify-center items-center mt-[10px] rounded">
           <BsFillPersonFill className="text-4xl text-gray-500 " />
           <h1 className="text-gray-500">Profile</h1>

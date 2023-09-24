@@ -4,30 +4,27 @@ import "./modal.css";
 import OrderSummaryCard from "../OrderSummaryCard/OrderSummaryCard";
 import InputName from "../../components/InputName/InputName";
 import Button from "../Button/Button";
+
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import ModalReceipt from "../ModalReceipt/ModalReceipt";
 import { useNavigate } from "react-router-dom";
 const Modals = (props) => {
   const { datas, transaction_uid } = props;
+  // hooks
   const navigate = useNavigate();
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  // hooks
   const [selectPayment, setSelectPayment] = useState(1);
   const [subTotal, setSubTotal] = useState([]);
   const [subTotal1, setSubTotal1] = useState([]);
-  console.log(selectPayment);
+  const [disabled, setDisabled] = useState(false);
+  const [qty, setQty] = useState(0);
+
   const refCustomerName = useRef();
   const refCustomerMoney = useRef();
   const refCustomerName2 = useRef();
 
-  useEffect(() => {
-    // 👉️ ref could be null here
-    if (refCustomerMoney.current != null) {
-      // 👉️ TypeScript knows that ref is not null here
-      refCustomerMoney.current.focus();
-    }
-  }, []);
+
   // api
   const getApi = async () => {
     try {
@@ -38,11 +35,12 @@ const Modals = (props) => {
 
       setSubTotal(total.data?.data);
       setSubTotal1(total.data?.data[0]?.total_price);
+        console.log(total);
     } catch (error) {
       console.log(error);
     }
   };
-
+  console.log(subTotal);
   useEffect(() => {
     getApi();
   }, [transaction_uid, selectPayment]);
@@ -67,33 +65,59 @@ const Modals = (props) => {
   };
 
   const vat = subTotal1 * 0.1;
-  const total = subTotal1 - vat;
+  const total = Number(subTotal1) + Number(vat);
 
   const handleConfirmOrder = async () => {
     try {
+
+
       if (selectPayment == 1) {
         const changes = refCustomerMoney.current.value - total;
-        const onCreateReceipt = await axios.post(
-          "http://localhost:3001/transaction/confirm-order",
-          {
-            total_price: total,
-            customer_name: refCustomerName.current.value,
-            customer_changes: changes,
-            customer_money: refCustomerMoney.current.value,
-            transaction_uid: transaction_uid,
-            metode_pembayaran_id: selectPayment,
-          }
-        );
 
-        getApi();
-        setModalIsOpen(true);
-        toast.success(onCreateReceipt.data.message);
+        if (!refCustomerName.current.value || !refCustomerMoney.current.value) {
+          toast.error("Customer Name or Customer Money Can Not Empty");
+        } else {
+          setDisabled(true)
+          const onCreateReceipt = await axios.post(
+            "http://localhost:3001/transaction/confirm-order",
+            {
+              total_price: total,
+              customer_name: refCustomerName.current.value,
+              customer_changes: changes,
+              customer_money: refCustomerMoney.current.value,
+              transaction_uid: transaction_uid,
+              metode_pembayaran_id: selectPayment,
+            }
+          );
+
+          getApi();
+          setModalIsOpen(true);
+          toast.success(onCreateReceipt.data.message);
+
+          if (onCreateReceipt.data.isError === false) {
+            const deleteCart = await axios.post(
+              "http://localhost:3001/transaction/delete-cart",
+              {
+                token:
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1NTM3MzMyLCJleHAiOjE2OTU2MjM3MzJ9.9GITtZ1LFy8FWVdJTM8r2qUKxfR3OPJNxGcU9Y09T0Y",
+              }
+            );
+            console.log(deleteCart);
+          }
+          setTimeout(() => {
+            navigate(`/receipt?transaction_uid=${transaction_uid}`);
+          }, 3000);
+        }
       } else {
+        if (!refCustomerName.current.value) {
+          return toast.error("Customer Name Can Not Empty");
+        }
+        setDisabled(true)
         const onCreateReceipt = await axios.post(
           "http://localhost:3001/transaction/confirm-order",
           {
             total_price: total,
-            customer_name: refCustomerName2.current?.value,
+            customer_name: refCustomerName.current?.value,
             customer_changes: null,
             customer_money: null,
             transaction_uid: transaction_uid,
@@ -101,20 +125,28 @@ const Modals = (props) => {
           }
         );
 
-
-
         toast.success(onCreateReceipt.data.message);
-        setTimeout(() => {}, 3000);
 
-        // navigate(`/receipt?transaction_uid=${transaction_uid}`);
+        if (onCreateReceipt.data.isError === false) {
+          const deleteCart = await axios.post(
+            "http://localhost:3001/transaction/delete-cart",
+            {
+              token:
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1NTM3MzMyLCJleHAiOjE2OTU2MjM3MzJ9.9GITtZ1LFy8FWVdJTM8r2qUKxfR3OPJNxGcU9Y09T0Y",
+            }
+          );
+          console.log(deleteCart);
+        }
+
+        setTimeout(() => {
+          navigate(`/receipt?transaction_uid=${transaction_uid}`);
+        }, 3000);
       }
     } catch (error) {
-      console.log(error);
-      // toast.error(error.response.data.message);
-    } finally {
-      setTimeout(() => {
-        navigate(`/receipt?transaction_uid=${transaction_uid}`);
-      }, 5000);
+
+      toast.error(error.response.data.message);
+    }finally{
+      setDisabled(false)
     }
   };
 
@@ -131,7 +163,11 @@ const Modals = (props) => {
           <div className="h-full w-full   mt-[50px]">
             {/* {datas.map((value) => {
               console.log(value); */}
-            <OrderSummaryCard datas={datas} className="" />
+            <OrderSummaryCard
+              datas={datas}
+              className=""
+              transaction_uid={transaction_uid}
+            />
             {/* })} */}
           </div>
         </div>
@@ -204,7 +240,7 @@ const Modals = (props) => {
               <InputName
                 name="Input Customer Name"
                 type="text"
-                ref={refCustomerName2}
+                ref={refCustomerName}
                 className=""
               />
               <h1 className="text-xl text-center mt-[20px] text-customPrimary cursor-pointer">
@@ -215,8 +251,9 @@ const Modals = (props) => {
 
           <Button
             onClick={handleConfirmOrder}
-            btnCSS="mt-[40px]"
+            btnCSS="mt-[40px] disabled:bg-black"
             btnName="Confirm Order"
+            disabled={disabled}
           />
         </div>
         {/* <ModalReceipt isOpen={modalIsOpen} datas={transaction_uid} /> */}

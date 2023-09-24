@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import LeftSideBarAdmin from '../../components/LeftSideBarAdmin/LeftSideBarAdmin'
-// import Sidebar from '../../components/LeftSideBarAdmin/Sidebar'
 import Button from '../../components/Button/Button'
-import axios from 'axios'
-import toast, {Toaster} from 'react-hot-toast'
-// import Sidebar from '../../components/LeftSideBarAdmin/Sidebar'
 
 
-    const CreatePorduk = () => {
+const CreatePorduk = () => {
     const [input, setInput] = useState({
         nama_produk:"",
         deskripsi:"",
@@ -15,81 +11,7 @@ import toast, {Toaster} from 'react-hot-toast'
         harga:"",
         kategori_produk_id:""
     })
-    const [datas, setDatas] = useState(null)
-    const [images, setImages] = useState([])
-
-    const getData = async () => {
-        try {
-            const getData = await axios.get("http://localhost:3001/product")
-                setDatas(getData)
-                console.log(getData.data.data);
-        } catch (error) {
-            toast.error(error)
-        }
-    }
-    console.log(datas);
-    const onSelectImages = (event) => {
-        try {
-            const files = [...event.target.files]
-            files.forEach(value => {
-                if(value.size > 10000000 || value.type.split('/')[0] !== 'image') throw {message: `${value.name} Size Too Large / File Must be Image`}
-            })
-
-            setImages(files)
-        } catch (error) {
-            alert(error.message)
-        }
-    }
-    const createProduk = async () => {
-        try {
-            const fd = new FormData()
-            console.log(fd);
-            fd.append('data', JSON.stringify(input))
-            images.forEach(value => {
-                fd.append('images', value)
-            })
-
-            if(input.nama_produk === "" || input.deskripsi === "" || input.harga === "" || input.stock === "" || input.kategori_produk_id === "" || images.length === 0) {
-                return toast.error("Form Harus Dilengkapi")
-            }
-
-            if(input.harga < 5000) {
-                return alert("harga tidak boleh kurang dari 5000")
-            }
-
-            if(input.stock < 1) {
-                return alert('stock tidak boleh 0 atau minus')
-            }
-
-                const findProduk = datas.data.data.find((value) => {
-                    return value.nama_produk === input.nama_produk
-                })
-                console.log(findProduk);
-                if(findProduk) {
-                    toast.error("Produk Already Exist")
-                } 
-                const create = await axios.post("http://localhost:3001/product", fd)
-                // console.log(create.data);
-                toast.success(create)
-        } catch (error) {
-            console.log(error.message);
-            // toast.error(error)
-        }
-    }
-    const handleChange = (e) =>{
-        const nama_produk = e.target.name
-        const value = e.target.value
-        const newData = {
-            ...input
-        }
-        newData[nama_produk] = value
-        setInput(newData)
-    }
-    // console.log(input);
-
-    useEffect(() => {
-        getData()
-    }, [])
+    // console.log();
 
   return (
     <div className='grid h-screen'>
@@ -117,7 +39,7 @@ import toast, {Toaster} from 'react-hot-toast'
 
                                     <div>
                                         <label htmlFor="" className='font-serif'>Pilih Kategori</label><br />
-                                        <select name='kategori_produk_id' onChange={handleChange} className='select w-full max-w-xs mt-2 mb-5' style={{ width: '100%' }}>
+                                        <select name='kategori_produk_id' onChange={handleChange} className='select w-full max-w-xs mt-2 mb-5 ' style={{ width: '100%' }}>
                                             <option disabled selected>Kategori Produk</option>
                                             <option value={1}>Snack</option>
                                             <option value={2}>Main Course</option>

@@ -32,6 +32,13 @@ Router.post("/cart", transactionController.deleteCartQty);
 
 Router.post("/cartById", transactionController.cartById);
 
+Router.post("/transactionUID", transactionController.getTransactionUID);
+
+Router.post("/delete-cart", verify, transactionController.deleteCartByUID);
+
+Router.get("/total-price-cart", transactionController.cartTotalPrice);
+
+
 
 
 

@@ -31,10 +31,11 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [idProduct, setIdProduct] = useState(null);
   const [cart, setCart] = useState([]);
-  const [qty, setQty] = useState([]);
 
+  const [disabled, setDisabled] = useState(false);
   const [cartToTransaction, setCartToTransaction] = useState(null);
   const [transactionUID, setTransactionUID] = useState(null);
+  const [subTotal, setSubTotal] = useState(null);
 
   const getApi = async () => {
     const getProduct = await axios.get(
@@ -45,7 +46,11 @@ const Home = () => {
       "http://localhost:3001/transaction/cartById",
       { idProduct: idProduct }
     );
-    setQty(cartById.data.data?.quantity);
+    const total = await axios.get(
+      "http://localhost:3001/transaction/total-price-cart"
+    );
+
+    setSubTotal(total.data[0].total_price);
 
     setProducts(getProduct.data.data);
     setCart(getCart.data.data);
@@ -86,7 +91,6 @@ const Home = () => {
           { idProduct: id }
         );
         console.log(deleteCart);
-
       }
       getApi();
       // }
@@ -103,7 +107,7 @@ const Home = () => {
         {
           idProduct: id,
           token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1NDQ4Mzg3LCJleHAiOjE2OTU1MzQ3ODd9.FqiweKLJgaVY9imyrWrM4cgmCo81iZfOqpKePZ0vkho",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1NTM3MzMyLCJleHAiOjE2OTU2MjM3MzJ9.9GITtZ1LFy8FWVdJTM8r2qUKxfR3OPJNxGcU9Y09T0Y",
         }
       );
       getApi();
@@ -117,7 +121,10 @@ const Home = () => {
 
   const confirm = async () => {
     try {
-      setModelIsOpen(true);
+      setDisabled(true);
+      if (cart.length === 0) {
+        return toast.error("Input Something On Cart");
+      }
 
       function getRandomCode() {
         let result = "";
@@ -127,7 +134,7 @@ const Home = () => {
         }
         return result;
       }
-      // let hasil =
+
       const carts = await axios.post(
         "http://localhost:3001/transaction/transaction",
         { cartProduct: cart, uid: getRandomCode() }
@@ -135,10 +142,16 @@ const Home = () => {
       console.log(carts.data.dataTransaction);
       setTransactionUID(carts.data?.transaction_uid);
       setCartToTransaction(carts.data.dataTransaction);
+      const loading = toast.loading("loading...");
 
-      console.log("asd");
+      setTimeout(() => {
+        toast.dismiss(loading);
+        setModelIsOpen(true);
+      }, 1000);
     } catch (error) {
       console.log(error);
+    } finally {
+      setDisabled(false);
     }
   };
 
@@ -149,11 +162,10 @@ const Home = () => {
   useEffect(() => {
     getApi();
   }, []);
+  
+  const vat = Math.floor(subTotal * 0.1);
+  const total = Number(subTotal) + Number(vat);
 
-  // if(products.length === 0) return console.log("ini product");
-
-  // if(cart.length === 0) return console.log("ini cart");
-  // if(!cartToTransaction) return console.log("test");
   return (
     <div className="screen  w-full h-screen flex ">
       <LeftSideBar />
@@ -232,19 +244,24 @@ const Home = () => {
         <div className="mt-[20px] border-t-2 border-b-2 py-[20px]">
           <div className="SubTotal flex justify-between items-center">
             <h1 className="text-lg">Sub Total</h1>
-            <h1 className="text-xl  font-normal">$111</h1>
+            <h1 className="text-xl  font-normal">{`Rp. ${subTotal}`}</h1>
           </div>
           <div className="VAT flex justify-between items-center">
             <h1 className="text-lg">VAT (10%)</h1>
-            <h1 className="text-xl font-normal">$11.1</h1>
+            <h1 className="text-xl font-normal">{`Rp. ${vat}`}</h1>
           </div>
         </div>
         <div className="flex justify-between items-center mt-[10px]">
           <h1 className="font-semibold text-xl">TOTAL : </h1>
-          <h1 className="font-semibold text-xl">$122.1 </h1>
+          <h1 className="font-semibold text-xl">{`Rp. ${total}`}</h1>
         </div>
         <div className="flex flex-col lg:mt-[75px]  mt-[10px] ">
-          <Button onClick={confirm} btnCSS="btn-modal" btnName="Confirm" />
+          <Button
+            onClick={confirm}
+            btnCSS="btn-modal"
+            btnName="Confirm"
+            disabled={disabled}
+          />
         </div>
         <Modals
           datas={cartToTransaction}

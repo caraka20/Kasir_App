@@ -1,20 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../Input/Input";
 
 //icons
 
 import { HiPlus } from "react-icons/hi";
 import { HiMinus } from "react-icons/hi";
+import axios from "axios";
 
 const OrderSummaryCard = (props) => {
-  const { datas } = props;
+  const { datas, transaction_uid } = props;
 
-  console.log(datas);
+  const [transactionDatas, setDatasTransaction] = useState([])
 
-  if(!datas) return <div>SABAR BOS</div>;
+  const getApi = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3001/transaction/transactionUID",
+        { transaction_uid: transaction_uid }
+      );
+
+      setDatasTransaction(res.data.data)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getApi()
+  }, [transactionDatas]);
+
+
+
+  if (transactionDatas.length === 0) return <div>SABAR BOS</div>;
   return (
     <>
-      {datas.map((value) => {
+      {transactionDatas.map((value) => {
+        const price = value.product_price * value.quantity
         return (
           <div className={`border-b-2 pb-[20px] ${props.className}`}>
             <div className="flex items-center justify-between ">
@@ -23,7 +44,7 @@ const OrderSummaryCard = (props) => {
                 <h1 className="text-gray-500 text-sm">notes</h1>
               </div>
               <div className="flex justify-center items-center">
-                <h1 className="font-bold text-xl ">{`Rp.${value.product_price}`}</h1>
+                <h1 className="font-bold text-xl ">{`Rp.${price}`}</h1>
                 <h1 className="ml-[20px] text-gray-400">{`x${value.quantity}`}</h1>
               </div>
             </div>

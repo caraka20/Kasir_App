@@ -1,5 +1,5 @@
 const db = require("./../models");
-const { sequelize } = require("./../models");
+const { Op,  sequelize } = require("./../models");
 
 module.exports = {
   addToCart: async (data) => {
@@ -82,9 +82,10 @@ module.exports = {
     try {
       const totalPrice = await db.transaction.findAll({
         attributes: [
-          [sequelize.fn("SUM", sequelize.col("product_price")), "total_price"],
+          [sequelize.fn("SUM", sequelize.literal("product_price * quantity")), "total_price"],
         ],
         where: { transaction_uid: data },
+        
       });
       return totalPrice;
     } catch (error) {
@@ -159,4 +160,40 @@ module.exports = {
       return error;
     }
   },
+  transactionByIdTrans: async (data) => {
+    try {
+      const getTransaction = db.transaction.findAll({
+        where: { transaction_uid: data },
+      });
+
+      return getTransaction;
+    } catch (error) {
+      return error;
+    }
+  },
+  deleteCart: async(data) => {
+    try {
+      const deleteCart = await db.cart.destroy({where: {user_id: data}})
+      return deleteCart
+    } catch (error) {
+      return error
+    }
+  },
+  totalPriceCart: async(data) => {
+    try {
+      const cart = await db.cart.findAll({
+        attributes: [
+          [sequelize.fn("SUM", sequelize.literal("harga * quantity")), "total_price"],
+        ],
+        include: [{
+          model: db.produk,
+          attributes: []
+        }]
+      })
+
+      return cart
+    } catch (error) {
+      return error
+    }
+  }
 };

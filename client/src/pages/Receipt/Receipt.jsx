@@ -10,4 +10,3 @@ const Receipt = () => {
 export default Receipt
 
 
-rafc

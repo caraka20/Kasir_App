@@ -14,6 +14,8 @@ const {
   cartById,
   decreaseQty,
   cartDelete,
+  transactionByIdTrans,deleteCart,
+  totalPriceCart
 } = require("./../services/transactionService");
 
 module.exports = {
@@ -135,46 +137,44 @@ module.exports = {
       console.log(customer_changes);
 
       // if (customer_money == null) {
-      const dataToSend = {
-        total_price: total_price,
-        customer_name: customer_name,
-        customer_changes: customer_changes,
-        customer_money: Number(customer_money),
-        transaction_uid: transaction_uid,
-        metode_pembayaran_id: metode_pembayaran_id,
-        payment_method: null,
-      };
+      // const dataToSend = {
+      //   total_price: total_price,
+      //   customer_name: customer_name,
+      //   customer_changes: customer_changes,
+      //   customer_money: Number(customer_money),
+      //   transaction_uid: transaction_uid,
+      //   metode_pembayaran_id: metode_pembayaran_id,
+      //   payment_method: null,
+      // };
 
-      const create = await db.receipt.create(dataToSend);
+      // const create = await db.receipt.create(dataToSend);
 
-      res.status(200).send({
-        isError: false,
-        message: "Transaction Success",
-        data: create,
-      });
-      // }
-      //  else {
-      //   if (customer_money < total_price) {
-      //     throw { message: "Money Cann't less than total price" };
-      //   } else {
-      //     const dataToSend = {
-      //       total_price: total_price,
-      //       customer_name: customer_name,
-      //       customer_changes: customer_changes,
-      //       customer_money: customer_money,
-      //       transaction_uid: transaction_uid,
-      //       metode_pembayaran_id: metode_pembayaran_id,
-      //       payment_method: null,
-      //     };
+      // res.status(200).send({
+      //   isError: false,
+      //   message: "Transaction Success",
+      //   data: create,
+      // });
 
-      //     const create = await db.receipt.create(dataToSend);
+      // if (customer_money < total_price) {
+      //   throw { message: "Money Cann't less than total price" };
+      // } else {
+        const dataToSend = {
+          total_price: total_price,
+          customer_name: customer_name,
+          customer_changes: customer_changes,
+          customer_money: customer_money,
+          transaction_uid: transaction_uid,
+          metode_pembayaran_id: metode_pembayaran_id,
+          payment_method: null,
+        };
 
-      //     res.status(200).send({
-      //       isError: false,
-      //       message: "Transaction Success",
-      //       data: create,
-      //     });
-      //   }
+        const create = await db.receipt.create(dataToSend);
+
+        res.status(200).send({
+          isError: false,
+          message: "Transaction Success",
+          data: create,
+        });
       // }
     } catch (error) {
       next(error);
@@ -240,9 +240,6 @@ module.exports = {
       const cartData = await decreaseQty(idProduct);
       const data = await cartById(idProduct);
 
-      
-
-
       res.status(200).send({
         isError: false,
         message: "decrease 1 success",
@@ -275,10 +272,46 @@ module.exports = {
       res.status(200).send({
         isError: false,
         data: cartt,
-
       });
     } catch (error) {
       next(error);
     }
   },
+  getTransactionUID: async (req, res, next) => {
+    try {
+      const { transaction_uid } = req.body;
+      const getDataTransa = await transactionByIdTrans(transaction_uid);
+
+      res.status(200).send({
+        isError: false,
+        data: getDataTransa,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  deleteCartByUID:async (req,res,next)=> {
+    try {
+      const {id} = req.dataToken
+
+      const deleteCartt = await deleteCart(id) 
+      res.status(200).send({
+        isError: false,
+        message: "Delete Success",
+        data: deleteCartt
+      })
+    } catch (error) {
+      next(error)
+    }
+  },
+  cartTotalPrice: async(req,res,next) => {
+    try {
+      // const {qty} = req.body 
+      const total_price = await totalPriceCart()
+
+      res.send(total_price)
+    } catch (error) {
+      return error
+    }
+  }
 };
