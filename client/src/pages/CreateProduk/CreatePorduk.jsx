@@ -15,7 +15,8 @@ const CreatePorduk = () => {
     })
     const [datas, setDatas] = useState(null)
     const [images, setImages] = useState([])
-console.log("lala");
+    const [kategori, setKategori] = useState(null)
+// console.log("lala");
     const getData = async () => {
         try {
             const getData = await axios.get("http://localhost:3001/product")
@@ -26,7 +27,7 @@ console.log("lala");
             toast.error(error)
         }
     }
-    console.log(datas);
+    // console.log(datas);
     const onSelectImages = (event) => {
         try {
             const files = [...event.target.files]
@@ -87,8 +88,20 @@ console.log("lala");
     }
     // console.log(input);
 
+    const getAllProduk = async () => {
+        try {
+            const respon = await axios.get(`http://localhost:3001/category`)
+            const hasil = respon.data.data.filter((item) => {
+                return item.status === "active"
+            })
+            setKategori(hasil)
+        } catch (error) {
+            console.log(error);
+        }
+    }
     useEffect(() => {
         getData()
+        getAllProduk()
     }, [])
 
   return (
@@ -119,10 +132,12 @@ console.log("lala");
                                         <label htmlFor="" className='font-serif'>Pilih Kategori</label><br />
                                         <select name='kategori_produk_id' onChange={handleChange} className='select w-full max-w-xs mt-2 mb-5 ' style={{ width: '100%' }}>
                                             <option disabled selected>Kategori Produk</option>
-                                            <option value={1}>Snack</option>
-                                            <option value={2}>Main Course</option>
-                                            <option value={3}>Coffee</option>
-                                            <option value={4}>Non-Coffee</option>
+                                                {
+                                                    !kategori ? <option>-</option> :
+                                                    kategori.map((item) => {
+                                                        return <option value={item.id} >{item.nama_kategori}</option> 
+                                                    })
+                                                }
                                         </select>
                                     </div>
 

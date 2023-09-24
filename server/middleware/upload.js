@@ -8,7 +8,7 @@ const upload = async (req, res, next) => {
   result(req, res, function (err) {
     try {
       if (err) throw err;
-
+      if (!req.files.images) return res.status(409).send("tidak ada gambar yang di uploud");
       // console.log(req.files);
       req.files.images.forEach((values) => {
         if (values.size > 1000000)
