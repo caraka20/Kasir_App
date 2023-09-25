@@ -10,9 +10,11 @@ const Card = (props) => {
   return (
     
     <div className="card  sm:w-38 lg:w-[180px] xl:w-[260px] shadow-xl bg-white rounded-2xl px-[10px]">
-      <figure>
-        <img
-          src="https://cdn1-production-images-kly.akamaized.net/EjwV7j3Y4JrlqUFuavke4NtRWtM=/1200x675/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/3108566/original/079979700_1587487794-Sajiku_1.jpg"
+      <figure className="]">
+        <img className=" object-cover rounded-xl h-[200px] w-full "
+          src={`http://localhost:3001/${datas.image_product.substring(
+            6
+          )}`}
           alt="Shoes"
         />
       </figure>
@@ -23,7 +25,7 @@ const Card = (props) => {
           {datas.harga}
         </p>
         <div className=" card-actions justify-end ">
-          <Button  onClick={() => props.handleAddToCart(props.id)} btnName=" Add To Cart" btnCSS="my-[10px] text-sm" />
+          <Button  onClick={() => props.handleAddToCart(props.id, props.kategori_name)} btnName=" Add To Cart" btnCSS="my-[10px] text-sm" />
         </div>
       </div>
     </div>

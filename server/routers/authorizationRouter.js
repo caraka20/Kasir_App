@@ -5,6 +5,6 @@ const {authorizationController} = require('../controller')
 
 
 Route.get('/forgetpassword',authorizationController.mailForgetPassword)
-Route.put('/updatepassword',authorizationController.updatePassword)
+Route.put('/updatepassword/',authorizationController.updatePassword)
 Route.put('/resetpassword',verify, authorizationController.resetPassword)
 module.exports = Route

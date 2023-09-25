@@ -110,9 +110,10 @@ const CardAdmin = () => {
       const res = await Instance().put(`product/${e}`, input);
       console.log(res);
       setModalOpen(false);
+      toast.success(res.data.message)
       getData();
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -281,10 +282,12 @@ console.log(datas);
             <option className="" disabled selected>
               Select
             </option>
-            <option value={"A-Z"}>A/Z</option>
-            <option value={"Z-A"}>Z/A</option>
-            <option value={"H-L"}>Highest</option>
-            <option value={"L-H"}>Lowest</option>
+            {
+                                                    !kategori ? <option>-</option> :
+                                                    kategori.map((item) => {
+                                                        return <option value={item.id} >{item.nama_kategori}</option> 
+                                                    })
+                                                }
           </select>
         </div>
       </div>

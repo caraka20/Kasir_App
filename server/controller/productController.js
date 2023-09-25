@@ -77,12 +77,12 @@ module.exports = {
         harga: data.harga,
         status_product: "Active",
         image_product: dataImage[0].image_product,
-        kategori_produk_id: kategori_produk_id,
+        kategori_produk_id: Number(data.kategori_produk_id),
       });
 
       // await db.produk.bulkCreate(createProduk)
 
-      res.status(200).send({
+      res.status(200).json({
         isError: false,
         message: "Success Membuat produk",
         data: createProduk,

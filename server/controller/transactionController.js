@@ -66,11 +66,12 @@ module.exports = {
       return result;
     }
     try {
-      const { cartProduct, uid } = req.body;
+      const { cartProduct, uid, kategori_name } = req.body;
       // res.send(cartProduct);
-
+      console.log(uid);
+      console.log(kategori_name);
       const transact = await transaction();
-      console.log(transact);
+
       const transaction_id = uid;
 
       const maps = cartProduct.map((value) => {
@@ -78,7 +79,7 @@ module.exports = {
           product_name: value.produk.nama_produk,
           quantity: value.quantity,
           product_price: value.produk.harga,
-
+          product_kategori: null,
           transaction_uid: transaction_id,
           user_id: value.user_id,
         };
@@ -99,7 +100,12 @@ module.exports = {
   },
   productList: async (req, res, next) => {
     try {
-      const products = await db.produk.findAll();
+      const products = await db.produk.findAll({
+        include: [{
+          model: db.kategori_produk,
+          attributes: ["nama_kategori"]
+        }]
+      });
 
       res.status(200).send({
         isError: false,

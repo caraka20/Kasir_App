@@ -24,7 +24,7 @@ module.exports = {
 
             await transporter.sendMail({
                 from: "Admin TSUGI ",
-                to:"ariefrubani44@gmail.com",
+                to:email,
                 subject: "Forget Password Request",
                 html: newTemplate
             })

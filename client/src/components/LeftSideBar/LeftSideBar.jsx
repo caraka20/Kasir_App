@@ -31,7 +31,7 @@ const LeftSideBar = () => {
           <PiCoffeeFill />
         </div>
       </Link>
-      <div
+      <Link to={"/cashier"}><div
         onClick={() => setOnPage(2)}
         className={`Menu w-full cursor-pointer h-[75px] flex flex-col  justify-center items-center mt-[50px] border-l-8   rounded ${
           onPage === 2 ? " border-l-customPrimary" : "border-l-gray-500"
@@ -42,6 +42,7 @@ const LeftSideBar = () => {
             onPage === 2 ? " text-customPrimary" : "text-gray-500"
           }`}
         />
+        
         <h1
           className={`  ${
             onPage === 2 ? " text-customPrimary" : "text-gray-500"
@@ -49,7 +50,7 @@ const LeftSideBar = () => {
         >
           Menu
         </h1>
-      </div>
+      </div></Link>
       <Link to={`/cashier/profile/${state}`}>
         <div
           onClick={() => setOnPage(3)}
