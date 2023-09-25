@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Instance } from "../../api/instance";
 const CreateKasir = () => {
   const [state, setState] = useState({
     username: "",
@@ -42,7 +43,7 @@ const onSubmit = async(e) => {
       if(state.nama_lengkap === "" || state.username === "" || state.email === "" || state.password === "" || images.length === 0) {
         return toast.error("Form Harus Dilengkapi")
     }
-      await axios.post('http://localhost:3001/kasir', fd)
+      await Instance().post('kasir', fd)
 
       toast.success('Data Created!')
       setTimeout(() => {

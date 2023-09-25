@@ -6,13 +6,14 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Instance } from "../../api/instance";
 
 const ListKasir = () => {
   const [datas, setDatas] = useState(null);
 
   const getData = async () => {
     try {
-      const fetchData = await axios.get("http://localhost:3001/kasir");
+      const fetchData = await Instance().get("kasir");
       console.log(fetchData.data.data);
       setDatas(fetchData.data.data);
     } catch (error) {
@@ -22,7 +23,7 @@ const ListKasir = () => {
 
   const editStatus = async (e) => {
     try {
-      const res = await axios.put(`http://localhost:3001/kasir/${e}`);
+      const res = await Instance().put(`kasir/${e}`);
       console.log(res.data.message);
       getData();
     } catch (error) {

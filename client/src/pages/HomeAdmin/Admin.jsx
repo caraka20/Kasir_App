@@ -20,6 +20,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Instance } from "../../api/instance";
 
 const Admin = () => {
   const [datas, setDatas] = useState(null);
@@ -27,7 +28,7 @@ const Admin = () => {
 
   const getData = async () => {
     try {
-      const fetchData = await axios.get("http://localhost:3001/product");
+      const fetchData = await Instance().get("product");
       // console.log(fetchData.data.data);
       setDatas(fetchData.data.data);
     } catch (error) {
@@ -37,7 +38,7 @@ const Admin = () => {
 
   const getKategori = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/category");
+      const res = await Instance().get("category");
       // console.log(res.data.data);
       const hasil = res.data.data.filter((item) => {
         return item.status === "active"

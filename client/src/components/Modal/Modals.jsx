@@ -9,6 +9,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import ModalReceipt from "../ModalReceipt/ModalReceipt";
 import { useNavigate, Link } from "react-router-dom";
+import { Instance } from "../../api/instance";
 const Modals = (props) => {
   const { datas, transaction_uid, modal } = props;
   // hooks
@@ -19,6 +20,7 @@ const Modals = (props) => {
   const [subTotal1, setSubTotal1] = useState([]);
   const [disabled, setDisabled] = useState(false);
   const [qty, setQty] = useState(0);
+  const [user_id, setUser_id] = useState(localStorage.getItem("userId"));
 
   const refCustomerName = useRef();
   const refCustomerMoney = useRef();
@@ -27,10 +29,9 @@ const Modals = (props) => {
   // api
   const getApi = async () => {
     try {
-      const total = await axios.post(
-        "http://localhost:3001/transaction/total-price",
-        { transaction_uid: transaction_uid }
-      );
+      const total = await Instance().post("transaction/total-price", {
+        transaction_uid: transaction_uid,
+      });
 
       setSubTotal(total.data?.data);
       setSubTotal1(total.data?.data[0]?.total_price);
@@ -68,6 +69,7 @@ const Modals = (props) => {
 
   const handleConfirmOrder = async () => {
     try {
+      setDisabled(true);
       if (selectPayment == 1) {
         const changes = refCustomerMoney.current.value - total;
 
@@ -75,8 +77,8 @@ const Modals = (props) => {
           toast.error("Customer Name or Customer Money Can Not Empty");
         } else {
           setDisabled(true);
-          const onCreateReceipt = await axios.post(
-            "http://localhost:3001/transaction/confirm-order",
+          const onCreateReceipt = await Instance().post(
+            "transaction/confirm-order",
             {
               total_price: total,
               customer_name: refCustomerName.current.value,
@@ -92,14 +94,9 @@ const Modals = (props) => {
           toast.success(onCreateReceipt.data.message);
 
           if (onCreateReceipt.data.isError === false) {
-            const deleteCart = await axios.post(
-              "http://localhost:3001/transaction/delete-cart",
-              {
-                token:
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1NTM3MzMyLCJleHAiOjE2OTU2MjM3MzJ9.9GITtZ1LFy8FWVdJTM8r2qUKxfR3OPJNxGcU9Y09T0Y",
-              }
+            const deleteCart = await Instance(user_id).post(
+              "transaction/delete-cart"
             );
-            console.log(deleteCart);
           }
           setTimeout(() => {
             navigate(`/receipt?transaction_uid=${transaction_uid}`);
@@ -110,8 +107,8 @@ const Modals = (props) => {
           return toast.error("Customer Name Can Not Empty");
         }
         setDisabled(true);
-        const onCreateReceipt = await axios.post(
-          "http://localhost:3001/transaction/confirm-order",
+        const onCreateReceipt = await Instance().post(
+          "transaction/confirm-order",
           {
             total_price: total,
             customer_name: refCustomerName.current?.value,
@@ -125,12 +122,8 @@ const Modals = (props) => {
         toast.success(onCreateReceipt.data.message);
 
         if (onCreateReceipt.data.isError === false) {
-          const deleteCart = await axios.post(
-            "http://localhost:3001/transaction/delete-cart",
-            {
-              token:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1NTM3MzMyLCJleHAiOjE2OTU2MjM3MzJ9.9GITtZ1LFy8FWVdJTM8r2qUKxfR3OPJNxGcU9Y09T0Y",
-            }
+          const deleteCart = await Instance(user_id).post(
+            "transaction/delete-cart"
           );
           console.log(deleteCart);
         }
@@ -145,8 +138,6 @@ const Modals = (props) => {
       setDisabled(false);
     }
   };
-
-  
 
   return (
     <Modal style={customStyle} isOpen={props.isOpen}>
@@ -214,7 +205,10 @@ const Modals = (props) => {
                 className=""
               />
 
-              <h1 onClick={modal} className="text-xl text-center mt-[20px] text-customPrimary cursor-pointer">
+              <h1
+                onClick={modal}
+                className="text-xl text-center mt-[20px] text-customPrimary cursor-pointer"
+              >
                 CANCEL ORDER
               </h1>
             </div>

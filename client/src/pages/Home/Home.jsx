@@ -25,6 +25,7 @@ import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
 import Modals from "../../components/Modal/Modals";
 // import css
 import "./home.css";
+import { Instance } from "../../api/instance";
 
 const Home = () => {
   const [modalIsOpen, setModelIsOpen] = useState(false);
@@ -33,24 +34,19 @@ const Home = () => {
   const [cart, setCart] = useState([]);
   const [kategori, setKategori] = useState([]);
   const [search, setSearch] = useState("");
-
   const [disabled, setDisabled] = useState(false);
   const [cartToTransaction, setCartToTransaction] = useState(null);
   const [transactionUID, setTransactionUID] = useState(null);
   const [subTotal, setSubTotal] = useState(null);
 
+  const [user_id, setUser_id] = useState(localStorage.getItem("userId"));
   const getApi = async () => {
-    const getProduct = await axios.get(
-      "http://localhost:3001/transaction/products"
-    );
-    const getCart = await axios.get("http://localhost:3001/transaction/cart");
-    const cartById = await axios.post(
-      "http://localhost:3001/transaction/cartById",
-      { idProduct: idProduct }
-    );
-    const total = await axios.get(
-      "http://localhost:3001/transaction/total-price-cart"
-    );
+    const getProduct = await Instance().get("transaction/products");
+    const getCart = await Instance().get("transaction/cart");
+    const cartById = await Instance().post("transaction/cartById", {
+      idProduct: idProduct,
+    });
+    const total = await Instance().get("transaction/total-price-cart");
 
     setSubTotal(total.data[0].total_price);
 
@@ -60,7 +56,7 @@ const Home = () => {
 
   //PAGINATION
 
-  const cardsPerPage = 9; // Number of cards to display per page
+  const cardsPerPage = 8; // Number of cards to display per page
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate the index range for the current page
@@ -84,8 +80,8 @@ const Home = () => {
   const incrementQty = async (id) => {
     try {
       setIdProduct(id);
-      const addQuantity = await axios.put(
-        "http://localhost:3001/transaction/increase-quantity",
+      const addQuantity = await Instance().put(
+        "transaction/increase-quantity",
         { idProduct: id }
       );
 
@@ -102,18 +98,16 @@ const Home = () => {
 
   const decrementQty = async (id) => {
     try {
-      const decrease = await axios.put(
-        "http://localhost:3001/transaction/decrease-quantity",
-        { idProduct: id }
-      );
+      const decrease = await Instance().put("transaction/decrease-quantity", {
+        idProduct: id,
+      });
 
       getApi();
 
       if (decrease.data.data.quantity <= 0) {
-        const deleteCart = await axios.post(
-          "http://localhost:3001/transaction/cart",
-          { idProduct: id }
-        );
+        const deleteCart = await Instance().post("transaction/cart", {
+          idProduct: id,
+        });
         console.log(deleteCart);
       }
       getApi();
@@ -126,16 +120,11 @@ const Home = () => {
   const addToCart = async (id) => {
     // console.log(id);
     try {
-      const add = await axios.post(
-        "http://localhost:3001/transaction/cashier",
-        {
-          idProduct: id,
-          token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjk1NTM3MzMyLCJleHAiOjE2OTU2MjM3MzJ9.9GITtZ1LFy8FWVdJTM8r2qUKxfR3OPJNxGcU9Y09T0Y",
-        }
-      );
+      const add = await Instance(user_id).post("transaction/cashier", {
+        idProduct: id,
+      });
       getApi();
-
+      console.log(add);
       toast.success(add.data.message);
     } catch (error) {
       console.log(error.response.data.message);
@@ -159,10 +148,10 @@ const Home = () => {
         return result;
       }
 
-      const carts = await axios.post(
-        "http://localhost:3001/transaction/transaction",
-        { cartProduct: cart, uid: getRandomCode() }
-      );
+      const carts = await Instance().post("transaction/transaction", {
+        cartProduct: cart,
+        uid: getRandomCode(),
+      });
       console.log(carts.data.dataTransaction);
       setTransactionUID(carts.data?.transaction_uid);
       setCartToTransaction(carts.data.dataTransaction);
@@ -186,9 +175,7 @@ const Home = () => {
   const handleFilter = async (e) => {
     try {
       console.log(e.target.value);
-      const res = await axios.get(
-        `http://localhost:3001/filter/${e.target.value}`
-      );
+      const res = await Instance().get(`filter/${e.target.value}`);
       console.log(res.data.data);
       setProducts(res.data.data);
     } catch (error) {
@@ -199,7 +186,7 @@ const Home = () => {
   const filterKategori = async (e) => {
     try {
       // console.log(e);
-      const res = await axios.get(`http://localhost:3001/filter/${e}`);
+      const res = await Instance().get(`filter/${e}`);
       console.log(res.data.data);
       setProducts(res.data.data);
       // getData()
@@ -210,7 +197,7 @@ const Home = () => {
 
   const getKategori = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/category");
+      const res = await Instance().get("category");
       // console.log(res.data.data);
       const hasil = res.data.data.filter((item) => {
         return item.status === "active";
@@ -233,7 +220,7 @@ const Home = () => {
 
   const vat = Math.floor(subTotal * 0.1);
   const total = Number(subTotal) + Number(vat);
-console.log(search);
+  console.log(search);
   return (
     <div className="screen  w-full h-screen flex ">
       <LeftSideBar />
@@ -277,7 +264,7 @@ console.log(search);
             </select>
           </div>
         </div>
-        <div className="grid sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-4 gap-5 mt-[20px]">
+        <div className="grid sm:grid-cols-3 lg:grid-cols-3 2xl:grid-cols-4 gap-5 mt-[20px]">
           {/* {products} */}
           {!products ? (
             <span>Loading....</span>
@@ -316,7 +303,11 @@ console.log(search);
             btnName="Previously"
             onClick={previousPage}
           />
-          <Button onClick={nextPage} btnCSS="test2 w-[200px] text-white" btnName="Next" />
+          <Button
+            onClick={nextPage}
+            btnCSS="test2 w-[200px] text-white"
+            btnName="Next"
+          />
         </div>
       </div>
       <div className="right-side h-full w-3/12 px-[20px] bg-white relative overflow-auto">

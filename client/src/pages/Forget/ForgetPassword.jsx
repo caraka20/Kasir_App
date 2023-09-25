@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios"
 import toast, {Toaster} from 'react-hot-toast'
+import { Instance } from "../../api/instance";
 
 const ForgetPassword = () => {
     const [state, setState] = useState({
@@ -15,7 +16,7 @@ const ForgetPassword = () => {
     const passwordForget = async (e) => {
       e.preventDefault()
       try {
-        const data = await axios.get(`http://localhost:3001/auth/forgetpassword?email=${state.email}`)
+        const data = await Instance().get(`auth/forgetpassword?email=${state.email}`)
         console.log(data)
         toast.success(data.data.message)
       } catch (error) {

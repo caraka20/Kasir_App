@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import LeftSideBar from "../LeftSideBar/LeftSideBar";
+import { Instance } from "../../api/instance";
 const moment = require("moment");
 const ModalReceipt = (props) => {
   const [receiptDatas, setReceiptDatas] = useState(null);
@@ -27,8 +28,8 @@ const ModalReceipt = (props) => {
 
   const getApi1 = async () => {
     try {
-      const getDatasByTransactionId = await axios.post(
-        "http://localhost:3001/transaction/receipt",
+      const getDatasByTransactionId = await Instance().post(
+        "transaction/receipt",
         { transaction_id: transaction_uid }
       );
 

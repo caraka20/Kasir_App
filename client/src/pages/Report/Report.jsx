@@ -5,6 +5,7 @@ import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,  } from 'recharts';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { Instance } from "../../api/instance";
 
 
 const Report = () => {
@@ -28,7 +29,7 @@ const Report = () => {
   const apply = async () => {
     try {
       console.log("test");
-      const res = await axios.get(`http://localhost:3001/report/tanggal?awal=${rangeTanggal.awal}&akhir=${rangeTanggal.akhir}`)
+      const res = await Instance().get(`report/tanggal?awal=${rangeTanggal.awal}&akhir=${rangeTanggal.akhir}`)
       console.log(res);
       setDatas(res.data.dataFix)
       const hasil = Object.entries(res.data.dataFix.kategori_paling_diminati).map(([kategori, jumlah]) => ({ name: kategori, value: jumlah }));

@@ -5,6 +5,7 @@ import Button from '../../components/Button/Button'
 import axios from 'axios'
 import toast, {Toaster} from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { Instance } from "../../api/instance";
 const CreatePorduk = () => {
     const nav = useNavigate()
     const [input, setInput] = useState({
@@ -20,7 +21,7 @@ const CreatePorduk = () => {
 // console.log("lala");
     const getData = async () => {
         try {
-            const getData = await axios.get("http://localhost:3001/product")
+            const getData = await Instance().get("product")
                 setDatas(getData)
                 console.log(getData.data.data);
         } catch (error) {
@@ -70,7 +71,7 @@ const CreatePorduk = () => {
                 if(findProduk) {
                     toast.error("Produk Already Exist")
                 } 
-                const create = await axios.post("http://localhost:3001/product", fd)
+                const create = await Instance().post("product", fd)
                 // console.log(create.data.message);
                 toast.success(create.data.message)
                 // setTimeout(() => {
@@ -94,7 +95,7 @@ const CreatePorduk = () => {
 
     const getAllProduk = async () => {
         try {
-            const respon = await axios.get(`http://localhost:3001/category`)
+            const respon = await Instance().get(`category`)
             const hasil = respon.data.data.filter((item) => {
                 return item.status === "active"
             })

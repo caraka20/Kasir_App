@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Button from '../../components/Button/Button';
 import axios from 'axios';
 import { useEffect } from 'react';
-
+import { Instance } from "../../api/instance";
 const CreateCategory = () => {
 // const [state, setState] = useState(null)
     const [category, setCategory] = useState({nama_kategori:""});
@@ -15,7 +15,7 @@ const CreateCategory = () => {
 
     const getDataAll = async () => {
        try {
-        const findDataCategory = await axios.get("http://localhost:3001/category")
+        const findDataCategory = await Instance().get("category")
         // console.log(findDataCategory.data.data);
         setAllCategory(findDataCategory.data.data)
        } catch (error) {
@@ -30,7 +30,7 @@ const CreateCategory = () => {
         if(category.nama_kategori === "") {
           alert("Silahkan isi form")
         }
-        const editCategory = await axios.patch(`http://localhost:3001/category/${idUpdate}`, category)
+        const editCategory = await Instance().patch(`category/${idUpdate}`, category)
         console.log(editCategory);
         setCategory({nama_kategori:""})
         setIdUpdate(0)
@@ -41,7 +41,7 @@ const CreateCategory = () => {
           alert("Silahkan isi form")
         }
   
-        const CreateCategori = await axios.post("http://localhost:3001/category", category)
+        const CreateCategori = await Instance().post("category", category)
         console.log(CreateCategori);
         getDataAll()
         setCategory({
@@ -77,7 +77,7 @@ console.log(allCategory);
   const editStatus = async (id) => {
     try {
       console.log(id);
-      const res = await axios.patch(`http://localhost:3001/category/img/${id}`)
+      const res = await Instance().patch(`category/img/${id}`)
       console.log(res);
       getDataAll()
     } catch (error) {

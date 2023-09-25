@@ -1,46 +1,46 @@
-import React, { useEffect, useState } from 'react'
-import axios from "axios"
-import toast, {Toaster} from 'react-hot-toast'
-import { Link, useNavigate } from 'react-router-dom'
-import LeftSideBar from '../../components/LeftSideBar/LeftSideBar'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import LeftSideBar from "../../components/LeftSideBar/LeftSideBar";
+import { useParams } from "react-router-dom";
 import Modal from "react-modal";
-import Button from '../../components/Button/Button'
+import Button from "../../components/Button/Button";
 
-
+import { Instance } from "../../api/instance";
 
 const Profile = () => {
   const [userData, setUserData] = useState({});
-  const [userId, setUserId] = useState(localStorage.getItem("userId"))
-  const {id} = useParams()
-  const [data, setData] = useState(null)
+  const [userId, setUserId] = useState(localStorage.getItem("userId"));
+  const { id } = useParams();
+  const [data, setData] = useState(null);
   const [modalImage, setModalImage] = useState(false);
   const [idProduk, setIdProduk] = useState(0);
-  const [input, setInput] = useState([])
+  const [input, setInput] = useState([]);
   const [images, setImages] = useState([]);
-
-  const nav = useNavigate()
+  console.log(id);
+  const nav = useNavigate();
   // console.log(id);
 
   const getData = async () => {
     try {
-      const res = await axios.post("http://localhost:3001/user/map", {token : id})
+      const res = await Instance(userId).post("user/map");
       console.log(res.data.data);
-      setData(res.data.data)
+      setData(res.data.data);
       // setTimeout(() =>{nav('')})
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const logOut = async () => {
-  localStorage.removeItem('userId');
-  localStorage.removeItem('role');
-  toast.success("Logout Berhasil")
-  setTimeout(() => {
-    nav("/")
-  }, 2000);
-  }
+    localStorage.removeItem("userId");
+    localStorage.removeItem("role");
+    toast.success("Logout Berhasil");
+    setTimeout(() => {
+      nav("/");
+    }, 2000);
+  };
 
   const customStyless = {
     content: {
@@ -83,10 +83,7 @@ const Profile = () => {
       if (images.length === 0) {
         return toast.error("Form Harus Dilengkapi");
       }
-      const create = await axios.put(
-        `http://localhost:3001/kasir/imageKasir/${e}`,
-        fd
-      );
+      const create = await Instance().put(`kasir/imageKasir/${e}`, fd);
       // console.log(create.data.message);
       toast.success(create.data.message);
       setTimeout(() => {
@@ -95,7 +92,7 @@ const Profile = () => {
       }, 2000);
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message)
+      toast.error(error.response.data.message);
     }
   };
 
@@ -115,74 +112,100 @@ const Profile = () => {
     }
   };
 
-console.log(data);
+  console.log(data);
 
   useEffect(() => {
-    getData()
-  },[])
-      return (
-        <div className='grid h-full w-auto bg-customBackground'>
-          <div className='flex gap-3'>
-          <LeftSideBar/>
-          <div className='flex justify-center items-center bg-slate-400 h-screen w-full'>
-          <Toaster/>
-          <div className='rounded-xl w-1/2 bg-blue-200'>
-            <div className='flex justify-center mt-10'>
-              <label className='font-bold'>User Profile</label>
+    getData();
+  }, []);
+  return (
+    <div className="grid h-full w-auto bg-customBackground">
+      <div className="flex gap-3">
+        <LeftSideBar />
+        <div className="flex justify-center items-center bg-slate-400 h-screen w-full">
+          <Toaster />
+          <div className="rounded-xl w-1/2 bg-blue-200">
+            <div className="flex justify-center mt-10">
+              <label className="font-bold">User Profile</label>
             </div>
-            {
-              !data ? <span>Not Found</span> :
+            {!data ? (
+              <span>Not Found</span>
+            ) : (
               data.map((item) => {
                 return (
-            <div className='m-20 mb-10'>
-                                          <Modal style={customStyless} isOpen={modalImage}>
-                    <button
-                      onClick={tutupModelImage}
-                      className="rounded-full relative   text-white bg-customPrimary  px-[15px] py-[8px]"
-                    >
-                      X
-                    </button>
+                  <div className="m-20 mb-10">
+                    <Modal style={customStyless} isOpen={modalImage}>
+                      <button
+                        onClick={tutupModelImage}
+                        className="rounded-full relative   text-white bg-customPrimary  px-[15px] py-[8px]"
+                      >
+                        X
+                      </button>
 
-                    <div className="grid justify-center item-center mt-[30px]">
-                      <label htmlFor="" className="font-serif">
-                        Gambar Product
-                      </label>
-                      <br />
-                      <input
-                        onChange={(e) => onSelectImages(e)}
-                        type="file"
-                        multiple="multiple"
-                        className="mt-2 mb-5 file-input file-input-bordered w-full max-w-xs bg-white"
+                      <div className="grid justify-center item-center mt-[30px]">
+                        <label htmlFor="" className="font-serif">
+                          Gambar Product
+                        </label>
+                        <br />
+                        <input
+                          onChange={(e) => onSelectImages(e)}
+                          type="file"
+                          multiple="multiple"
+                          className="mt-2 mb-5 file-input file-input-bordered w-full max-w-xs bg-white"
+                        />
+                      </div>
+                      <Button
+                        onClick={() => updateImage(item.id)}
+                        btnName="Edit"
+                        btnCSS="my-[10px] w-[150px] text-sm"
                       />
+                    </Modal>
+                    <div className="w-full flex justify-center items-center">
+                      <img
+                        onClick={() => modalOpenImage(item.id)}
+                        src={`http://localhost:3001/${item.image_user.substring(
+                          7
+                        )}`}
+                        className="flex justify-center w-[250px] h-[250px] rounded-full  "
+                        alt="kebon kebon kebon"
+                      ></img>
                     </div>
-                    <Button
-                      onClick={() => updateImage(item.id)}
-                      btnName="Edit"
-                      btnCSS="my-[10px] w-[150px] text-sm"
-                    />
-                  </Modal>
-            <img onClick={() => modalOpenImage(item.id)}  src={`http://localhost:3001/${item.image_user.substring(7)}`} className='flex justify-center w-[250px] h-[250px] rounded-full 'alt='kebon kebon kebon'></img>
-          <div className="mb-10">
-              <h1 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>ID: {item.id}</h1>
-              <h1 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>Nama Lengkap: {item.nama_lengkap}</h1>
-              <h1 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>Status: {item.status_user}</h1>
-              <h1 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>Email: {item.email}</h1>
-            </div>
-            <div>
-            <Link to={`/changeoldpass/${userId}`}><p className="text-white bg-orange-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Change Password</p></Link> 
-            <button onClick={logOut} type="OnClick" className="w-full mt-5 first-letter:text-white bg-orange-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Log Out</button>
-            </div>
-          </div>                  
-                )
+                    <div className="mb-10">
+                      <h1 className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        ID: {item.id}
+                      </h1>
+                      <h1 className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Nama Lengkap: {item.nama_lengkap}
+                      </h1>
+                      <h1 className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Status: {item.status_user}
+                      </h1>
+                      <h1 className="mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Email: {item.email}
+                      </h1>
+                    </div>
+                    <div>
+                      <Link to={`/changeoldpass/${userId}`}>
+                        <p className="text-white bg-orange-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                          Change Password
+                        </p>
+                      </Link>
+                      <button
+                        onClick={logOut}
+                        type="OnClick"
+                        className="w-full mt-5 text-white bg-orange-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      >
+                        Log Out
+                      </button>
+                    </div>
+                  </div>
+                );
               })
-            }
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-          </div>
-        </div>
-          </div>
-        </div>
-        
-      )
-    }
-    
-    export default Profile
+export default Profile;

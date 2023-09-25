@@ -15,6 +15,7 @@ import RecordTransaction from "../RecordTransaction/RecordTransaction";
 import DetailTransaksi from "../DetailTransaksi/DetailTransaksi";
 import CreateKasir from "../CreateKasir/CreateKasir";
 import ListKasir from "../HomeAdmin/ListKasir";
+import ModalReceipt from "../../components/ModalReceipt/ModalReceipt";
 
 import Protected from "./protected";
 import ItemList from "../../components/Pagin/ItemList";
@@ -30,6 +31,7 @@ const routes = [
     <Route path="/admin/ListKasir" element={<Protected adminPage={true}><ListKasir /></Protected>} />,
 
     <Route path="/" element={<Login/>}/>,
+    <Route path="/receipt" element={<ModalReceipt/>}/>,
     <Route path="/forgetpassword" element={<ForgetPassword/>}/>,
     <Route path="/updatepassword/:email" element={<UpdatePassword/>}/>,
     <Route path="/changeoldpass/:id" element={<ChangeOldPass/>}/>,

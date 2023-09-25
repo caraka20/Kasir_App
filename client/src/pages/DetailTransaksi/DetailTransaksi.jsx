@@ -4,6 +4,7 @@ import InputName from "../../components/InputName/InputName";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import LeftSideBarAdmin from "../../components/LeftSideBarAdmin/LeftSideBarAdmin";
+import { Instance } from "../../api/instance";
 
 const DetailTransaksi = () => {
   const { awal, akhir } = useParams();
@@ -13,7 +14,7 @@ const DetailTransaksi = () => {
   const onOpen = async (e) => {
     try {
       // console.log(e + "lala");
-      const res = await axios.get(`http://localhost:3001/report/${e}`);
+      const res = await Instance().get(`report/${e}`);
       setDataTransaksi(res.data);
       setIsOpen(true);
     } catch (error) {
@@ -26,8 +27,8 @@ const DetailTransaksi = () => {
   const getdata = async () => {
     try {
       // console.log("test");
-      const res = await axios.get(
-        `http://localhost:3001/report/tanggal?awal=${awal}&akhir=${akhir}`
+      const res = await Instance().get(
+        `report/tanggal?awal=${awal}&akhir=${akhir}`
       );
       // console.log(res);
       setDatas(res.data.dataFix.jumlahSemuaTransaksi);

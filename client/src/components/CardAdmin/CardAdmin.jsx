@@ -8,6 +8,7 @@ import Modal from "react-modal";
 import toast, { Toaster } from "react-hot-toast";
 import Search from "../Search/Search";
 import Paginasi from "./Paginasi";
+import { Instance } from "../../api/instance";
 const CardAdmin = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [datas, setDatas] = useState(null);
@@ -57,7 +58,7 @@ const CardAdmin = () => {
 
   const getData = async () => {
     try {
-      const fetchData = await axios.get("http://localhost:3001/product");
+      const fetchData = await Instance().get("product");
       // console.log(fetchData.data.data);
       setDatas(fetchData.data.data);
     } catch (error) {
@@ -106,7 +107,7 @@ const CardAdmin = () => {
   const submitEdit = async (e) => {
     try {
       // console.log(e);
-      const res = await axios.put(`http://localhost:3001/product/${e}`, input);
+      const res = await Instance().put(`product/${e}`, input);
       console.log(res);
       setModalOpen(false);
       getData();
@@ -161,8 +162,8 @@ const CardAdmin = () => {
       if (images.length === 0) {
         return toast.error("Form Harus Dilengkapi");
       }
-      const create = await axios.patch(
-        `http://localhost:3001/product/img/${e}`,
+      const create = await Instance().patch(
+        `product/img/${e}`,
         fd
       );
       // console.log(create.data.message);
@@ -180,8 +181,8 @@ const CardAdmin = () => {
   const handleFilter = async (e) => {
     try {
       console.log(e.target.value);
-      const res = await axios.get(
-        `http://localhost:3001/filter/${e.target.value}`
+      const res = await Instance().get(
+        `filter/${e.target.value}`
       );
       console.log(res.data.data);
       setDatas(res.data.data);
@@ -193,7 +194,7 @@ const CardAdmin = () => {
   const statusProduct = async (e) => {
     try {
       console.log(e);
-      const res = await axios.patch(`http://localhost:3001/product/${e}`);
+      const res = await Instance().patch(`product/${e}`);
       console.log(res.data);
       getData();
     } catch (error) {
@@ -204,7 +205,7 @@ const CardAdmin = () => {
   const filterKategori = async (e) => {
     try {
       // console.log(e);
-      const res = await axios.get(`http://localhost:3001/filter/${e}`);
+      const res = await Instance().get(`filter/${e}`);
       console.log(res.data.data);
       setDatas(res.data.data);
       // getData()
@@ -215,7 +216,7 @@ const CardAdmin = () => {
 
   const getKategori = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/category");
+      const res = await Instance().get("category");
       // console.log(res.data.data);
       const hasil = res.data.data.filter((item) => {
         return item.status === "active";

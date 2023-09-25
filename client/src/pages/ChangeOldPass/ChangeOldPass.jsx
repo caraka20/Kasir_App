@@ -2,6 +2,7 @@ import React, { useState} from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axios from "axios"
 import toast, {Toaster} from 'react-hot-toast'
+import { Instance } from "../../api/instance";
 
 const ChangeOldPass = () => {
     const [state, setState] = useState({
@@ -21,7 +22,7 @@ console.log(id);
     const passwordUpdate = async (e) => {
       e.preventDefault()
       try {
-        const data = await axios.put(`http://localhost:3001/auth/resetpassword`, {...state, token: id})
+        const data = await Instance().put(`auth/resetpassword`, {...state, token: id})
         console.log(data)
         toast.success(data.data.message)
         setTimeout(() =>{nav('/')},3000)

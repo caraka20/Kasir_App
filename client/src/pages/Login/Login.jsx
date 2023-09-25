@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios"
 import toast, {Toaster} from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { Instance } from "../../api/instance";
 
 const Login = () => {
     const [state, setState] = useState({
@@ -24,7 +25,7 @@ const Login = () => {
       }
       try {
         const {username, password} = state;
-        const data = await axios.get(`http://localhost:3001/user/login?username=${username}&password=${password}`)
+        const data = await Instance().get(`user/login?username=${username}&password=${password}`)
         // console.log(data.data.role)
         localStorage.setItem("userId",data.data.data) //encryption masuk ke localstorage
         localStorage.setItem("role",data.data.role) // role

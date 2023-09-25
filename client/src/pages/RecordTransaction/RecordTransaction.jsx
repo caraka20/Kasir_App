@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import LeftSideBarAdmin from "../../components/LeftSideBarAdmin/LeftSideBarAdmin";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { Instance } from "../../api/instance";
 const RecordTransaction = () => {
   const { awal, akhir } = useParams();
   const [datas, setDatas] = useState(null);
@@ -9,8 +10,8 @@ const RecordTransaction = () => {
   const getData = async () => {
     try {
       // console.log("test");
-      const res = await axios.get(
-        `http://localhost:3001/report/tanggal?awal=${awal}&akhir=${akhir}`
+      const res = await Instance().get(
+        `report/tanggal?awal=${awal}&akhir=${akhir}`
       );
       // console.log(res);
       setDatas(res.data.dataFix.dataAll);

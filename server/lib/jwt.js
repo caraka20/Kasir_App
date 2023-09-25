@@ -12,8 +12,10 @@ module.exports = {
     },
     verify: (req, res, next) => {
         try {
-            const {token} = req.body
-            const decodeData = jwt.verify(token, 'abc123')
+            const {authorization} = req.headers
+            console.log(authorization);
+            
+            const decodeData = jwt.verify(authorization, 'abc123')
             console.log(decodeData);
             req.dataToken = decodeData
             next()

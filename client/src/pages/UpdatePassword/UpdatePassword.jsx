@@ -2,6 +2,7 @@ import React, { useEffect, useState} from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axios from "axios"
 import toast, {Toaster} from 'react-hot-toast'
+import { Instance } from "../../api/instance";
 
 const UpdatePassword = () => {
     const [state, setState] = useState({
@@ -18,7 +19,7 @@ const UpdatePassword = () => {
     const passwordUpdate = async (e) => {
       e.preventDefault()
       try {
-        const data = await axios.put(`http://localhost:3001/auth/updatepassword?email=${email}`,state)
+        const data = await Instance().put(`auth/updatepassword?email=${email}`,state)
         console.log(data)
         toast.success(data.data.message)
         setTimeout(() =>{nav('/')},3000)

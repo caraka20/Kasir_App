@@ -6,6 +6,7 @@ import Input from "../Input/Input";
 import { HiPlus } from "react-icons/hi";
 import { HiMinus } from "react-icons/hi";
 import axios from "axios";
+import { Instance } from "../../api/instance";
 
 const OrderSummaryCard = (props) => {
   const { datas, transaction_uid } = props;
@@ -14,8 +15,8 @@ const OrderSummaryCard = (props) => {
 
   const getApi = async () => {
     try {
-      const res = await axios.post(
-        "http://localhost:3001/transaction/transactionUID",
+      const res = await Instance().post(
+        "transaction/transactionUID",
         { transaction_uid: transaction_uid }
       );
 
